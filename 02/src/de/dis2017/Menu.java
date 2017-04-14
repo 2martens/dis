@@ -6,80 +6,81 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 /**
- * Kleine Helferklasse für Menüs
- * Zuvor müssen mit addEntry Menüoptionen hinzugefügt werden. Mit
- * der Methode show() wird das Menü angezeigt und die mit der Option
- * angegebene Konstante zurückgeliefert.
+ * Small helper class for menus.
+ *
+ * First menu entries have to be created with addEntry. Afterwards the menu can be shown
+ * on the console with show(). show() also returns the constant number of the selected menu entry.
+ *
+ * Example:
+ * Menu m = new Menu("Main menu");
+ * m.addEntry("Work hard", 0);
+ * m.addEntry("Rest", 1);
+ * m.addEntry("Go home", 2);
+ * int chosenOption = m.show();
  * 
- * Beispiel:
- * Menu m = new Menu("Hauptmenü");
- * m.addEntry("Hart arbeiten", 0);
- * m.addEntry("Ausruhen", 1);
- * m.addEntry("Nach Hause gehen", 2);
- * int wahl = m.show();
- * 
- * Angezeigt wird dann das Menü:
- * Hauptmenü:
- * [1] Hart arbeiten
- * [2] Ausruhen
- * [3] Nach Hause gehen
+ * This results in the following output on the console:
+ * Main menu:
+ * [1] Work hard
+ * [2] Rest
+ * [3] Go home
  * --
  */
-public class Menu {
-	private String title;
-	private ArrayList<String> labels = new ArrayList<String>();
-	private ArrayList<Integer> returnValues = new ArrayList<Integer>();
+class Menu {
+	private String _title;
+	private ArrayList<String> _labels = new ArrayList<>();
+	private ArrayList<Integer> _returnValues = new ArrayList<>();
 	
 	/**
-	 * Konstruktor.
-	 * @param title Titel des Menüs z.B. "Hauptmenü"
+	 * Initializes the menu object.
+     *
+	 * @param title Title of the menu (e.g. "Main menu")
 	 */
-	public Menu(String title) {
+	Menu(String title) {
 		super();
-		this.title = title;
+		_title = title;
 	}
 	
 	/**
-	 * Fügt einen Menüeintrag zum Menü hinzu
-	 * @param label Name des Eintrags
-	 * @param returnValue Konstante, die bei Wahl dieses Eintrags zurückgegeben wird
+	 * Adds a new menu entry
+     *
+	 * @param label Name of the entry
+	 * @param returnValue constant number which is returned upon selection this entry
 	 */
-	public void addEntry(String label, int returnValue) {
-		this.labels.add(label);
-		this.returnValues.add(new Integer(returnValue));
+	void addEntry(String label, int returnValue) {
+		_labels.add(label);
+		_returnValues.add(returnValue);
 	}
 	
 	/**
-	 * Zeigt das Menü an
-	 * @return Die Konstante des ausgewählten Menüeintrags
+	 * Shows the menu.
+     *
+	 * @return The constant number of the selected menu entry.
 	 */
-	public int show()  {
+	int show()  {
 		int selection = -1;
 		
 		BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in));
 		
 		while(selection == -1) {
-			System.out.println(title+":");
+			System.out.println(_title+":");
 			
-			for(int i = 0; i < labels.size(); ++i) {
-				System.out.println("["+(i+1)+"] "+labels.get(i));
+			for(int i = 0; i < _labels.size(); ++i) {
+				System.out.println("[" + (i + 1) + "] " + _labels.get(i));
 			}
 			
 			System.out.print("-- ");
 			try {
 				selection = Integer.parseInt(stdin.readLine());
-			} catch (NumberFormatException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
+			} catch (NumberFormatException | IOException e) {
 				e.printStackTrace();
 			}
 			
-			if(selection < 1 || selection > returnValues.size()) {
-				System.err.println("Ungültige Eingabe!");
+			if(selection < 1 || selection > _returnValues.size()) {
+				System.err.println("Invalid input!");
 				selection = -1;
 			} 
 		}
 		
-		return returnValues.get(selection-1);
+		return _returnValues.get(selection-1);
 	}
 }
