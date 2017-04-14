@@ -1,12 +1,10 @@
-package de.dis2011.data;
+package de.dis2017.data;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-
-import de.dis2011.data.DB2ConnectionManager;
 
 /**
  * Makler-Bean

@@ -1,6 +1,6 @@
-package de.dis2011;
+package de.dis2017;
 
-import de.dis2011.data.Makler;
+import de.dis2017.data.Makler;
 
 /**
  * Hauptklasse
