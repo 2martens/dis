@@ -11,7 +11,7 @@ import java.sql.SQLException;
 import java.util.Properties;
 
 /**
- * Einfaches Singleton zur Verwaltung von Datenbank-Verbindungen.
+ * Singleton for management of database connections
  * 
  * @author Michael von Riegen
  * @version April 2009
@@ -25,11 +25,11 @@ class DB2ConnectionManager {
 	private Connection _con;
 
 	/**
-	 * Erzeugt eine Datenbank-Verbindung
+	 * Initializes database connection
 	 */
 	private DB2ConnectionManager() {
 		try {
-			// Holen der Einstellungen aus der db2.properties Datei
+			// load properties from db2.properties file
 			Properties properties = new Properties();
 			URL url = ClassLoader.getSystemResource("db2.properties");
 			FileInputStream stream = new FileInputStream(new File(url.toURI()));
@@ -40,7 +40,7 @@ class DB2ConnectionManager {
 			String jdbcPass = properties.getProperty("jdbc_pass");
 			String jdbcUrl = properties.getProperty("jdbc_url");
 
-			// Verbindung zur DB2 herstellen
+			// created connection to DB2 database
 			Class.forName("com.ibm.db2.jcc.DB2Driver");
 			_con = DriverManager.getConnection(jdbcUrl, jdbcUser, jdbcPass);
 
@@ -51,7 +51,7 @@ class DB2ConnectionManager {
 	}
 
 	/**
-	 * Liefert Instanz des Managers
+	 * Returns the instance of the connection manager
 	 * 
 	 * @return DB2ConnectionManager
 	 */
@@ -63,12 +63,11 @@ class DB2ConnectionManager {
 	}
 
 	/**
-	 * Liefert eine Verbindung zur DB2 zurC<ck
+	 * Returns the connection to the DB2 database
 	 * 
 	 * @return Connection
 	 */
 	Connection getConnection() {
 		return _con;
 	}
-
 }
