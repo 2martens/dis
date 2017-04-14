@@ -105,5 +105,8 @@ public class ORM {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        if (!_agents.containsKey(agent.getId())) {
+            _agents.put(agent.getId(), agent);
+        }
     }
 }
