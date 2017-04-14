@@ -1,38 +1,39 @@
 package de.dis2017;
 
-import de.dis2017.data.Makler;
+import de.dis2017.data.EstateAgent;
+import de.dis2017.data.db.ORM;
 
 /**
- * Hauptklasse
+ * Main class
  */
 public class Main {
 	/**
-	 * Startet die Anwendung
+	 * Starts the application.
 	 */
 	public static void main(String[] args) {
 		showMainMenu();
 	}
 	
 	/**
-	 * Zeigt das Hauptmenü
+	 * Shows the main menu.
 	 */
-	public static void showMainMenu() {
-		//Menüoptionen
-		final int MENU_MAKLER = 0;
+	private static void showMainMenu() {
+		// menu options
+		final int MENU_AGENT = 0;
 		final int QUIT = 1;
 		
-		//Erzeuge Menü
-		Menu mainMenu = new Menu("Hauptmenü");
-		mainMenu.addEntry("Makler-Verwaltung", MENU_MAKLER);
-		mainMenu.addEntry("Beenden", QUIT);
+		// create menu
+		Menu mainMenu = new Menu("Main menu");
+		mainMenu.addEntry("EstateAgent management", MENU_AGENT);
+		mainMenu.addEntry("Quit", QUIT);
 		
-		//Verarbeite Eingabe
+		// process input
 		while(true) {
 			int response = mainMenu.show();
 			
 			switch(response) {
-				case MENU_MAKLER:
-					showMaklerMenu();
+				case MENU_AGENT:
+					showEstateAgentMenu();
 					break;
 				case QUIT:
 					return;
@@ -41,25 +42,25 @@ public class Main {
 	}
 	
 	/**
-	 * Zeigt die Maklerverwaltung
+	 * Shows the estate management.
 	 */
-	public static void showMaklerMenu() {
-		//Menüoptionen
-		final int NEW_MAKLER = 0;
+	private static void showEstateAgentMenu() {
+		// menu options
+		final int NEW_AGENT = 0;
 		final int BACK = 1;
 		
-		//Maklerverwaltungsmenü
-		Menu maklerMenu = new Menu("Makler-Verwaltung");
-		maklerMenu.addEntry("Neuer Makler", NEW_MAKLER);
-		maklerMenu.addEntry("Zurück zum Hauptmenü", BACK);
+		// estate management menu
+		Menu estateAgentMenu = new Menu("EstateAgent management");
+		estateAgentMenu.addEntry("Create EstateAgent", NEW_AGENT);
+		estateAgentMenu.addEntry("Back to the main menu", BACK);
 		
-		//Verarbeite Eingabe
+		// process input
 		while(true) {
-			int response = maklerMenu.show();
+			int response = estateAgentMenu.show();
 			
 			switch(response) {
-				case NEW_MAKLER:
-					newMakler();
+				case NEW_AGENT:
+					newEstateAgent();
 					break;
 				case BACK:
 					return;
@@ -68,18 +69,19 @@ public class Main {
 	}
 	
 	/**
-	 * Legt einen neuen Makler an, nachdem der Benutzer
-	 * die entprechenden Daten eingegeben hat.
+	 * Creates a new estate agent after the usesr has entered the necessary data.
 	 */
-	public static void newMakler() {
-		Makler m = new Makler();
+	private static void newEstateAgent() {
+		EstateAgent agent = new EstateAgent();
 		
-		m.setName(FormUtil.readString("Name"));
-		m.setAddress(FormUtil.readString("Adresse"));
-		m.setLogin(FormUtil.readString("Login"));
-		m.setPassword(FormUtil.readString("Passwort"));
-		m.save();
+		agent.setName(FormUtil.readString("Name"));
+		agent.setAddress(FormUtil.readString("Address"));
+		agent.setLogin(FormUtil.readString("Login"));
+		agent.setPassword(FormUtil.readString("Password"));
 		
-		System.out.println("Makler mit der ID "+m.getId()+" wurde erzeugt.");
+		ORM orm = new ORM();
+		orm.persist(agent);
+		
+		System.out.println("EstateAgent with the ID " + agent.getId() + " was created.");
 	}
 }
