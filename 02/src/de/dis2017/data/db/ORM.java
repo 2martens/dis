@@ -29,7 +29,7 @@ public class ORM {
      * @param ID the ID of the agent to load
      * @return returns the EstateAgent or null if there is no such agent
      */
-    public EstateAgent getEstateAgent(int ID) {
+    public EstateAgent get(int ID) {
         if (_agents.containsKey(ID)) {
             return _agents.get(ID);
         }
