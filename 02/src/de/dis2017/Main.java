@@ -7,11 +7,14 @@ import de.dis2017.data.db.ORM;
  * Main class
  */
 public class Main {
+    private static ORM _orm;
+    
 	/**
 	 * Starts the application.
 	 */
 	public static void main(String[] args) {
-		showMainMenu();
+		_orm = new ORM();
+	    showMainMenu();
 	}
 	
 	/**
@@ -79,8 +82,7 @@ public class Main {
 		agent.setLogin(FormUtil.readString("Login"));
 		agent.setPassword(FormUtil.readString("Password"));
 		
-		ORM orm = new ORM();
-		orm.persist(agent);
+		_orm.persist(agent);
 		
 		System.out.println("EstateAgent with the ID " + agent.getId() + " was created.");
 	}
