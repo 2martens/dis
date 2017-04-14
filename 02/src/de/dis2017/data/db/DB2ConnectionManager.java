@@ -1,4 +1,4 @@
-package de.dis2017.data;
+package de.dis2017.data.db;
 
 import java.io.File;
 import java.io.FileInputStream;
