@@ -393,5 +393,9 @@ public class Main {
 	    agent.setPassword(FormUtil.readPassword());
 	    
 	    _orm.persist(agent);
+    
+        System.out.println("------------------");
+        System.out.println("Agent was modified.");
+	    
     }
 }
