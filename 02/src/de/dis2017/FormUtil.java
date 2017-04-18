@@ -5,15 +5,16 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 /**
- * Kleine Helferklasse zum Einlesen von Formulardaten
+ * Small helper class for forms.
  */
 public class FormUtil {
 	/**
-	 * Liest einen String vom standard input ein
-	 * @param label Zeile, die vor der Eingabe gezeigt wird
-	 * @return eingelesene Zeile
+	 * Reads a string from the console.
+	 *
+	 * @param label Label that is shown before the input
+	 * @return read string
 	 */
-	public static String readString(String label) {
+	static String readString(String label) {
 		String ret = null;
 		BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in));
 
@@ -28,9 +29,10 @@ public class FormUtil {
 	}
 	
 	/**
-	 * Liest einen Integer vom standard input ein
-	 * @param label Zeile, die vor der Eingabe gezeigt wird
-	 * @return eingelesener Integer
+	 * Reads an integer from the console.
+     *
+	 * @param label Label that is shown before the input
+	 * @return read integer
 	 */
 	public static int readInt(String label) {
 		int ret = 0;
@@ -43,7 +45,7 @@ public class FormUtil {
 				ret = Integer.parseInt(line);
 				finished = true;
 			} catch (NumberFormatException e) {
-				System.err.println("Ungültige Eingabe: Bitte geben Sie eine Zahl an!");
+				System.err.println("Invalid input: Please insert a valid number!");
 			}
 		}
 		
