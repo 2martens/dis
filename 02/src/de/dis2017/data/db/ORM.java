@@ -102,6 +102,35 @@ public class ORM {
     }
     
     /**
+     * Deletes the given agent from the database.
+     *
+     * @param agent the agent that should be deleted
+     */
+    public void delete(EstateAgent agent)
+    {
+        try {
+            if (agent.getId() == -1) {
+                System.err.println("This agent is not yet persisted to the dabase and cannot be deleted.");
+                return;
+            } else {
+                // create query
+                String updateSQL = "DELETE FROM ESTATEAGENT WHERE ID = ?";
+                PreparedStatement pstmt = _connection.prepareStatement(updateSQL);
+                pstmt.setInt(1, agent.getId());
+            
+                // execute query
+                pstmt.executeUpdate();
+                pstmt.close();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        if (_agents.containsKey(agent.getId())) {
+            _agents.remove(agent.getId(), agent);
+        }
+    }
+    
+    /**
      * Persists the given agent.
      *
      * @param agent the agent that should be persisted
