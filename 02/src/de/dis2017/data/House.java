@@ -1,9 +1,9 @@
 package de.dis2017.data;
 
 public class House extends Estate {
-	int floors;
-	int price;
-	boolean garden;
+	private int floors;
+	private int price;
+	private boolean garden;
 	
 	public int getFloors() {
 		return floors;

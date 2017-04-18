@@ -1,11 +1,11 @@
 package de.dis2017.data;
 
 public class Apartment extends Estate{
-	int floor;
-	int rent;
-	int rooms;
-	boolean balcony;
-	boolean builtinKitchen;
+	private int floor;
+	private int rent;
+	private int rooms;
+	private boolean balcony;
+	private boolean builtinKitchen;
 	
 	public int getFloor() {
 		return floor;
