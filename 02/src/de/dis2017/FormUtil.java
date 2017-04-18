@@ -27,6 +27,18 @@ public class FormUtil {
 		
 		return ret;
 	}
+    
+    /**
+     * Reads a password from the console.
+     *
+     * @return the entered password
+     */
+	static String readPassword() {
+	    String password;
+        System.out.print("Password: ");
+        password = String.valueOf(System.console().readPassword());
+        return password;
+    }
 	
 	/**
 	 * Reads an integer from the console.
