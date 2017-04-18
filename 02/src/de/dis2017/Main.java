@@ -116,7 +116,7 @@ public class Main {
 	 */
 	private static void newEstate() {
 		String input = FormUtil.readString("Apartmnet(A)/House(H)");
-		boolean apartment = input=="A"||input=="a";
+		boolean apartment = input.equals("A") || input.equals("a");
 		if(apartment){
 			Apartment estate = new Apartment();
 			
@@ -130,9 +130,9 @@ public class Main {
 			estate.setRent(FormUtil.readInt("Rent"));
 			estate.setRooms(FormUtil.readInt("Rooms"));
 			input = FormUtil.readString("Balcony(Y/N)");
-			estate.setBalcony(input=="Y"||input=="y");
+			estate.setBalcony(input.equals("Y") || input.equals("y"));
 			input = FormUtil.readString("Built-in Kitchen(Y/N)");
-			estate.setBuiltinKitchen(input=="Y"||input=="y");
+			estate.setBuiltinKitchen(input.equals("Y") || input.equals("y"));
 			
 			//_orm.persist(estate);
 			
@@ -159,7 +159,7 @@ public class Main {
 	}
 	
 	/**
-	 * TODO Change an estate agent after the usesr has entered the necessary data.
+	 * TODO Change an estate agent after the user has entered the necessary data.
 	 */
 	private static void changeEstate() {
 		//Choose Estate from List
@@ -179,9 +179,9 @@ public class Main {
 			apartment.setRent(FormUtil.readInt("Rent"));
 			apartment.setRooms(FormUtil.readInt("Rooms"));
 			String input = FormUtil.readString("Balcony(Y/N)");
-			apartment.setBalcony(input=="Y"||input=="y");
+			apartment.setBalcony(input.equals("Y") || input.equals("y"));
 			input = FormUtil.readString("Built-in Kitchen(Y/N)");
-			apartment.setBuiltinKitchen(input=="Y"||input=="y");
+			apartment.setBuiltinKitchen(input.equals("Y") || input.equals("y"));
 			
 			//_orm.persist(apartment);
 			
@@ -199,7 +199,7 @@ public class Main {
 			house.setFloors(FormUtil.readInt("Floors"));
 			house.setPrice(FormUtil.readInt("Price"));
 			String input = FormUtil.readString("Garden(Y/N)");
-			house.setGarden(input=="Y"||input=="y");
+			house.setGarden(input.equals("Y") || input.equals("y"));
 			
 			//_orm.persist(house);
 			
