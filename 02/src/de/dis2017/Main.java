@@ -6,7 +6,6 @@ import de.dis2017.data.EstateAgent;
 import de.dis2017.data.House;
 import de.dis2017.data.db.ORM;
 
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -65,9 +64,9 @@ public class Main {
      */
 	private static boolean checkPassword() {
 	    System.out.println("Please insert the sudo password. You are entering dangerous territory.");
-        char[] passwordInput = System.console().readPassword();
-        char[] sudoPassword = "ea-sudo".toCharArray();
-        return Arrays.equals(sudoPassword, passwordInput);
+        String passwordInput = FormUtil.readPassword();
+        String sudoPassword = "ea-sudo";
+        return sudoPassword.equals(passwordInput);
 	}
 	
 	/**
