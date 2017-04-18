@@ -3,7 +3,9 @@ package de.dis2017.data.db;
 import de.dis2017.data.EstateAgent;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -21,6 +23,41 @@ public class ORM {
         DB2ConnectionManager _dbManager = DB2ConnectionManager.getInstance();
         _connection = _dbManager.getConnection();
         _agents = new HashMap<>();
+    }
+    
+    /**
+     * Loads all estate agents from the database and returns a list with them.
+     *
+     * @return a list of estate agents
+     */
+    public List<EstateAgent> getAll() {
+        List<EstateAgent> agents = new ArrayList<>();
+        try {
+            // create query
+            String            selectSQL = "SELECT * FROM ESTATEAGENT";
+            PreparedStatement pstmt     = _connection.prepareStatement(selectSQL);
+    
+            // execute query
+            ResultSet rs = pstmt.executeQuery();
+            EstateAgent agent;
+            while (rs.next()) {
+                agent = new EstateAgent();
+                agent.setId(rs.getInt("ID"));
+                agent.setName(rs.getString("name"));
+                agent.setAddress(rs.getString("address"));
+                agent.setLogin(rs.getString("login"));
+                agent.setPassword(rs.getString("password"));
+    
+                _agents.put(agent.getId(), agent);
+                agents.add(agent);
+            }
+            rs.close();
+            pstmt.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        
+        return agents;
     }
     
     /**
