@@ -6,6 +6,8 @@ import de.dis2017.data.EstateAgent;
 import de.dis2017.data.House;
 import de.dis2017.data.db.ORM;
 
+import java.util.Arrays;
+
 /**
  * Main class
  */
@@ -41,7 +43,12 @@ public class Main {
 			
 			switch(response) {
 				case MENU_AGENT:
-					showEstateAgentMenu();
+				    if (checkPassword()) {
+                        showEstateAgentMenu();
+                    }
+                    else {
+				    	System.out.println("The password was wrong.");
+				    }
 					break;
 				case MENU_ESTATES:
 					showEstateMenu();
@@ -50,6 +57,16 @@ public class Main {
 					return;
 			}
 		}
+	}
+    
+    /**
+     * Checks the password for sudo-like menu areas.
+     */
+	private static boolean checkPassword() {
+	    System.out.println("Please insert the sudo password. You are entering dangerous territory.");
+        char[] passwordInput = System.console().readPassword();
+        char[] sudoPassword = "ea-sudo".toCharArray();
+        return Arrays.equals(sudoPassword, passwordInput);
 	}
 	
 	/**
