@@ -258,7 +258,7 @@ public class Main {
 		agent.setName(FormUtil.readString("Name"));
 		agent.setAddress(FormUtil.readString("Address"));
 		agent.setLogin(FormUtil.readString("Login"));
-		agent.setPassword(FormUtil.readString("Password"));
+		agent.setPassword(FormUtil.readPassword());
 		
 		_orm.persist(agent);
 		
