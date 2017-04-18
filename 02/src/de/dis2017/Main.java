@@ -225,15 +225,13 @@ public class Main {
 		final int NEW_AGENT = 0;
         final int LIST_AGENTS = 1;
 		final int CHANGE_AGENT = 2;
-		final int DELETE_AGENT = 3;
-		final int BACK = 4;
+		final int BACK = 3;
 
 		// estate management menu
 		Menu estateAgentMenu = new Menu("EstateAgent management");
 		estateAgentMenu.addEntry("Create EstateAgent", NEW_AGENT);
         estateAgentMenu.addEntry("List EstateAgents", LIST_AGENTS);
 		estateAgentMenu.addEntry("Change EstateAgent", CHANGE_AGENT);
-		estateAgentMenu.addEntry("Delete EstateAgent", DELETE_AGENT);
 		estateAgentMenu.addEntry("Back to the main menu", BACK);
 		
 		// process input
@@ -246,9 +244,6 @@ public class Main {
 					break;
 				case CHANGE_AGENT:
 					changeEstateAgent();
-					break;
-				case DELETE_AGENT:
-					deleteEstateAgent();
 					break;
                 case LIST_AGENTS:
                     listEstateAgents();
@@ -279,26 +274,17 @@ public class Main {
 	 * TODO Change an estate agent after the usesr has entered the necessary data.
 	 */
 	private static void changeEstateAgent() {
-		EstateAgent agent = new EstateAgent();//logged in Agent
-		
-		agent.setName(FormUtil.readString("Name"));
-		agent.setAddress(FormUtil.readString("Address"));
-		agent.setLogin(FormUtil.readString("Login"));
-		agent.setPassword(FormUtil.readString("Password"));
-		
-		//_orm.persist(agent);
-		
-		System.out.println("EstateAgent with the ID " + agent.getId() + " was updated.");
-	}
-	
-	/**
-	 * TODO Deletes an estate agent.
-	 */
-	private static void deleteEstateAgent() {
-		//Delete Agent
-		EstateAgent agent = new EstateAgent();//logged in Agent
-		System.out.println("EstateAgent with the ID " + agent.getId() + " was deleted.");
-	}
+        EstateAgent agent = new EstateAgent();//logged in Agent
+        
+        agent.setName(FormUtil.readString("Name"));
+        agent.setAddress(FormUtil.readString("Address"));
+        agent.setLogin(FormUtil.readString("Login"));
+        agent.setPassword(FormUtil.readString("Password"));
+        
+        //_orm.persist(agent);
+        
+        System.out.println("EstateAgent with the ID " + agent.getId() + " was updated.");
+    }
     
     /**
      * List estate agents.
@@ -360,10 +346,10 @@ public class Main {
             
             switch (response) {
                 case MODIFY:
-                    modifyEstateAgent(id);
+                    modifyEstateAgent(agent);
                     break;
                 case DELETE:
-                    //deleteEstateAgent(id);
+                    deleteEstateAgent(agent);
                     break;
                 case BACK:
                     return;
@@ -374,14 +360,12 @@ public class Main {
     /**
      * Modify estate agent.
      *
-     * @param id the id of the modified agent
+     * @param agent the modified agent
      */
-    private static void modifyEstateAgent(int id) {
-	    EstateAgent agent = _orm.get(id);
-	    
+    private static void modifyEstateAgent(EstateAgent agent) {
 	    System.out.println("Modify EstateAgent");
 	    System.out.println("------------------");
-	    System.out.println("ID: " + id);
+	    System.out.println("ID: " + agent.getId());
 	    System.out.println("Name: " + agent.getName());
 	    System.out.println("Address: " + agent.getAddress());
         System.out.println("Username: " + agent.getLogin());
@@ -396,6 +380,15 @@ public class Main {
     
         System.out.println("------------------");
         System.out.println("Agent was modified.");
-	    
+    }
+    
+    /**
+     * Deletes an estate agent.
+     *
+     * @param agent the agent that should be deleted
+     */
+    private static void deleteEstateAgent(EstateAgent agent) {
+        _orm.delete(agent);
+        System.out.println("EstateAgent with the ID " + agent.getId() + " was deleted.");
     }
 }
