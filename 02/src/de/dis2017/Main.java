@@ -7,6 +7,7 @@ import de.dis2017.data.House;
 import de.dis2017.data.db.ORM;
 
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * Main class
@@ -223,13 +224,15 @@ public class Main {
 	private static void showEstateAgentMenu() {
 		// menu options
 		final int NEW_AGENT = 0;
-		final int CHANGE_AGENT = 1;
-		final int DELETE_AGENT = 2;
-		final int BACK = 3;
-		
+        final int LIST_AGENTS = 1;
+		final int CHANGE_AGENT = 2;
+		final int DELETE_AGENT = 3;
+		final int BACK = 4;
+
 		// estate management menu
 		Menu estateAgentMenu = new Menu("EstateAgent management");
 		estateAgentMenu.addEntry("Create EstateAgent", NEW_AGENT);
+        estateAgentMenu.addEntry("List EstateAgents", LIST_AGENTS);
 		estateAgentMenu.addEntry("Change EstateAgent", CHANGE_AGENT);
 		estateAgentMenu.addEntry("Delete EstateAgent", DELETE_AGENT);
 		estateAgentMenu.addEntry("Back to the main menu", BACK);
@@ -248,6 +251,9 @@ public class Main {
 				case DELETE_AGENT:
 					deleteEstateAgent();
 					break;
+                case LIST_AGENTS:
+                    listEstateAgents();
+                    break;
 				case BACK:
 					return;
 			}
@@ -255,7 +261,7 @@ public class Main {
 	}
 	
 	/**
-	 * Creates a new estate agent after the usesr has entered the necessary data.
+	 * Creates a new estate agent after the user has entered the necessary data.
 	 */
 	private static void newEstateAgent() {
 		EstateAgent agent = new EstateAgent();
@@ -294,4 +300,99 @@ public class Main {
 		EstateAgent agent = new EstateAgent();//logged in Agent
 		System.out.println("EstateAgent with the ID " + agent.getId() + " was deleted.");
 	}
+    
+    /**
+     * List estate agents.
+     */
+	private static void listEstateAgents() {
+	    // get all agents
+        List<EstateAgent> agents = _orm.getAll();
+        Menu listEstateAgents = new Menu("Please select the estate agent you want to modify or delete");
+        System.out.println("List of EstateAgents");
+        
+        final int BACK = 0;
+        
+        for (EstateAgent agent : agents) {
+            listEstateAgents.addEntry("ID: " + agent.getId() + ", Name: " + agent.getName(), agent.getId());
+        }
+        listEstateAgents.addEntry("Back to the EstateAgent management menu", BACK);
+        
+        // process input
+        while(true) {
+            int response = listEstateAgents.show();
+            
+            switch (response) {
+                case BACK:
+                    return;
+                default:
+                    showEstateAgent(response);
+                    break;
+            }
+        }
+    }
+    
+    /**
+     * Shows a selected estate agent.
+     *
+     * @param id the id of the selected agent
+     */
+    private static void showEstateAgent(int id) {
+        EstateAgent agent = _orm.get(id);
+    
+        System.out.println("EstateAgent");
+        System.out.println("------------------");
+        System.out.println("ID: " + id);
+        System.out.println("Name: " + agent.getName());
+        System.out.println("Address: " + agent.getAddress());
+        System.out.println("Username: " + agent.getLogin());
+        System.out.println("------------------");
+        
+        final int MODIFY = 1;
+        final int DELETE = 2;
+        final int BACK = 3;
+        
+        Menu showEstateAgentMenu = new Menu("Do you want to modify or delete the agent?");
+        showEstateAgentMenu.addEntry("Modify", MODIFY);
+        showEstateAgentMenu.addEntry("Delete", DELETE);
+        showEstateAgentMenu.addEntry("Back to the list of agents", BACK);
+        
+        while(true) {
+            int response = showEstateAgentMenu.show();
+            
+            switch (response) {
+                case MODIFY:
+                    modifyEstateAgent(id);
+                    break;
+                case DELETE:
+                    //deleteEstateAgent(id);
+                    break;
+                case BACK:
+                    return;
+            }
+        }
+    }
+    
+    /**
+     * Modify estate agent.
+     *
+     * @param id the id of the modified agent
+     */
+    private static void modifyEstateAgent(int id) {
+	    EstateAgent agent = _orm.get(id);
+	    
+	    System.out.println("Modify EstateAgent");
+	    System.out.println("------------------");
+	    System.out.println("ID: " + id);
+	    System.out.println("Name: " + agent.getName());
+	    System.out.println("Address: " + agent.getAddress());
+        System.out.println("Username: " + agent.getLogin());
+        System.out.println("------------------");
+	    
+        agent.setName(FormUtil.readString("Name"));
+	    agent.setAddress(FormUtil.readString("Address"));
+	    agent.setLogin(FormUtil.readString("Username"));
+	    agent.setPassword(FormUtil.readPassword());
+	    
+	    _orm.persist(agent);
+    }
 }
