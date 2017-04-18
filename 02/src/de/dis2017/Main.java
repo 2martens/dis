@@ -224,14 +224,12 @@ public class Main {
 		// menu options
 		final int NEW_AGENT = 0;
         final int LIST_AGENTS = 1;
-		final int CHANGE_AGENT = 2;
-		final int BACK = 3;
+		final int BACK = 2;
 
 		// estate management menu
 		Menu estateAgentMenu = new Menu("EstateAgent management");
 		estateAgentMenu.addEntry("Create EstateAgent", NEW_AGENT);
         estateAgentMenu.addEntry("List EstateAgents", LIST_AGENTS);
-		estateAgentMenu.addEntry("Change EstateAgent", CHANGE_AGENT);
 		estateAgentMenu.addEntry("Back to the main menu", BACK);
 		
 		// process input
@@ -241,9 +239,6 @@ public class Main {
 			switch(response) {
 				case NEW_AGENT:
 					newEstateAgent();
-					break;
-				case CHANGE_AGENT:
-					changeEstateAgent();
 					break;
                 case LIST_AGENTS:
                     listEstateAgents();
@@ -269,22 +264,6 @@ public class Main {
 		
 		System.out.println("EstateAgent with the ID " + agent.getId() + " was created.");
 	}
-	
-	/**
-	 * TODO Change an estate agent after the usesr has entered the necessary data.
-	 */
-	private static void changeEstateAgent() {
-        EstateAgent agent = new EstateAgent();//logged in Agent
-        
-        agent.setName(FormUtil.readString("Name"));
-        agent.setAddress(FormUtil.readString("Address"));
-        agent.setLogin(FormUtil.readString("Login"));
-        agent.setPassword(FormUtil.readString("Password"));
-        
-        //_orm.persist(agent);
-        
-        System.out.println("EstateAgent with the ID " + agent.getId() + " was updated.");
-    }
     
     /**
      * List estate agents.
