@@ -163,7 +163,7 @@ public class Main {
 			estate.setFloors(FormUtil.readInt("Floors"));
 			estate.setPrice(FormUtil.readInt("Price"));
 			input = FormUtil.readString("Garden(Y/N)");
-			estate.setGarden(input=="Y"||input=="y");
+			estate.setGarden(input.equals("Y") || input.equals("y"));
 			
 			//_orm.persist(estate);
 			
