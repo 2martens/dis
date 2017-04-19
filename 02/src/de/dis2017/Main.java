@@ -126,16 +126,13 @@ public class Main {
     private static void newEstate() {
         String input = FormUtil.readString("Apartment(A)/House(H)");
         boolean isApartment = input.equals("A") || input.equals("a");
-        Estate estate;
+        Estate estate = new Estate();
+        estate.setStreet(FormUtil.readString("Street"));
+        estate.setStreetNumber(FormUtil.readInt("Street Number"));
+        estate.setPostalCode(FormUtil.readString("Postal Code"));
+        estate.setCity(FormUtil.readString("City"));
+        estate.setSquareArea(FormUtil.readInt("Square Area"));
         if(isApartment){
-            estate = new Apartment();
-            
-            estate.setCity(FormUtil.readString("Name"));
-            estate.setPostalCode(FormUtil.readString("Postal Code"));
-            estate.setStreet(FormUtil.readString("Street"));
-            estate.setStreetNumber(FormUtil.readInt("Street Number"));
-            estate.setSquareArea(FormUtil.readInt("Square Area"));
-            
             Apartment apartment = (Apartment) estate;
             apartment.setFloor(FormUtil.readInt("Floor"));
             apartment.setRent(FormUtil.readInt("Rent"));
@@ -144,20 +141,8 @@ public class Main {
             apartment.setBalcony(input.equals("Y") || input.equals("y"));
             input = FormUtil.readString("Built-in Kitchen(Y/N)");
             apartment.setBuiltinKitchen(input.equals("Y") || input.equals("y"));
-            
-            //_orm.persist(estate);
-            
-            System.out.println("Estate with the ID " + estate.getId() + " was created.");
         }
         else{
-            estate = new House();
-            
-            estate.setCity(FormUtil.readString("Name"));
-            estate.setPostalCode(FormUtil.readString("Postal Code"));
-            estate.setStreet(FormUtil.readString("Street"));
-            estate.setStreetNumber(FormUtil.readInt("Street Number"));
-            estate.setSquareArea(FormUtil.readInt("Square Area"));
-            
             House house = (House) estate;
             house.setFloors(FormUtil.readInt("Floors"));
             house.setPrice(FormUtil.readInt("Price"));
