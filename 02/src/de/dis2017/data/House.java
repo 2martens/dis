@@ -17,7 +17,7 @@ public class House extends Estate {
 	public void setPrice(int price) {
 		this.price = price;
 	}
-	public boolean isGarden() {
+	public boolean hasGarden() {
 		return garden;
 	}
 	public void setGarden(boolean garden) {
