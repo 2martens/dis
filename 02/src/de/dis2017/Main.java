@@ -1,9 +1,13 @@
 package de.dis2017;
 
 import de.dis2017.data.Apartment;
+import de.dis2017.data.Contract;
 import de.dis2017.data.Estate;
 import de.dis2017.data.EstateAgent;
 import de.dis2017.data.House;
+import de.dis2017.data.Person;
+import de.dis2017.data.PurchaseContract;
+import de.dis2017.data.TenancyContract;
 import de.dis2017.data.db.ORM;
 import de.dis2017.data.db.Type;
 
@@ -30,12 +34,14 @@ public class Main {
 		// menu options
 		final int MENU_AGENT = 0;
 		final int MENU_ESTATES = 1;
-		final int QUIT = 2;
+		final int MENU_CONTRACTS = 2;
+		final int QUIT = 3;
 		
 		// create menu
 		Menu mainMenu = new Menu("Main menu");
 		mainMenu.addEntry("EstateAgent management", MENU_AGENT);
 		mainMenu.addEntry("Estate management", MENU_ESTATES);
+		mainMenu.addEntry("Contract management", MENU_CONTRACTS);
 		mainMenu.addEntry("Quit", QUIT);
 		
 		// process input
@@ -59,13 +65,122 @@ public class Main {
 				        System.out.println("The username or password was wrong.");
                     }
 					break;
+				case MENU_CONTRACTS:
+				    showContractMenu();
+				    break;
 				case QUIT:
 					return;
 			}
 		}
 	}
     
-    /**
+    private static void showContractMenu() {
+    	// menu options
+		final int INSERT_PERSON = 0;
+		final int CREATE_CONTRACT = 1;
+		final int OVERVIEW_CONTRACTS = 2;
+		final int BACK = 3;
+		
+		// create menu
+		Menu mainMenu = new Menu("Contract Menu");
+		mainMenu.addEntry("Insert person",INSERT_PERSON );
+		mainMenu.addEntry("Create/Sign contract", CREATE_CONTRACT);
+		mainMenu.addEntry("Contracts overview", OVERVIEW_CONTRACTS);
+		mainMenu.addEntry("Back", BACK);
+		
+		// process input
+		while(true) {
+			int response = mainMenu.show();
+			
+			switch(response) {
+				case INSERT_PERSON:
+				    newPerson();
+					break;
+				case CREATE_CONTRACT:
+				    newContract();
+					break;
+				case OVERVIEW_CONTRACTS:
+				    showContractsOverview();
+				    break;
+				case BACK:
+					return;
+			}
+		}
+	}
+
+	private static void showContractsOverview() {
+		List<?> contracts = _orm.getAll(Type.CONTRACT);
+		Menu listContracts = new Menu("Contracts Overview");
+        
+        final int BACK = 0;
+        
+        for (Object o : contracts) {
+            Contract contract = (Contract) o;
+            if(contract instanceof TenancyContract){
+            	TenancyContract tenContract = (TenancyContract) contract;
+            	listContracts.addEntry("Contract No: " + tenContract.getContractNo() + " Place: "+tenContract.getPlace()
+            	+ "Date: "+tenContract.getDate()+" Start Date: "+tenContract.getStartDate()
+            	+" Duration: "+tenContract.getDuration()+" Additional Costs: "+tenContract.getAdditionalCost()
+            	,tenContract.getContractNo());
+            }
+            else{
+            	PurchaseContract purContract = (PurchaseContract) contract;
+            	listContracts.addEntry("Contract No: " + purContract.getContractNo() + " Place: "+purContract.getPlace()
+            	+ "Date: "+purContract.getDate()+" No of Installments: "+purContract.getNoOfInstallments()
+            	+" Interest Rate: "+purContract.getInterestRate()
+            	,purContract.getContractNo());
+            }
+        }
+        listContracts.addEntry("Back to the Contract management menu", BACK);
+        
+        // process input
+        while(true) {
+            int response = listContracts.show();
+            
+            switch (response) {
+                case BACK:
+                    return;
+                default:
+                    break;
+            }
+        }
+	}
+
+	private static void newContract() {
+		Contract contract = new Contract();
+		//choose Estate from List
+		Estate estate = new Estate();
+		//choose Person from List
+		contract.setPlace(FormUtil.readString("Place"));
+		contract.setDate(FormUtil.readString("Date"));
+		if(estate instanceof Apartment){
+			TenancyContract tenContract = (TenancyContract) contract;
+			tenContract.setStartDate(FormUtil.readString("Start Date"));
+			tenContract.setDuration(FormUtil.readInt("Duration"));
+			tenContract.setAdditionalCost(FormUtil.readInt("Additional Costs"));
+			
+			//_orm.persist(tenContract);
+		}
+		else{
+			PurchaseContract purContract = (PurchaseContract) contract;
+			purContract.setNoOfInstallments(FormUtil.readInt("No of Installments"));
+			purContract.setInterestRate(FormUtil.readInt("Interest Rate"));
+			
+			//_orm.persist(purContract);
+		}
+	}
+
+	private static void newPerson() {
+        Person person = new Person();
+        person.setFirstName(FormUtil.readString("First Name"));
+        person.setName(FormUtil.readString("Name"));
+        person.setAddress(FormUtil.readString("Address"));
+        
+        //_orm.persist(person);
+        System.out.println("Person with the Name " + person.getFirstName() +" "+person.getName() + " was created.");
+	}
+
+	/**
      * Checks the password for sudo-like menu areas.
      */
 	private static boolean checkPassword() {
@@ -261,34 +376,28 @@ public class Main {
         System.out.println("Modify Estate");
         printEstateDetails(estate);
     
-        estate.setStreet(FormUtil.readString("Street"));
-        estate.setStreetNumber(FormUtil.readInt("Street Number"));
-        estate.setPostalCode(FormUtil.readString("Postal Code"));
-        estate.setCity(FormUtil.readString("City"));
-        estate.setSquareArea(FormUtil.readInt("Square Area"));
+        estate.setStreet(FormUtil.readString("Street",estate.getStreet()));
+        estate.setStreetNumber(FormUtil.readInt("Street Number",estate.getStreetNumber()));
+        estate.setPostalCode(FormUtil.readString("Postal Code",estate.getPostalCode()));
+        estate.setCity(FormUtil.readString("City",estate.getCity()));
+        estate.setSquareArea(FormUtil.readInt("Square Area",estate.getSquareArea()));
     
         if(estate instanceof Apartment){
             Apartment apartment = (Apartment) estate;
-            apartment.setFloor(FormUtil.readInt("Floor"));
-            apartment.setRent(FormUtil.readInt("Rent"));
-            apartment.setRooms(FormUtil.readInt("Rooms"));
-            String input = FormUtil.readString("Balcony(Y/N)");
+            apartment.setFloor(FormUtil.readInt("Floor",apartment.getFloor()));
+            apartment.setRent(FormUtil.readInt("Rent",apartment.getRent()));
+            apartment.setRooms(FormUtil.readInt("Rooms",apartment.getRooms()));
+            String input = FormUtil.readString("Balcony(Y/N)",apartment.hasBalcony()?"Y":"N");
             apartment.setBalcony(input.equals("Y") || input.equals("y"));
-            input = FormUtil.readString("Built-in Kitchen(Y/N)");
+            input = FormUtil.readString("Built-in Kitchen(Y/N)",apartment.hasBuiltinKitchen()?"Y":"N");
             apartment.setBuiltinKitchen(input.equals("Y") || input.equals("y"));
         }
         else{
             House house = (House)estate;
         
-            estate.setCity(FormUtil.readString("Name"));
-            estate.setPostalCode(FormUtil.readString("Postal Code"));
-            estate.setStreet(FormUtil.readString("Street"));
-            estate.setStreetNumber(FormUtil.readInt("Street Number"));
-            estate.setSquareArea(FormUtil.readInt("Square Area"));
-        
-            house.setFloors(FormUtil.readInt("Floors"));
-            house.setPrice(FormUtil.readInt("Price"));
-            String input = FormUtil.readString("Garden(Y/N)");
+            house.setFloors(FormUtil.readInt("Floors",house.getFloors()));
+            house.setPrice(FormUtil.readInt("Price",house.getPrice()));
+            String input = FormUtil.readString("Garden(Y/N)",house.hasGarden()?"Y":"N");
             house.setGarden(input.equals("Y") || input.equals("y"));
         }
         
@@ -442,10 +551,10 @@ public class Main {
         System.out.println("Username: " + agent.getLogin());
         System.out.println("------------------");
 	    
-        agent.setName(FormUtil.readString("Name"));
-	    agent.setAddress(FormUtil.readString("Address"));
-	    agent.setLogin(FormUtil.readString("Username"));
-	    agent.setPassword(FormUtil.readPassword());
+        agent.setName(FormUtil.readString("Name",agent.getName()));
+	    agent.setAddress(FormUtil.readString("Address",agent.getAddress()));
+	    agent.setLogin(FormUtil.readString("Username",agent.getLogin()));
+	    agent.setPassword(FormUtil.readPassword(agent.getPassword()));
 	    
 	    _orm.persist(agent);
     

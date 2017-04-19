@@ -51,6 +51,18 @@ class FormUtil {
         password = String.valueOf(System.console().readPassword());
         return password;
     }
+	/**
+     * Reads a password from the console.
+     *
+     * @return the entered password
+     */
+	static String readPassword(String oldPassword) {
+	    String password;
+        System.out.print("Password: ");
+        password = String.valueOf(System.console().readPassword());
+        if(password.equals(""))return oldPassword;
+        return password;
+    }
     
     /**
      * Reads an integer from the console.
