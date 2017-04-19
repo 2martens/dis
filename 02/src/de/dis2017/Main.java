@@ -267,7 +267,7 @@ public class Main {
         estate.setCity(FormUtil.readString("City"));
         estate.setSquareArea(FormUtil.readInt("Square Area"));
     
-        if(estate instanceof Apartment){
+        if (estate instanceof Apartment) {
             Apartment apartment = (Apartment) estate;
             apartment.setFloor(FormUtil.readInt("Floor"));
             apartment.setRent(FormUtil.readInt("Rent"));
@@ -277,8 +277,8 @@ public class Main {
             input = FormUtil.readString("Built-in Kitchen(Y/N)");
             apartment.setBuiltinKitchen(input.equals("Y") || input.equals("y"));
         }
-        else{
-            House house = (House)estate;
+        else if (estate instanceof House){
+            House house = (House) estate;
         
             estate.setCity(FormUtil.readString("Name"));
             estate.setPostalCode(FormUtil.readString("Postal Code"));
