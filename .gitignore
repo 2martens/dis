@@ -14,3 +14,9 @@ hs_err_pid*
 # binary files
 out/
 bin/
+
+# IDE files
+.idea/
+.metadata/
+.classpath
+.project
