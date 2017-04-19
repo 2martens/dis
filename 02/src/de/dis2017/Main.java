@@ -138,8 +138,8 @@ public class Main {
         if(isApartment){
             Apartment apartment = (Apartment) estate;
             apartment.setFloor(FormUtil.readInt("Floor"));
-            apartment.setRent(FormUtil.readInt("Rent"));
             apartment.setRooms(FormUtil.readInt("Rooms"));
+            apartment.setRent(FormUtil.readInt("Rent"));
             input = FormUtil.readString("Balcony(Y/N)");
             apartment.setBalcony(input.equals("Y") || input.equals("y"));
             input = FormUtil.readString("Built-in Kitchen(Y/N)");
@@ -147,8 +147,8 @@ public class Main {
         }
         else{
             House house = (House) estate;
-            house.setFloors(FormUtil.readInt("Floors"));
             house.setPrice(FormUtil.readInt("Price"));
+            house.setFloors(FormUtil.readInt("Floors"));
             input = FormUtil.readString("Garden(Y/N)");
             house.setGarden(input.equals("Y") || input.equals("y"));
         }
@@ -292,8 +292,8 @@ public class Main {
         if (estate instanceof Apartment) {
             Apartment apartment = (Apartment) estate;
             apartment.setFloor(FormUtil.readInt("Floor"));
-            apartment.setRent(FormUtil.readInt("Rent"));
             apartment.setRooms(FormUtil.readInt("Rooms"));
+            apartment.setRent(FormUtil.readInt("Rent"));
             String input = FormUtil.readString("Balcony(Y/N)");
             apartment.setBalcony(input.equals("Y") || input.equals("y"));
             input = FormUtil.readString("Built-in Kitchen(Y/N)");
@@ -301,8 +301,8 @@ public class Main {
         }
         else if (estate instanceof House){
             House house = (House) estate;
-            house.setFloors(FormUtil.readInt("Floors"));
             house.setPrice(FormUtil.readInt("Price"));
+            house.setFloors(FormUtil.readInt("Floors"));
             String input = FormUtil.readString("Garden(Y/N)");
             house.setGarden(input.equals("Y") || input.equals("y"));
         }
