@@ -307,7 +307,7 @@ public class ORM {
     public void delete(EstateAgent agent)
     {
         if (agent.getId() == -1) {
-            System.err.println("This agent is not yet persisted to the dabase and cannot be deleted.");
+            System.err.println("This agent is not yet persisted to the database and cannot be deleted.");
             return;
         } else {
             // create query
@@ -319,6 +319,29 @@ public class ORM {
         }
         if (_agentsUsername.containsKey(agent.getLogin())) {
             _agentsUsername.remove(agent.getLogin(), agent);
+        }
+    }
+    
+    /**
+     * Deletes an estate from the database.
+     *
+     * @param estate the estate to be deleted
+     */
+    public void delete(Estate estate) {
+        if (estate.getId() == -1) {
+            System.err.println("This estate is not yet persisted to the database and cannot be deleted.");
+            return;
+        } else {
+            // create query
+            String deleteSQL = "DELETE FROM HOUSE WHERE ID = ?";
+            delete(deleteSQL, estate.getId());
+            deleteSQL = "DELETE FROM APARTMENT WHERE ID = ?";
+            delete(deleteSQL, estate.getId());
+            deleteSQL = "DELETE FROM ESTATE WHERE ID = ?";
+            delete(deleteSQL, estate.getId());
+        }
+        if (_estates.containsKey(estate.getId())) {
+            _estates.remove(estate.getId(), estate);
         }
     }
     
