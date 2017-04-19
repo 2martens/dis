@@ -406,19 +406,19 @@ public class Main {
     
         if (estate instanceof Apartment) {
             Apartment apartment = (Apartment) estate;
-            apartment.setFloor(FormUtil.readInt("Floor",apartment.getFloor()));
-            apartment.setRooms(FormUtil.readInt("Rooms",apartment.getRooms()));
-            apartment.setRent(FormUtil.readInt("Rent",apartment.getRent()));
-            String input = FormUtil.readString("Balcony(Y/N)",apartment.hasBalcony()?"Y":"N");
+            apartment.setFloor(FormUtil.readInt("Floor", apartment.getFloor()));
+            apartment.setRooms(FormUtil.readInt("Rooms", apartment.getRooms()));
+            apartment.setRent(FormUtil.readInt("Rent", apartment.getRent()));
+            String input = FormUtil.readString("Balcony(Y/N)", apartment.hasBalcony()?"Y":"N");
             apartment.setBalcony(input.equals("Y") || input.equals("y"));
-            input = FormUtil.readString("Built-in Kitchen(Y/N)",apartment.hasBuiltinKitchen()?"Y":"N");
+            input = FormUtil.readString("Built-in Kitchen(Y/N)", apartment.hasBuiltinKitchen()?"Y":"N");
             apartment.setBuiltinKitchen(input.equals("Y") || input.equals("y"));
         }
         else if (estate instanceof House){
             House house = (House) estate;
-            house.setFloors(FormUtil.readInt("Floors",house.getFloors()));
-            house.setPrice(FormUtil.readInt("Price",house.getPrice()));
-            String input = FormUtil.readString("Garden(Y/N)",house.hasGarden()?"Y":"N");
+            house.setFloors(FormUtil.readInt("Floors", house.getFloors()));
+            house.setPrice(FormUtil.readInt("Price", house.getPrice()));
+            String input = FormUtil.readString("Garden(Y/N)", house.hasGarden()?"Y":"N");
             house.setGarden(input.equals("Y") || input.equals("y"));
         }
         
@@ -572,9 +572,9 @@ public class Main {
         System.out.println("Username: " + agent.getLogin());
         System.out.println("------------------");
 	    
-        agent.setName(FormUtil.readString("Name",agent.getName()));
-	    agent.setAddress(FormUtil.readString("Address",agent.getAddress()));
-	    agent.setLogin(FormUtil.readString("Username",agent.getLogin()));
+        agent.setName(FormUtil.readString("Name", agent.getName()));
+	    agent.setAddress(FormUtil.readString("Address", agent.getAddress()));
+	    agent.setLogin(FormUtil.readString("Username", agent.getLogin()));
 	    agent.setPassword(FormUtil.readPassword(agent.getPassword()));
 	    
 	    _orm.persist(agent);
