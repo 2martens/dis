@@ -1,7 +1,9 @@
 package de.dis2017.data.db;
 
+import de.dis2017.data.Apartment;
 import de.dis2017.data.Estate;
 import de.dis2017.data.EstateAgent;
+import de.dis2017.data.House;
 import org.jetbrains.annotations.Nullable;
 
 import java.sql.*;
@@ -116,12 +118,108 @@ public class ORM {
     }
     
     /**
+     * Loads the estate with the given ID from database and returns the corresponding object.
+     *
+     * @param ID the id of the estate to load
+     * @return the Estate or null if there is no such object
+     */
+    public Estate getEstate(int ID) {
+        if (_estates.containsKey(ID)) {
+            return _estates.get(ID);
+        }
+    
+        String            selectSQLHouse = "SELECT * FROM HOUSE LEFT JOIN ESTATE ON HOUSE.ID = ESTATE.ID " +
+                                           "WHERE HOUSE.ID = ?";
+        String selectSQLApartment = "SELECT * FROM APARTMENT LEFT JOIN ESTATE ON APARTMENT.ID = ESTATE.ID " +
+                                    "WHERE APARTMENT.ID = ?";
+    
+        String countHouse = "SELECT COUNT(ID) AS count FROM HOUSE WHERE ID = ?";
+        String countApartment = "SELECT COUNT(ID) AS count FROM APARTMENT WHERE ID = ?";
+        try {
+            // try house first
+            PreparedStatement preparedStatementCount = _connection.prepareStatement(countHouse);
+            preparedStatementCount.setInt(1, ID);
+            ResultSet rs = preparedStatementCount.executeQuery();
+            rs.next();
+            int count = rs.getInt("count");
+            String type = "None";
+            if (count == 0) {
+                // try apartment next
+                preparedStatementCount = _connection.prepareStatement(countApartment);
+                preparedStatementCount.setInt(1, ID);
+                rs = preparedStatementCount.executeQuery();
+                rs.next();
+                count = rs.getInt("count");
+                if (count == 1) {
+                    type = "Apartment";
+                }
+            }
+            else {
+                type = "House";
+            }
+            rs.close();
+            preparedStatementCount.close();
+            
+            PreparedStatement pstmt;
+            Estate estate;
+            switch (type) {
+                case "House":
+                    pstmt = _connection.prepareStatement(selectSQLHouse);
+                    pstmt.setInt(1, ID);
+                    rs = pstmt.executeQuery();
+                    estate = new House();
+                    break;
+                case "Apartment":
+                    pstmt = _connection.prepareStatement(selectSQLApartment);
+                    pstmt.setInt(1, ID);
+                    rs = pstmt.executeQuery();
+                    estate = new Apartment();
+                    break;
+                default:
+                    return null;
+            }
+    
+            if (rs.next()) {
+                estate.setId(ID);
+                estate.setCity(rs.getString("city"));
+                estate.setPostalCode(rs.getString("postalCode"));
+                estate.setStreet(rs.getString("street"));
+                estate.setStreetNumber(rs.getInt("streetNumber"));
+                estate.setSquareArea(rs.getInt("squareArea"));
+                estate.setAgent(rs.getInt("agent"));
+                
+                if (estate instanceof House) {
+                    ((House) estate).setFloors(rs.getInt("floors"));
+                    ((House) estate).setGarden(rs.getBoolean("garden"));
+                    ((House) estate).setPrice(rs.getInt("price"));
+                }
+                if (estate instanceof Apartment) {
+                    ((Apartment) estate).setRent(rs.getInt("rent"));
+                    ((Apartment) estate).setFloor(rs.getInt("floor"));
+                    ((Apartment) estate).setRooms(rs.getInt("rooms"));
+                    ((Apartment) estate).setBalcony(rs.getBoolean("balcony"));
+                    ((Apartment) estate).setBuiltinKitchen(rs.getBoolean("builtInKitchen"));
+                }
+                
+                _estates.put(ID, estate);
+            }
+            rs.close();
+            pstmt.close();
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        
+        return null;
+    }
+    
+    /**
      * Loads the estate agent with the given ID from database and returns the corresponding object.
      *
      * @param ID the ID of the agent to load
      * @return the EstateAgent or null if there is no such agent
      */
-    public EstateAgent get(int ID) {
+    public EstateAgent getAgent(int ID) {
         if (_agents.containsKey(ID)) {
             return _agents.get(ID);
         }
@@ -132,7 +230,7 @@ public class ORM {
             PreparedStatement pstmt     = _connection.prepareStatement(selectSQL);
             pstmt.setInt(1, ID);
         
-            return get(pstmt);
+            return getAgent(pstmt);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -146,7 +244,7 @@ public class ORM {
      * @param username the username of the estate agent
      * @return the EstateAgent or null if there is no such agent
      */
-    public EstateAgent get(String username) {
+    public EstateAgent getAgent(String username) {
         if (_agentsUsername.containsKey(username)) {
             return _agentsUsername.get(username);
         }
@@ -157,7 +255,7 @@ public class ORM {
             PreparedStatement pstmt     = _connection.prepareStatement(selectSQL);
             pstmt.setString(1, username);
             
-            return get(pstmt);
+            return getAgent(pstmt);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -172,7 +270,7 @@ public class ORM {
      * @return the EstateAgent or null
      */
     @Nullable
-    private EstateAgent get(PreparedStatement pstmt)
+    private EstateAgent getAgent(PreparedStatement pstmt)
     {
         try {
             // execute query
