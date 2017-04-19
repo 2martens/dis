@@ -124,6 +124,8 @@ public class Main {
      * Creates a new estate agent after the usesr has entered the necessary data.
      */
     private static void newEstate() {
+        printListOfAgents();
+        
         String input = FormUtil.readString("Apartment(A)/House(H)");
         boolean isApartment = input.equals("A") || input.equals("a");
         Estate estate = new Estate();
@@ -132,6 +134,7 @@ public class Main {
         estate.setPostalCode(FormUtil.readString("Postal Code"));
         estate.setCity(FormUtil.readString("City"));
         estate.setSquareArea(FormUtil.readInt("Square Area"));
+        estate.setAgent(FormUtil.readInt("EstateAgent ID"));
         if(isApartment){
             Apartment apartment = (Apartment) estate;
             apartment.setFloor(FormUtil.readInt("Floor"));
@@ -255,6 +258,21 @@ public class Main {
     }
     
     /**
+     * Print a list of agents.
+     */
+    private static void printListOfAgents() {
+        List<?> agents = _orm.getAll(Type.ESTATEAGENT);
+        System.out.println("List of EstateAgents");
+        System.out.println("------------------");
+    
+        for (Object o : agents) {
+            EstateAgent agent = (EstateAgent) o;
+            System.out.println("ID: " + agent.getId() + ", Name: " + agent.getName());
+        }
+        System.out.println("------------------");
+    }
+    
+    /**
      * Modify estate.
      *
      * @param estate the modified estate
@@ -262,12 +280,14 @@ public class Main {
     private static void modifyEstate(Estate estate) {
         System.out.println("Modify Estate");
         printEstateDetails(estate);
+        printListOfAgents();
     
         estate.setStreet(FormUtil.readString("Street"));
         estate.setStreetNumber(FormUtil.readInt("Street Number"));
         estate.setPostalCode(FormUtil.readString("Postal Code"));
         estate.setCity(FormUtil.readString("City"));
         estate.setSquareArea(FormUtil.readInt("Square Area"));
+        estate.setAgent(FormUtil.readInt("EstateAgent ID"));
     
         if (estate instanceof Apartment) {
             Apartment apartment = (Apartment) estate;
