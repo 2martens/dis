@@ -200,11 +200,12 @@ public class ORM {
                     ((Apartment) estate).setBalcony(rs.getBoolean("balcony"));
                     ((Apartment) estate).setBuiltinKitchen(rs.getBoolean("builtInKitchen"));
                 }
-                
+    
+                rs.close();
+                pstmt.close();
                 _estates.put(ID, estate);
+                return estate;
             }
-            rs.close();
-            pstmt.close();
             
         } catch (SQLException e) {
             e.printStackTrace();
