@@ -484,6 +484,7 @@ public class ORM {
                 pstmt.setInt(4, estate.getStreetNumber());
                 pstmt.setInt(5, estate.getSquareArea());
                 pstmt.setInt(6, estate.getAgent());
+                pstmt.setInt(7, estate.getId());
                 
                 if (estate instanceof House) {
                     House house = (House) estate;
