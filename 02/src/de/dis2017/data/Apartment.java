@@ -25,13 +25,13 @@ public class Apartment extends Estate{
 	public void setRooms(int rooms) {
 		this.rooms = rooms;
 	}
-	public boolean isBalcony() {
+	public boolean hasBalcony() {
 		return balcony;
 	}
 	public void setBalcony(boolean balcony) {
 		this.balcony = balcony;
 	}
-	public boolean isBuiltinKitchen() {
+	public boolean hasBuiltinKitchen() {
 		return builtinKitchen;
 	}
 	public void setBuiltinKitchen(boolean builtinKitchen) {
