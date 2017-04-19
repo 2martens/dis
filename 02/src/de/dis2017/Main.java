@@ -235,6 +235,8 @@ public class Main {
         System.out.println("PostalCode: " + estate.getPostalCode());
         System.out.println("City: " + estate.getCity());
         System.out.println("SquareArea: " + estate.getSquareArea());
+        EstateAgent agent = _orm.getAgent(estate.getAgent());
+        System.out.println("Agent: " + agent.getName());
         if (estate instanceof House) {
             House house = (House) estate;
             System.out.println("Price: " + house.getPrice());
