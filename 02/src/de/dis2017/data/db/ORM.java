@@ -85,7 +85,6 @@ public class ORM {
             estate.setSquareArea(rs.getInt("squareArea"));
             estate.setAgent(rs.getInt("agent"));
         
-            _estates.put(estate.getId(), estate);
             estates.add(estate);
         }
         
@@ -411,6 +410,128 @@ public class ORM {
         }
         if (!_agentsUsername.containsKey(agent.getLogin())) {
             _agentsUsername.put(agent.getLogin(), agent);
+        }
+    }
+    
+    /**
+     * Persists the given estate.
+     *
+     * @param estate the estate that should be persisted
+     */
+    public void persist(Estate estate)
+    {
+        boolean changeFinished = false;
+        try {
+            _connection.setAutoCommit(false);
+            if (estate.getId() == -1) {
+                String insertSQL = "INSERT INTO ESTATE (city, postalCode, street, streetNumber, squareArea, agent) " +
+                                   "VALUES (?, ?, ?, ?, ?, ?)";
+                PreparedStatement pstmt = _connection.prepareStatement(insertSQL, Statement.RETURN_GENERATED_KEYS);
+                pstmt.setString(1, estate.getCity());
+                pstmt.setString(2, estate.getPostalCode());
+                pstmt.setString(3, estate.getStreet());
+                pstmt.setInt(4, estate.getStreetNumber());
+                pstmt.setInt(5, estate.getSquareArea());
+                pstmt.setInt(6, estate.getAgent());
+                pstmt.executeUpdate();
+                
+                ResultSet rs = pstmt.getGeneratedKeys();
+                if (rs.next()) {
+                    estate.setId(rs.getInt(1));
+                }
+                rs.close();
+                pstmt.close();
+                
+                if (estate instanceof House) {
+                    House house = (House) estate;
+                    String insertSQLHouse = "INSERT INTO HOUSE (ID, price, garden, floors) VALUES (?, ?, ?, ?)";
+                    PreparedStatement pstmtHouse = _connection.prepareStatement(insertSQLHouse);
+                    pstmtHouse.setInt(1, house.getId());
+                    pstmtHouse.setInt(2, house.getPrice());
+                    pstmtHouse.setInt(3, house.hasGarden() ? 1 : 0);
+                    pstmtHouse.setInt(4, house.getFloors());
+                    pstmt.executeUpdate();
+                    pstmtHouse.executeUpdate();
+                    pstmt.close();
+                    pstmtHouse.close();
+                    changeFinished = true;
+                }
+                else if (estate instanceof Apartment) {
+                    Apartment apartment = (Apartment) estate;
+                    String insertSQLApartment = "INSERT INTO APARTMENT (ID, floor, rent, rooms, balcony, builtInKitchen) " +
+                                                "VALUES (?, ?, ?, ?, ?, ?)";
+                    PreparedStatement pstmtApartment = _connection.prepareStatement(insertSQLApartment);
+                    pstmtApartment.setInt(1, apartment.getId());
+                    pstmtApartment.setInt(2, apartment.getFloor());
+                    pstmtApartment.setInt(3, apartment.getRent());
+                    pstmtApartment.setInt(4, apartment.getRooms());
+                    pstmtApartment.setInt(5, apartment.hasBalcony() ? 1 : 0);
+                    pstmtApartment.setInt(6, apartment.hasBuiltinKitchen() ? 1 : 0);
+                    pstmt.executeUpdate();
+                    pstmtApartment.executeUpdate();
+                    pstmt.close();
+                    pstmtApartment.close();
+                    changeFinished = true;
+                }
+            } else {
+                // create query
+                String updateSQL = "UPDATE ESTATE SET city = ?, postalCode = ?, street = ?, streetNumber = ?, " +
+                                   "squareArea = ?, agent = ? WHERE ID = ?";
+                PreparedStatement pstmt = _connection.prepareStatement(updateSQL);
+                pstmt.setString(1, estate.getCity());
+                pstmt.setString(2, estate.getPostalCode());
+                pstmt.setString(3, estate.getStreet());
+                pstmt.setInt(4, estate.getStreetNumber());
+                pstmt.setInt(5, estate.getSquareArea());
+                pstmt.setInt(6, estate.getAgent());
+                pstmt.setInt(7, estate.getId());
+                
+                if (estate instanceof House) {
+                    House house = (House) estate;
+                    String updateSQLHouse = "UPDATE HOUSE SET floors = ?, garden = ?, price = ? WHERE ID = ?";
+                    PreparedStatement pstmtHouse = _connection.prepareStatement(updateSQLHouse);
+                    pstmtHouse.setInt(1, house.getFloors());
+                    pstmtHouse.setInt(2, house.hasGarden() ? 1 : 0);
+                    pstmtHouse.setInt(3, house.getPrice());
+                    pstmtHouse.setInt(4, house.getId());
+                    pstmt.executeUpdate();
+                    pstmtHouse.executeUpdate();
+                    pstmt.close();
+                    pstmtHouse.close();
+                    changeFinished = true;
+                }
+                else if (estate instanceof Apartment) {
+                    Apartment apartment = (Apartment) estate;
+                    String updateSQLApartment = "UPDATE APARTMENT SET floor = ?, rent = ?, rooms = ?, " +
+                                                "balcony = ?, builtInKitchen = ? WHERE ID = ?";
+                    PreparedStatement pstmtApartment = _connection.prepareStatement(updateSQLApartment);
+                    pstmtApartment.setInt(1, apartment.getFloor());
+                    pstmtApartment.setInt(2, apartment.getRent());
+                    pstmtApartment.setInt(3, apartment.getRooms());
+                    pstmtApartment.setInt(4, apartment.hasBalcony() ? 1 : 0);
+                    pstmtApartment.setInt(5, apartment.hasBuiltinKitchen() ? 1 : 0);
+                    pstmtApartment.setInt(6, apartment.getId());
+                    pstmt.executeUpdate();
+                    pstmtApartment.executeUpdate();
+                    pstmt.close();
+                    pstmtApartment.close();
+                    changeFinished = true;
+                }
+            }
+            if (changeFinished) {
+                _connection.commit();
+                if (!_estates.containsKey(estate.getId())) {
+                    _estates.put(estate.getId(), estate);
+                }
+            }
+            _connection.setAutoCommit(true);
+        } catch (SQLException e) {
+            try {
+                _connection.rollback();
+            } catch (SQLException e1) {
+                e1.printStackTrace();
+            }
+            e.printStackTrace();
         }
     }
 }

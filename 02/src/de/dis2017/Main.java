@@ -239,6 +239,8 @@ public class Main {
      * Creates a new estate agent after the usesr has entered the necessary data.
      */
     private static void newEstate() {
+        printListOfAgents();
+        
         String input = FormUtil.readString("Apartment(A)/House(H)");
         boolean isApartment = input.equals("A") || input.equals("a");
         Estate estate = new Estate();
@@ -247,11 +249,12 @@ public class Main {
         estate.setPostalCode(FormUtil.readString("Postal Code"));
         estate.setCity(FormUtil.readString("City"));
         estate.setSquareArea(FormUtil.readInt("Square Area"));
+        estate.setAgent(FormUtil.readInt("EstateAgent ID"));
         if(isApartment){
             Apartment apartment = (Apartment) estate;
             apartment.setFloor(FormUtil.readInt("Floor"));
-            apartment.setRent(FormUtil.readInt("Rent"));
             apartment.setRooms(FormUtil.readInt("Rooms"));
+            apartment.setRent(FormUtil.readInt("Rent"));
             input = FormUtil.readString("Balcony(Y/N)");
             apartment.setBalcony(input.equals("Y") || input.equals("y"));
             input = FormUtil.readString("Built-in Kitchen(Y/N)");
@@ -259,8 +262,8 @@ public class Main {
         }
         else{
             House house = (House) estate;
-            house.setFloors(FormUtil.readInt("Floors"));
             house.setPrice(FormUtil.readInt("Price"));
+            house.setFloors(FormUtil.readInt("Floors"));
             input = FormUtil.readString("Garden(Y/N)");
             house.setGarden(input.equals("Y") || input.equals("y"));
         }
@@ -350,6 +353,8 @@ public class Main {
         System.out.println("PostalCode: " + estate.getPostalCode());
         System.out.println("City: " + estate.getCity());
         System.out.println("SquareArea: " + estate.getSquareArea());
+        EstateAgent agent = _orm.getAgent(estate.getAgent());
+        System.out.println("Agent: " + agent.getName());
         if (estate instanceof House) {
             House house = (House) estate;
             System.out.println("Price: " + house.getPrice());
@@ -368,6 +373,21 @@ public class Main {
     }
     
     /**
+     * Print a list of agents.
+     */
+    private static void printListOfAgents() {
+        List<?> agents = _orm.getAll(Type.ESTATEAGENT);
+        System.out.println("List of EstateAgents");
+        System.out.println("------------------");
+    
+        for (Object o : agents) {
+            EstateAgent agent = (EstateAgent) o;
+            System.out.println("ID: " + agent.getId() + ", Name: " + agent.getName());
+        }
+        System.out.println("------------------");
+    }
+    
+    /**
      * Modify estate.
      *
      * @param estate the modified estate
@@ -375,33 +395,34 @@ public class Main {
     private static void modifyEstate(Estate estate) {
         System.out.println("Modify Estate");
         printEstateDetails(estate);
+        printListOfAgents();
     
-        estate.setStreet(FormUtil.readString("Street",estate.getStreet()));
-        estate.setStreetNumber(FormUtil.readInt("Street Number",estate.getStreetNumber()));
-        estate.setPostalCode(FormUtil.readString("Postal Code",estate.getPostalCode()));
-        estate.setCity(FormUtil.readString("City",estate.getCity()));
-        estate.setSquareArea(FormUtil.readInt("Square Area",estate.getSquareArea()));
+        estate.setStreet(FormUtil.readString("Street", estate.getStreet()));
+        estate.setStreetNumber(FormUtil.readInt("Street Number", estate.getStreetNumber()));
+        estate.setPostalCode(FormUtil.readString("Postal Code", estate.getPostalCode()));
+        estate.setCity(FormUtil.readString("City", estate.getCity()));
+        estate.setSquareArea(FormUtil.readInt("Square Area", estate.getSquareArea()));
+        estate.setAgent(FormUtil.readInt("EstateAgent ID", estate.getAgent()));
     
-        if(estate instanceof Apartment){
+        if (estate instanceof Apartment) {
             Apartment apartment = (Apartment) estate;
             apartment.setFloor(FormUtil.readInt("Floor",apartment.getFloor()));
-            apartment.setRent(FormUtil.readInt("Rent",apartment.getRent()));
             apartment.setRooms(FormUtil.readInt("Rooms",apartment.getRooms()));
+            apartment.setRent(FormUtil.readInt("Rent",apartment.getRent()));
             String input = FormUtil.readString("Balcony(Y/N)",apartment.hasBalcony()?"Y":"N");
             apartment.setBalcony(input.equals("Y") || input.equals("y"));
             input = FormUtil.readString("Built-in Kitchen(Y/N)",apartment.hasBuiltinKitchen()?"Y":"N");
             apartment.setBuiltinKitchen(input.equals("Y") || input.equals("y"));
         }
-        else{
-            House house = (House)estate;
-        
+        else if (estate instanceof House){
+            House house = (House) estate;
             house.setFloors(FormUtil.readInt("Floors",house.getFloors()));
             house.setPrice(FormUtil.readInt("Price",house.getPrice()));
             String input = FormUtil.readString("Garden(Y/N)",house.hasGarden()?"Y":"N");
             house.setGarden(input.equals("Y") || input.equals("y"));
         }
         
-        //_orm.persist(estate);
+        _orm.persist(estate);
         
         System.out.println("------------------");
         System.out.println("Estate with the ID " + estate.getId() + " was modified.");
