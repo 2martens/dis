@@ -10,6 +10,7 @@ public class Estate {
 	private String street;
 	private int streetNumber;
 	private int squareArea;
+	private int agent;
 	
 	public int getId() {
 		return id;
@@ -58,4 +59,8 @@ public class Estate {
 	public void setSquareArea(int squareArea) {
 		this.squareArea = squareArea;
 	}
+	
+	public int getAgent() { return agent; }
+	
+	public void setAgent(int agent) { this.agent = agent; }
 }
