@@ -1,6 +1,7 @@
 package de.dis2017.data.db;
 
 import de.dis2017.data.EstateAgent;
+import org.jetbrains.annotations.Nullable;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -15,6 +16,7 @@ public class ORM {
     private Connection _connection;
     
     private Map<Integer, EstateAgent> _agents;
+    private Map<String, EstateAgent> _agentsUsername;
     
     /**
      * Initializes the ORM.
@@ -23,6 +25,7 @@ public class ORM {
         DB2ConnectionManager _dbManager = DB2ConnectionManager.getInstance();
         _connection = _dbManager.getConnection();
         _agents = new HashMap<>();
+        _agentsUsername = new HashMap<>();
     }
     
     /**
@@ -49,6 +52,7 @@ public class ORM {
                 agent.setPassword(rs.getString("password"));
     
                 _agents.put(agent.getId(), agent);
+                _agentsUsername.put(agent.getLogin(), agent);
                 agents.add(agent);
             }
             rs.close();
@@ -64,7 +68,7 @@ public class ORM {
      * Loads the estate agent with the given ID from database and returns the corresponding object.
      *
      * @param ID the ID of the agent to load
-     * @return returns the EstateAgent or null if there is no such agent
+     * @return the EstateAgent or null if there is no such agent
      */
     public EstateAgent get(int ID) {
         if (_agents.containsKey(ID)) {
@@ -77,12 +81,55 @@ public class ORM {
             PreparedStatement pstmt     = _connection.prepareStatement(selectSQL);
             pstmt.setInt(1, ID);
         
+            return get(pstmt);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        
+        return null;
+    }
+    
+    /**
+     * Loads the estate agent with the given username from database and returns the corresponding object,
+     *
+     * @param username the username of the estate agent
+     * @return the EstateAgent or null if there is no such agent
+     */
+    public EstateAgent get(String username) {
+        if (_agentsUsername.containsKey(username)) {
+            return _agentsUsername.get(username);
+        }
+        
+        try {
+            // create query
+            String            selectSQL = "SELECT * FROM ESTATEAGENT WHERE login = ?";
+            PreparedStatement pstmt     = _connection.prepareStatement(selectSQL);
+            pstmt.setString(1, username);
+            
+            return get(pstmt);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        
+        return null;
+    }
+    
+    /**
+     * Executes the given statement and returns an estate agent.
+     *
+     * @param pstmt the prepared statement with parameters already set
+     * @return the EstateAgent or null
+     */
+    @Nullable
+    private EstateAgent get(PreparedStatement pstmt)
+    {
+        try {
             // execute query
-            ResultSet rs = pstmt.executeQuery();
+            ResultSet   rs = pstmt.executeQuery();
             EstateAgent agent;
             if (rs.next()) {
                 agent = new EstateAgent();
-                agent.setId(ID);
+                agent.setId(rs.getInt("ID"));
                 agent.setName(rs.getString("name"));
                 agent.setAddress(rs.getString("address"));
                 agent.setLogin(rs.getString("login"));
@@ -90,8 +137,9 @@ public class ORM {
     
                 rs.close();
                 pstmt.close();
-                
-                _agents.put(ID, agent);
+    
+                _agents.put(agent.getId(), agent);
+                _agentsUsername.put(agent.getLogin(), agent);
                 return agent;
             }
         } catch (SQLException e) {
@@ -108,25 +156,39 @@ public class ORM {
      */
     public void delete(EstateAgent agent)
     {
-        try {
-            if (agent.getId() == -1) {
-                System.err.println("This agent is not yet persisted to the dabase and cannot be deleted.");
-                return;
-            } else {
-                // create query
-                String updateSQL = "DELETE FROM ESTATEAGENT WHERE ID = ?";
-                PreparedStatement pstmt = _connection.prepareStatement(updateSQL);
-                pstmt.setInt(1, agent.getId());
-            
-                // execute query
-                pstmt.executeUpdate();
-                pstmt.close();
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
+        if (agent.getId() == -1) {
+            System.err.println("This agent is not yet persisted to the dabase and cannot be deleted.");
+            return;
+        } else {
+            // create query
+            String deleteSQL = "DELETE FROM ESTATEAGENT WHERE ID = ?";
+            delete(deleteSQL, agent.getId());
         }
         if (_agents.containsKey(agent.getId())) {
             _agents.remove(agent.getId(), agent);
+        }
+        if (_agentsUsername.containsKey(agent.getLogin())) {
+            _agentsUsername.remove(agent.getLogin(), agent);
+        }
+    }
+    
+    /**
+     * Deletes an object from the database.
+     *
+     * @param sql the sql used for deletion
+     * @param id the id of the object to be deleted
+     */
+    private void delete(String sql, int id)
+    {
+        try {
+            PreparedStatement pstmt = _connection.prepareStatement(sql);
+            pstmt.setInt(1, id);
+    
+            // execute query
+            pstmt.executeUpdate();
+            pstmt.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
     
@@ -173,6 +235,9 @@ public class ORM {
         }
         if (!_agents.containsKey(agent.getId())) {
             _agents.put(agent.getId(), agent);
+        }
+        if (!_agentsUsername.containsKey(agent.getLogin())) {
+            _agentsUsername.put(agent.getLogin(), agent);
         }
     }
 }
