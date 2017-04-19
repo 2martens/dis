@@ -292,7 +292,7 @@ public class Main {
             house.setGarden(input.equals("Y") || input.equals("y"));
         }
         
-        //_orm.persist(estate);
+        _orm.persist(estate);
         
         System.out.println("------------------");
         System.out.println("Estate with the ID " + estate.getId() + " was modified.");
