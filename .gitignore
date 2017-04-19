@@ -20,3 +20,4 @@ bin/
 .metadata/
 .classpath
 .project
+.recommenders/
