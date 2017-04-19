@@ -1,5 +1,6 @@
 package de.dis2017.data.db;
 
+import de.dis2017.data.Estate;
 import de.dis2017.data.EstateAgent;
 import org.jetbrains.annotations.Nullable;
 
@@ -29,22 +30,45 @@ public class ORM {
     }
     
     /**
-     * Loads all estate agents from the database and returns a list with them.
+     * Loads all objects from the database and returns a list of them.
      *
-     * @return a list of estate agents
+     * @param objectType the type of objects to load
+     * @return a list of objects
      */
-    public List<EstateAgent> getAll() {
-        List<EstateAgent> agents = new ArrayList<>();
+    public List<?> getAll(Type objectType) {
+        List<?> objects = new ArrayList<>();
         try {
             // create query
-            String            selectSQL = "SELECT * FROM ESTATEAGENT";
+            String            selectSQL = "SELECT * FROM " + objectType.name();
             PreparedStatement pstmt     = _connection.prepareStatement(selectSQL);
     
             // execute query
             ResultSet rs = pstmt.executeQuery();
-            EstateAgent agent;
+            switch (objectType) {
+                case ESTATEAGENT:
+                    objects = processAgents(rs);
+                    break;
+            }
+            rs.close();
+            pstmt.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        
+        return objects;
+    }
+    
+    /**
+     * Processes a select all query for estate agents.
+     *
+     * @param rs the result set of such a query
+     * @return a list of agents
+     */
+    private List<EstateAgent> processAgents(ResultSet rs) {
+        List<EstateAgent> agents = new ArrayList<>();
+        try {
             while (rs.next()) {
-                agent = new EstateAgent();
+                EstateAgent agent = new EstateAgent();
                 agent.setId(rs.getInt("ID"));
                 agent.setName(rs.getString("name"));
                 agent.setAddress(rs.getString("address"));
@@ -55,8 +79,6 @@ public class ORM {
                 _agentsUsername.put(agent.getLogin(), agent);
                 agents.add(agent);
             }
-            rs.close();
-            pstmt.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
