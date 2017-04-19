@@ -276,10 +276,10 @@ public class Main {
         System.out.println("Modify Estate");
         printEstateDetails(estate);
     
-        estate.setCity(FormUtil.readString("City"));
-        estate.setPostalCode(FormUtil.readString("Postal Code"));
         estate.setStreet(FormUtil.readString("Street"));
         estate.setStreetNumber(FormUtil.readInt("Street Number"));
+        estate.setPostalCode(FormUtil.readString("Postal Code"));
+        estate.setCity(FormUtil.readString("City"));
         estate.setSquareArea(FormUtil.readInt("Square Area"));
     
         if(estate instanceof Apartment){
