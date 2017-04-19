@@ -30,7 +30,7 @@ class FormUtil {
 		BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in));
 
 		try {
-			System.out.print(label+": ");
+			System.out.print(label + (!defaultValue.isEmpty() ? "[" + defaultValue + "]" : "") + ": ");
 			ret = stdin.readLine();
 			ret = ret.isEmpty() ? defaultValue : ret;
 		} catch (IOException e) {
