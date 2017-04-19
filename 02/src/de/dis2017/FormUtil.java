@@ -57,11 +57,8 @@ class FormUtil {
      * @return the entered password
      */
 	static String readPassword(String oldPassword) {
-	    String password;
-        System.out.print("Password: ");
-        password = String.valueOf(System.console().readPassword());
-        if(password.equals(""))return oldPassword;
-        return password;
+	    String password = readPassword();
+	    return password.isEmpty() ? oldPassword : password;
     }
     
     /**
