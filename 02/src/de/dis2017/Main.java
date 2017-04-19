@@ -84,7 +84,7 @@ public class Main {
         System.out.println("Please insert the username and password of a valid estate agent.");
         String      username      = FormUtil.readString("Username");
         String      passwordInput = FormUtil.readPassword();
-        EstateAgent agent         = _orm.get(username);
+        EstateAgent agent         = _orm.getAgent(username);
         return agent != null && agent.getPassword().equals(passwordInput);
     }
 	
@@ -112,119 +112,216 @@ public class Main {
 					newEstate();
 					break;
 				case LIST_ESTATES:
-					//listEstates();
+					listEstates();
 					break;
 				case BACK:
 					return;
 			}
 		}
 	}
-	
-	/**
-	 * Creates a new estate agent after the usesr has entered the necessary data.
-	 */
-	private static void newEstate() {
-		String input = FormUtil.readString("Apartmnet(A)/House(H)");
-		boolean apartment = input.equals("A") || input.equals("a");
-		if(apartment){
-			Apartment estate = new Apartment();
-			
-			estate.setCity(FormUtil.readString("Name"));
-			estate.setPostalCode(FormUtil.readString("Postal Code"));
-			estate.setStreet(FormUtil.readString("Street"));
-			estate.setStreetNumber(FormUtil.readInt("Street Number"));
-			estate.setSquareArea(FormUtil.readInt("Square Area"));
-
-			estate.setFloor(FormUtil.readInt("Floor"));
-			estate.setRent(FormUtil.readInt("Rent"));
-			estate.setRooms(FormUtil.readInt("Rooms"));
-			input = FormUtil.readString("Balcony(Y/N)");
-			estate.setBalcony(input.equals("Y") || input.equals("y"));
-			input = FormUtil.readString("Built-in Kitchen(Y/N)");
-			estate.setBuiltinKitchen(input.equals("Y") || input.equals("y"));
-			
-			//_orm.persist(estate);
-			
-			System.out.println("Estate with the ID " + estate.getId() + " was created.");
-		}
-		else{
-			House estate = new House();
-			
-			estate.setCity(FormUtil.readString("Name"));
-			estate.setPostalCode(FormUtil.readString("Postal Code"));
-			estate.setStreet(FormUtil.readString("Street"));
-			estate.setStreetNumber(FormUtil.readInt("Street Number"));
-			estate.setSquareArea(FormUtil.readInt("Square Area"));
-
-			estate.setFloors(FormUtil.readInt("Floors"));
-			estate.setPrice(FormUtil.readInt("Price"));
-			input = FormUtil.readString("Garden(Y/N)");
-			estate.setGarden(input.equals("Y") || input.equals("y"));
-			
-			//_orm.persist(estate);
-			
-			System.out.println("Estate with the ID " + estate.getId() + " was created.");
-		}
-	}
-	
-	/**
-	 * TODO Change an estate agent after the user has entered the necessary data.
-	 */
-	private static void changeEstate() {
-		//Choose Estate from List
-		Estate estate = new Estate();//choosen Estate
-		
-		estate.setCity(FormUtil.readString("Name"));
-		estate.setPostalCode(FormUtil.readString("Postal Code"));
-		estate.setStreet(FormUtil.readString("Street"));
-		estate.setStreetNumber(FormUtil.readInt("Street Number"));
-		estate.setSquareArea(FormUtil.readInt("Square Area"));
-		
-		if(estate instanceof Apartment){
-			Apartment apartment = (Apartment) estate;
-			
-
-			apartment.setFloor(FormUtil.readInt("Floor"));
-			apartment.setRent(FormUtil.readInt("Rent"));
-			apartment.setRooms(FormUtil.readInt("Rooms"));
-			String input = FormUtil.readString("Balcony(Y/N)");
-			apartment.setBalcony(input.equals("Y") || input.equals("y"));
-			input = FormUtil.readString("Built-in Kitchen(Y/N)");
-			apartment.setBuiltinKitchen(input.equals("Y") || input.equals("y"));
-			
-			//_orm.persist(apartment);
-			
-			System.out.println("Estate with the ID " + estate.getId() + " was updated.");
-		}
-		else{
-			House house = (House)estate;
-			
-			estate.setCity(FormUtil.readString("Name"));
-			estate.setPostalCode(FormUtil.readString("Postal Code"));
-			estate.setStreet(FormUtil.readString("Street"));
-			estate.setStreetNumber(FormUtil.readInt("Street Number"));
-			estate.setSquareArea(FormUtil.readInt("Square Area"));
-
-			house.setFloors(FormUtil.readInt("Floors"));
-			house.setPrice(FormUtil.readInt("Price"));
-			String input = FormUtil.readString("Garden(Y/N)");
-			house.setGarden(input.equals("Y") || input.equals("y"));
-			
-			//_orm.persist(house);
-			
-			System.out.println("Estate with the ID " + estate.getId() + " was updated.");
-		}
-	}
-	
-	/**
-	 * TODO Deletes an estate.
-	 */
-	private static void deleteEstate() {
-		//Choose estate from list.
-		Estate estate = new Apartment();//choosen estate.
-		//Delete Agent
-		System.out.println("Estate with the ID " + estate.getId() + " was deleted.");
-	}
+    
+    /**
+     * Creates a new estate agent after the usesr has entered the necessary data.
+     */
+    private static void newEstate() {
+        String input = FormUtil.readString("Apartment(A)/House(H)");
+        boolean isApartment = input.equals("A") || input.equals("a");
+        Estate estate;
+        if(isApartment){
+            estate = new Apartment();
+            
+            estate.setCity(FormUtil.readString("Name"));
+            estate.setPostalCode(FormUtil.readString("Postal Code"));
+            estate.setStreet(FormUtil.readString("Street"));
+            estate.setStreetNumber(FormUtil.readInt("Street Number"));
+            estate.setSquareArea(FormUtil.readInt("Square Area"));
+            
+            Apartment apartment = (Apartment) estate;
+            apartment.setFloor(FormUtil.readInt("Floor"));
+            apartment.setRent(FormUtil.readInt("Rent"));
+            apartment.setRooms(FormUtil.readInt("Rooms"));
+            input = FormUtil.readString("Balcony(Y/N)");
+            apartment.setBalcony(input.equals("Y") || input.equals("y"));
+            input = FormUtil.readString("Built-in Kitchen(Y/N)");
+            apartment.setBuiltinKitchen(input.equals("Y") || input.equals("y"));
+            
+            //_orm.persist(estate);
+            
+            System.out.println("Estate with the ID " + estate.getId() + " was created.");
+        }
+        else{
+            estate = new House();
+            
+            estate.setCity(FormUtil.readString("Name"));
+            estate.setPostalCode(FormUtil.readString("Postal Code"));
+            estate.setStreet(FormUtil.readString("Street"));
+            estate.setStreetNumber(FormUtil.readInt("Street Number"));
+            estate.setSquareArea(FormUtil.readInt("Square Area"));
+            
+            House house = (House) estate;
+            house.setFloors(FormUtil.readInt("Floors"));
+            house.setPrice(FormUtil.readInt("Price"));
+            input = FormUtil.readString("Garden(Y/N)");
+            house.setGarden(input.equals("Y") || input.equals("y"));
+        }
+        
+        //_orm.persist(estate);
+        System.out.println("Estate with the ID " + estate.getId() + " was created.");
+    }
+    
+    /**
+     * Lists estates.
+     */
+	private static void listEstates() {
+	    List<?> estates = _orm.getAll(Type.ESTATE);
+        Menu listEstates = new Menu("Please select the estate you want to modify or delete");
+        System.out.println("List of Estates");
+        
+        final int BACK = 0;
+        
+        for (Object o : estates) {
+            Estate estate = (Estate) o;
+            listEstates.addEntry("ID: " + estate.getId() + ", Address: " + estate.getStreet() + " "
+                                 + estate.getStreetNumber() + ", " + estate.getPostalCode() + " " + estate.getCity(),
+                                 estate.getId());
+        }
+        listEstates.addEntry("Back to the Estate management menu", BACK);
+        
+        // process input
+        while(true) {
+            int response = listEstates.show();
+            
+            switch (response) {
+                case BACK:
+                    return;
+                default:
+                    showEstate(response);
+                    break;
+            }
+        }
+	    
+    }
+    
+    /**
+     * Shows a selected estate.
+     *
+     * @param id the id of the selected estate
+     */
+    private static void showEstate(int id) {
+        Estate estate = _orm.getEstate(id);
+        
+        System.out.println("Estate");
+        printEstateDetails(estate);
+        
+        final int MODIFY = 1;
+        final int DELETE = 2;
+        final int BACK = 3;
+        
+        Menu showEstateMenu = new Menu("Do you want to modify or delete the estate?");
+        showEstateMenu.addEntry("Modify", MODIFY);
+        showEstateMenu.addEntry("Delete", DELETE);
+        showEstateMenu.addEntry("Back to the list of estates", BACK);
+        
+        while(true) {
+            int response = showEstateMenu.show();
+            
+            switch (response) {
+                case MODIFY:
+                    modifyEstate(estate);
+                    break;
+                case DELETE:
+                    deleteEstate(estate);
+                    break;
+                case BACK:
+                    return;
+            }
+        }
+    }
+    
+    /**
+     * Prints the estate details to command line.
+     *
+     * @param estate the estate from which the details should be printed to commandline
+     */
+    private static void printEstateDetails(Estate estate) {
+        System.out.println("------------------");
+        System.out.println("ID: " + estate.getId());
+        System.out.println("Street: " + estate.getStreet() + " " + estate.getStreetNumber());
+        System.out.println("PostalCode: " + estate.getPostalCode());
+        System.out.println("City: " + estate.getCity());
+        System.out.println("SquareArea: " + estate.getSquareArea());
+        if (estate instanceof House) {
+            House house = (House) estate;
+            System.out.println("Price: " + house.getPrice());
+            System.out.println("Floors: " + house.getFloors());
+            System.out.println("Garden: " + (house.hasGarden() ? "yes" : "false"));
+        }
+        else if (estate instanceof Apartment) {
+            Apartment apartment = (Apartment) estate;
+            System.out.println("Floor: " + apartment.getFloor());
+            System.out.println("Rooms: " + apartment.getRooms());
+            System.out.println("Rent: " + apartment.getRent());
+            System.out.println("Balcony: " + (apartment.hasBalcony() ? "yes" : "no"));
+            System.out.println("Built-in Kitchen: " + (apartment.hasBuiltinKitchen() ? "yes" : "no"));
+        }
+        System.out.println("------------------");
+    }
+    
+    /**
+     * Modify estate.
+     *
+     * @param estate the modified estate
+     */
+    private static void modifyEstate(Estate estate) {
+        System.out.println("Modify Estate");
+        printEstateDetails(estate);
+    
+        estate.setCity(FormUtil.readString("Name"));
+        estate.setPostalCode(FormUtil.readString("Postal Code"));
+        estate.setStreet(FormUtil.readString("Street"));
+        estate.setStreetNumber(FormUtil.readInt("Street Number"));
+        estate.setSquareArea(FormUtil.readInt("Square Area"));
+    
+        if(estate instanceof Apartment){
+            Apartment apartment = (Apartment) estate;
+            apartment.setFloor(FormUtil.readInt("Floor"));
+            apartment.setRent(FormUtil.readInt("Rent"));
+            apartment.setRooms(FormUtil.readInt("Rooms"));
+            String input = FormUtil.readString("Balcony(Y/N)");
+            apartment.setBalcony(input.equals("Y") || input.equals("y"));
+            input = FormUtil.readString("Built-in Kitchen(Y/N)");
+            apartment.setBuiltinKitchen(input.equals("Y") || input.equals("y"));
+        }
+        else{
+            House house = (House)estate;
+        
+            estate.setCity(FormUtil.readString("Name"));
+            estate.setPostalCode(FormUtil.readString("Postal Code"));
+            estate.setStreet(FormUtil.readString("Street"));
+            estate.setStreetNumber(FormUtil.readInt("Street Number"));
+            estate.setSquareArea(FormUtil.readInt("Square Area"));
+        
+            house.setFloors(FormUtil.readInt("Floors"));
+            house.setPrice(FormUtil.readInt("Price"));
+            String input = FormUtil.readString("Garden(Y/N)");
+            house.setGarden(input.equals("Y") || input.equals("y"));
+        }
+        
+        //_orm.persist(estate);
+        
+        System.out.println("------------------");
+        System.out.println("Estate with the ID " + estate.getId() + " was modified.");
+    }
+    
+    /**
+     * Deletes an estate.
+     *
+     * @param estate the estate that should be deleted
+     */
+    private static void deleteEstate(Estate estate) {
+        _orm.delete(estate);
+        System.out.println("Estate with the ID " + estate.getId() + " was deleted.");
+    }
 	
 	/**
 	 * Shows the estate agent management.
@@ -311,7 +408,7 @@ public class Main {
      * @param id the id of the selected agent
      */
     private static void showEstateAgent(int id) {
-        EstateAgent agent = _orm.get(id);
+        EstateAgent agent = _orm.getAgent(id);
     
         System.out.println("EstateAgent");
         System.out.println("------------------");
