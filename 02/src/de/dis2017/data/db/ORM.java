@@ -18,6 +18,7 @@ public class ORM {
     
     private Map<Integer, EstateAgent> _agents;
     private Map<String, EstateAgent> _agentsUsername;
+    private Map<Integer, Estate> _estates;
     
     /**
      * Initializes the ORM.
@@ -27,6 +28,7 @@ public class ORM {
         _connection = _dbManager.getConnection();
         _agents = new HashMap<>();
         _agentsUsername = new HashMap<>();
+        _estates = new HashMap<>();
     }
     
     /**
@@ -48,6 +50,9 @@ public class ORM {
                 case ESTATEAGENT:
                     objects = processAgents(rs);
                     break;
+                case ESTATE:
+                    objects = processEstates(rs);
+                    break;
             }
             rs.close();
             pstmt.close();
@@ -59,28 +64,52 @@ public class ORM {
     }
     
     /**
+     * Process a select all query for estates.
+     *
+     * @param rs the result set of such a query
+     * @return a list of estates
+     * @throws SQLException when an error occurs during the rs.next call
+     */
+    private List<Estate> processEstates(ResultSet rs) throws SQLException {
+        List<Estate> estates = new ArrayList<>();
+    
+        while (rs.next()) {
+            Estate estate = new Estate();
+            estate.setId(rs.getInt("ID"));
+            estate.setCity(rs.getString("city"));
+            estate.setPostalCode(rs.getString("postalCode"));
+            estate.setStreet(rs.getString("street"));
+            estate.setStreetNumber(rs.getInt("streetNumber"));
+            estate.setSquareArea(rs.getInt("squareArea"));
+            estate.setAgent(rs.getInt("agent"));
+        
+            _estates.put(estate.getId(), estate);
+            estates.add(estate);
+        }
+        
+        return estates;
+    }
+    
+    /**
      * Processes a select all query for estate agents.
      *
      * @param rs the result set of such a query
      * @return a list of agents
+     * @throws SQLException when an error occurs during the rs.next call
      */
-    private List<EstateAgent> processAgents(ResultSet rs) {
+    private List<EstateAgent> processAgents(ResultSet rs) throws SQLException {
         List<EstateAgent> agents = new ArrayList<>();
-        try {
-            while (rs.next()) {
-                EstateAgent agent = new EstateAgent();
-                agent.setId(rs.getInt("ID"));
-                agent.setName(rs.getString("name"));
-                agent.setAddress(rs.getString("address"));
-                agent.setLogin(rs.getString("login"));
-                agent.setPassword(rs.getString("password"));
-    
-                _agents.put(agent.getId(), agent);
-                _agentsUsername.put(agent.getLogin(), agent);
-                agents.add(agent);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
+        while (rs.next()) {
+            EstateAgent agent = new EstateAgent();
+            agent.setId(rs.getInt("ID"));
+            agent.setName(rs.getString("name"));
+            agent.setAddress(rs.getString("address"));
+            agent.setLogin(rs.getString("login"));
+            agent.setPassword(rs.getString("password"));
+
+            _agents.put(agent.getId(), agent);
+            _agentsUsername.put(agent.getLogin(), agent);
+            agents.add(agent);
         }
         
         return agents;
