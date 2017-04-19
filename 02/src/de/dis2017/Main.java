@@ -279,13 +279,6 @@ public class Main {
         }
         else if (estate instanceof House){
             House house = (House) estate;
-        
-            estate.setCity(FormUtil.readString("Name"));
-            estate.setPostalCode(FormUtil.readString("Postal Code"));
-            estate.setStreet(FormUtil.readString("Street"));
-            estate.setStreetNumber(FormUtil.readInt("Street Number"));
-            estate.setSquareArea(FormUtil.readInt("Square Area"));
-        
             house.setFloors(FormUtil.readInt("Floors"));
             house.setPrice(FormUtil.readInt("Price"));
             String input = FormUtil.readString("Garden(Y/N)");
