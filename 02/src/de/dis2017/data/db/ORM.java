@@ -85,7 +85,6 @@ public class ORM {
             estate.setSquareArea(rs.getInt("squareArea"));
             estate.setAgent(rs.getInt("agent"));
         
-            _estates.put(estate.getId(), estate);
             estates.add(estate);
         }
         
