@@ -51,7 +51,12 @@ public class Main {
 				    }
 					break;
 				case MENU_ESTATES:
-					showEstateMenu();
+				    if (loginEstateAgent()) {
+                        showEstateMenu();
+                    }
+                    else {
+				        System.out.println("The username or password was wrong.");
+                    }
 					break;
 				case QUIT:
 					return;
@@ -68,6 +73,19 @@ public class Main {
         String sudoPassword = "ea-sudo";
         return sudoPassword.equals(passwordInput);
 	}
+    
+    /**
+     * Performs a login for an estate agent.
+     *
+     * @return true if the login is successful, false otherwise
+     */
+	private static boolean loginEstateAgent() {
+        System.out.println("Please insert the username and password of a valid estate agent.");
+        String      username      = FormUtil.readString("Username");
+        String      passwordInput = FormUtil.readPassword();
+        EstateAgent agent         = _orm.get(username);
+        return agent != null && agent.getPassword().equals(passwordInput);
+    }
 	
 	/**
 	 * TODO Shows the estate management.
