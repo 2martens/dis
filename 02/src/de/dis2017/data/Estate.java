@@ -6,10 +6,10 @@ package de.dis2017.data;
 public class Estate {
 	private int id = -1;
 	private String city;
-	private int postalcode;
+	private String postalCode;
 	private String street;
-	private int streetnumber;
-	private int squarearea;
+	private int streetNumber;
+	private int squareArea;
 	
 	public int getId() {
 		return id;
@@ -27,12 +27,12 @@ public class Estate {
 		this.city = city;
 	}
 	
-	public int getPostalcode() {
-		return postalcode;
+	public String getPostalCode() {
+		return postalCode;
 	}
 	
-	public void setPostalcode(int postalcode) {
-		this.postalcode = postalcode;
+	public void setPostalCode(String postalCode) {
+		this.postalCode = postalCode;
 	}
 	
 	public String getStreet() {
@@ -44,18 +44,18 @@ public class Estate {
 	}
 	
 	public int getStreetNumber() {
-		return streetnumber;
+		return streetNumber;
 	}
 	
-	public void setStreetnumber(int streetnumber) {
-		this.streetnumber = streetnumber;
+	public void setStreetNumber(int streetNumber) {
+		this.streetNumber = streetNumber;
 	}
 	
 	public int getSquareArea() {
-		return streetnumber;
+		return squareArea;
 	}
 	
-	public void setSquareArea(int squarearea) {
-		this.squarearea = squarearea;
+	public void setSquareArea(int squareArea) {
+		this.squareArea = squareArea;
 	}
 }
