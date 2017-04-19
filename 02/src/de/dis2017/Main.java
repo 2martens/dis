@@ -5,6 +5,7 @@ import de.dis2017.data.Estate;
 import de.dis2017.data.EstateAgent;
 import de.dis2017.data.House;
 import de.dis2017.data.db.ORM;
+import de.dis2017.data.db.Type;
 
 import java.util.List;
 
@@ -93,15 +94,13 @@ public class Main {
 	private static void showEstateMenu() {
 		// menu options
 		final int NEW_ESTATE = 0;
-		final int CHANGE_ESTATE = 1;
-		final int DELETE_ESTATE = 2;
-		final int BACK = 3;
+		final int LIST_ESTATES = 1;
+		final int BACK = 2;
 		
 		// estate management menu
 		Menu estateMenu = new Menu("Estate management");
 		estateMenu.addEntry("Create Estate", NEW_ESTATE);
-		estateMenu.addEntry("Change Estate", CHANGE_ESTATE);
-		estateMenu.addEntry("Delete Estate", DELETE_ESTATE);
+		estateMenu.addEntry("List Estates", LIST_ESTATES);
 		estateMenu.addEntry("Back to the main menu", BACK);
 		
 		// process input
@@ -112,11 +111,8 @@ public class Main {
 				case NEW_ESTATE:
 					newEstate();
 					break;
-				case CHANGE_ESTATE:
-					changeEstate();
-					break;
-				case DELETE_ESTATE:
-					deleteEstate();
+				case LIST_ESTATES:
+					//listEstates();
 					break;
 				case BACK:
 					return;
@@ -134,9 +130,9 @@ public class Main {
 			Apartment estate = new Apartment();
 			
 			estate.setCity(FormUtil.readString("Name"));
-			estate.setPostalcode(FormUtil.readInt("Postal Code"));
+			estate.setPostalCode(FormUtil.readString("Postal Code"));
 			estate.setStreet(FormUtil.readString("Street"));
-			estate.setStreetnumber(FormUtil.readInt("Street Number"));
+			estate.setStreetNumber(FormUtil.readInt("Street Number"));
 			estate.setSquareArea(FormUtil.readInt("Square Area"));
 
 			estate.setFloor(FormUtil.readInt("Floor"));
@@ -155,9 +151,9 @@ public class Main {
 			House estate = new House();
 			
 			estate.setCity(FormUtil.readString("Name"));
-			estate.setPostalcode(FormUtil.readInt("Postal Code"));
+			estate.setPostalCode(FormUtil.readString("Postal Code"));
 			estate.setStreet(FormUtil.readString("Street"));
-			estate.setStreetnumber(FormUtil.readInt("Street Number"));
+			estate.setStreetNumber(FormUtil.readInt("Street Number"));
 			estate.setSquareArea(FormUtil.readInt("Square Area"));
 
 			estate.setFloors(FormUtil.readInt("Floors"));
@@ -176,12 +172,12 @@ public class Main {
 	 */
 	private static void changeEstate() {
 		//Choose Estate from List
-		Estate estate = new Apartment();//choosen Estate
+		Estate estate = new Estate();//choosen Estate
 		
 		estate.setCity(FormUtil.readString("Name"));
-		estate.setPostalcode(FormUtil.readInt("Postal Code"));
+		estate.setPostalCode(FormUtil.readString("Postal Code"));
 		estate.setStreet(FormUtil.readString("Street"));
-		estate.setStreetnumber(FormUtil.readInt("Street Number"));
+		estate.setStreetNumber(FormUtil.readInt("Street Number"));
 		estate.setSquareArea(FormUtil.readInt("Square Area"));
 		
 		if(estate instanceof Apartment){
@@ -204,9 +200,9 @@ public class Main {
 			House house = (House)estate;
 			
 			estate.setCity(FormUtil.readString("Name"));
-			estate.setPostalcode(FormUtil.readInt("Postal Code"));
+			estate.setPostalCode(FormUtil.readString("Postal Code"));
 			estate.setStreet(FormUtil.readString("Street"));
-			estate.setStreetnumber(FormUtil.readInt("Street Number"));
+			estate.setStreetNumber(FormUtil.readInt("Street Number"));
 			estate.setSquareArea(FormUtil.readInt("Square Area"));
 
 			house.setFloors(FormUtil.readInt("Floors"));
@@ -283,13 +279,14 @@ public class Main {
      */
 	private static void listEstateAgents() {
 	    // get all agents
-        List<EstateAgent> agents = _orm.getAll();
+        List<?> agents = _orm.getAll(Type.ESTATEAGENT);
         Menu listEstateAgents = new Menu("Please select the estate agent you want to modify or delete");
         System.out.println("List of EstateAgents");
         
         final int BACK = 0;
         
-        for (EstateAgent agent : agents) {
+        for (Object o : agents) {
+            EstateAgent agent = (EstateAgent) o;
             listEstateAgents.addEntry("ID: " + agent.getId() + ", Name: " + agent.getName(), agent.getId());
         }
         listEstateAgents.addEntry("Back to the EstateAgent management menu", BACK);
