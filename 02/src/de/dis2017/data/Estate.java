@@ -3,7 +3,7 @@ package de.dis2017.data;
 /**
  * EstateAgent data class
  */
-public abstract class Estate {
+public class Estate {
 	private int id = -1;
 	private String city;
 	private int postalcode;
