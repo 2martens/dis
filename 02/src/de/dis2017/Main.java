@@ -88,14 +88,9 @@ public class Main {
     }
 	
 	/**
-	 * TODO Shows the estate management.
+	 * Shows the estate management menu.
 	 */
 	private static void showEstateMenu() {
-		String username = FormUtil.readString("Username");
-		String password = FormUtil.readString("Password");
-		// TODO Check username password combination else back to MainMenu
-		System.out.println("EstateAgent "+username+" logged in succesfully.");
-		
 		// menu options
 		final int NEW_ESTATE = 0;
 		final int CHANGE_ESTATE = 1;
