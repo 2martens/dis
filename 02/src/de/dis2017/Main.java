@@ -373,7 +373,7 @@ public class Main {
     
         for (Object o : agents) {
             Person person = (Person) o;
-            System.out.println("Name: " + person.getFirstName()+" "+person.getName() +", Address: " + person.getAddress());
+            System.out.println("ID: "+person.getId()+" Name: " + person.getFirstName()+" "+person.getName() +", Address: " + person.getAddress());
         }
         System.out.println("------------------");
     }
