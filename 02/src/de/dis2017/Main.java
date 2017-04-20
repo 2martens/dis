@@ -154,7 +154,7 @@ public class Main {
 		contract.setPlace(FormUtil.readString("Place"));
 		contract.setDate(FormUtil.readString("Date"));
 		if(estate instanceof Apartment){
-			TenancyContract tenContract = (TenancyContract) contract;
+			TenancyContract tenContract = new TenancyContract(contract);
 			tenContract.setStartDate(FormUtil.readString("Start Date"));
 			tenContract.setDuration(FormUtil.readInt("Duration"));
 			tenContract.setAdditionalCost(FormUtil.readInt("Additional Costs"));
@@ -162,7 +162,7 @@ public class Main {
 			//_orm.persist(tenContract);
 		}
 		else{
-			PurchaseContract purContract = (PurchaseContract) contract;
+			PurchaseContract purContract = new PurchaseContract(contract);
 			purContract.setNoOfInstallments(FormUtil.readInt("No of Installments"));
 			purContract.setInterestRate(FormUtil.readInt("Interest Rate"));
 			
@@ -251,7 +251,7 @@ public class Main {
         estate.setSquareArea(FormUtil.readInt("Square Area"));
         estate.setAgent(FormUtil.readInt("EstateAgent ID"));
         if(isApartment){
-            Apartment apartment = (Apartment) estate;
+            Apartment apartment = new Apartment(estate);
             apartment.setFloor(FormUtil.readInt("Floor"));
             apartment.setRooms(FormUtil.readInt("Rooms"));
             apartment.setRent(FormUtil.readInt("Rent"));
@@ -261,7 +261,7 @@ public class Main {
             apartment.setBuiltinKitchen(input.equals("Y") || input.equals("y"));
         }
         else{
-            House house = (House) estate;
+            House house = new House(estate);
             house.setPrice(FormUtil.readInt("Price"));
             house.setFloors(FormUtil.readInt("Floors"));
             input = FormUtil.readString("Garden(Y/N)");

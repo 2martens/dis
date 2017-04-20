@@ -9,6 +9,16 @@ public class TenancyContract extends Contract {
 	
 	private int apartment;
 
+	public TenancyContract(){
+		super();
+	}
+	public TenancyContract(Contract contract){
+		this.setContractNo(contract.getContractNo());
+		this.setDate(contract.getDate());
+		this.setPlace(contract.getPlace());
+		this.setPerson(contract.getPerson());
+	}
+	
 	public String getStartDate() {
 		return startDate;
 	}

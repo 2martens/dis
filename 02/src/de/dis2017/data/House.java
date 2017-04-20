@@ -5,6 +5,20 @@ public class House extends Estate {
 	private int price;
 	private boolean garden;
 	
+	public House(){
+		super();
+	}
+	
+	public House(Estate estate){
+		this.setId(estate.getId());
+		this.setCity(estate.getCity());
+		this.setPostalCode(estate.getPostalCode());
+		this.setStreet(estate.getStreet());
+		this.setStreetNumber(estate.getStreetNumber());
+		this.setSquareArea(estate.getSquareArea());
+		this.setAgent(estate.getAgent());
+	}
+	
 	public int getFloors() {
 		return floors;
 	}

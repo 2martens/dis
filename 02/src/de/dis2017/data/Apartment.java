@@ -7,6 +7,20 @@ public class Apartment extends Estate{
 	private boolean balcony;
 	private boolean builtinKitchen;
 	
+	public Apartment(){
+		super();
+	}
+	
+	public Apartment(Estate estate){
+		this.setId(estate.getId());
+		this.setCity(estate.getCity());
+		this.setPostalCode(estate.getPostalCode());
+		this.setStreet(estate.getStreet());
+		this.setStreetNumber(estate.getStreetNumber());
+		this.setSquareArea(estate.getSquareArea());
+		this.setAgent(estate.getAgent());
+	}
+	
 	public int getFloor() {
 		return floor;
 	}

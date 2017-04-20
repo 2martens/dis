@@ -55,6 +55,9 @@ public class ORM {
                 case ESTATE:
                     objects = processEstates(rs);
                     break;
+                case CONTRACT:
+                    objects = processEstates(rs);
+                    break;
             }
             rs.close();
             pstmt.close();
