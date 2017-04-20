@@ -589,6 +589,30 @@ public class ORM {
         }
     }
     
+    /**
+     * Persists the given person.
+     *
+     * @param person the person that should be persisted
+     */
+    public void persist(Person person)
+    {
+    	//TODO
+    }
+    /**
+     * Persists the given contract.
+     *
+     * @param contract the contract that should be persisted
+     */
+    public void persist(Contract contract)
+    {
+    	//TODO
+    }
+    
+    /**
+     * Checks is the Estate is an Apartment or House
+     * @param estateID ID from the estate that should be checked
+     * @return true if apartment, false if house
+     */
     public boolean isApartment(int estateID){
     	//TODO check in the DB if the Estate with the ID is an Apartment then return true. If it is a house return false.
     	return true;
