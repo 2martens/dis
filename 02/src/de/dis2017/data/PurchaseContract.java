@@ -3,8 +3,6 @@ package de.dis2017.data;
 public class PurchaseContract extends Contract {
 	private int noOfInstallments;
 	private int interestRate;
-	
-	private int house;
 
 	public PurchaseContract(){
 		super();
@@ -33,11 +31,11 @@ public class PurchaseContract extends Contract {
 	}
 
 	public int getHouse() {
-		return house;
+		return super.getEstate();
 	}
 
 	public void setHouse(int house) {
-		this.house = house;
+		super.setEstate(house);
 	}
 	
 	

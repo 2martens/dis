@@ -1,9 +1,12 @@
 package de.dis2017.data.db;
 
 import de.dis2017.data.Apartment;
+import de.dis2017.data.Contract;
 import de.dis2017.data.Estate;
 import de.dis2017.data.EstateAgent;
 import de.dis2017.data.House;
+import de.dis2017.data.Person;
+
 import org.jetbrains.annotations.Nullable;
 
 import java.sql.*;
@@ -56,7 +59,10 @@ public class ORM {
                     objects = processEstates(rs);
                     break;
                 case CONTRACT:
-                    objects = processEstates(rs);
+                    objects = processContracts(rs);
+                    break;
+                case PERSON:
+                    objects = processPersons(rs);
                     break;
             }
             rs.close();
@@ -66,6 +72,51 @@ public class ORM {
         }
         
         return objects;
+    }
+    
+    /**
+     * Process a select all query for contracts.
+     *
+     * @param rs the result set of such a query
+     * @return a list of estates
+     * @throws SQLException when an error occurs during the rs.next call
+     */
+    private List<Contract> processContracts(ResultSet rs) throws SQLException {
+        List<Contract> contracts = new ArrayList<>();
+    
+        while (rs.next()) {
+            Contract contract = new Contract();
+            contract.setContractNo(rs.getInt("CONTRACTNUMBER"));
+            contract.setDate(rs.getDate("DATE").toString());
+            contract.setPlace(rs.getString("PLACE"));
+        
+            contracts.add(contract);
+        }
+        
+        return contracts;
+    }
+    
+    /**
+     * Process a select all query for persons.
+     *
+     * @param rs the result set of such a query
+     * @return a list of estates
+     * @throws SQLException when an error occurs during the rs.next call
+     */
+    private List<Person> processPersons(ResultSet rs) throws SQLException {
+        List<Person> persons = new ArrayList<>();
+    
+        while (rs.next()) {
+            Person person = new Person();
+            person.setId(rs.getInt("ID"));
+            person.setFirstName(rs.getString("FirstName"));
+            person.setFirstName(rs.getString("Name"));
+            person.setName(rs.getString("Address"));
+        
+            persons.add(person);
+        }
+        
+        return persons;
     }
     
     /**
@@ -536,5 +587,10 @@ public class ORM {
             }
             e.printStackTrace();
         }
+    }
+    
+    public boolean isApartment(int estateID){
+    	//TODO check in the DB if the Estate with the ID is an Apartment then return true. If it is a house return false.
+    	return true;
     }
 }

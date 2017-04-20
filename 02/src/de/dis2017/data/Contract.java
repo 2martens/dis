@@ -9,7 +9,15 @@ public class Contract {
 	private String date;
 	private String place;
 	private int person;
+	private int estate;
 	
+	
+	public int getEstate() {
+		return estate;
+	}
+	public void setEstate(int estate) {
+		this.estate = estate;
+	}
 	public int getContractNo() {
 		return contractNo;
 	}
