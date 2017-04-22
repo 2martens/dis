@@ -1,10 +1,11 @@
 package de.dis2017.data;
 
+import java.sql.Timestamp;
 import java.util.Date;
 
 public class TenancyContract extends Contract {
-	private String startDate;
-	private int duration;
+	private Timestamp startDate;
+	private Timestamp duration;
 	private int additionalCost;
 
 	public TenancyContract(){
@@ -17,19 +18,19 @@ public class TenancyContract extends Contract {
 		this.setPerson(contract.getPerson());
 	}
 	
-	public String getStartDate() {
+	public Timestamp getStartDate() {
 		return startDate;
 	}
 
-	public void setStartDate(String startDate) {
+	public void setStartDate(Timestamp startDate) {
 		this.startDate = startDate;
 	}
 
-	public int getDuration() {
+	public Timestamp getDuration() {
 		return duration;
 	}
 
-	public void setDuration(int duration) {
+	public void setDuration(Timestamp duration) {
 		this.duration = duration;
 	}
 

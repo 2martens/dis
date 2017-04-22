@@ -11,6 +11,7 @@ import de.dis2017.data.TenancyContract;
 import de.dis2017.data.db.ORM;
 import de.dis2017.data.db.Type;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 /**
@@ -146,18 +147,22 @@ public class Main {
 		contract.setDate(FormUtil.readString("Date"));
 		if(_orm.isApartment(contract.getEstate())){
 			TenancyContract tenContract = new TenancyContract(contract);
-			tenContract.setStartDate(FormUtil.readString("Start Date"));
-			tenContract.setDuration(FormUtil.readInt("Duration"));
+			System.out.println("Start Date:");
+			Timestamp startDate = Timestamp.valueOf(FormUtil.readInt("Year")+"-"+FormUtil.readInt("Month")+"-"+FormUtil.readInt("Day"));
+			tenContract.setStartDate(startDate);
+			System.out.println("Duration:");
+			Timestamp duration = Timestamp.valueOf(FormUtil.readInt("Year")+"-"+FormUtil.readInt("Month")+"-"+FormUtil.readInt("Day"));
+			tenContract.setDuration(duration);
 			tenContract.setAdditionalCost(FormUtil.readInt("Additional Costs"));
 			
-			//_orm.persist(tenContract);
+			_orm.persist(tenContract);
 		}
 		else{
 			PurchaseContract purContract = new PurchaseContract(contract);
 			purContract.setNoOfInstallments(FormUtil.readInt("No of Installments"));
 			purContract.setInterestRate(FormUtil.readInt("Interest Rate"));
 			
-			//_orm.persist(purContract);
+			_orm.persist(purContract);
 		}
 	}
 
