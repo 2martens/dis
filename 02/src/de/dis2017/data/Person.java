@@ -4,7 +4,7 @@ public class Person {
 	private String firstName;
 	private String name;
 	private String address;
-	private int id;
+	private int id=-1;
 	
 	
 	public int getId() {

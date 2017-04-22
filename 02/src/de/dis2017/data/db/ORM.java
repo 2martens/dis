@@ -25,6 +25,7 @@ public class ORM {
     private Map<String, EstateAgent> _agentsUsername;
     private Map<Integer, Estate> _estates;
     private Map<Integer, Person> _persons;
+    private Map<Integer, Contract> _contracts;
     
     /**
      * Initializes the ORM.
@@ -35,6 +36,8 @@ public class ORM {
         _agents = new HashMap<>();
         _agentsUsername = new HashMap<>();
         _estates = new HashMap<>();
+        _persons = new HashMap<>();
+        _contracts = new HashMap<>();
     }
     
     /**
@@ -597,6 +600,7 @@ public class ORM {
      */
     public void persist(Person person)
     {
+        System.out.println(person.getId());
     	boolean changeFinished = false;
         try {
             _connection.setAutoCommit(false);
@@ -660,7 +664,29 @@ public class ORM {
      * @return true if apartment, false if house
      */
     public boolean isApartment(int estateID){
-    	//TODO check in the DB if the Estate with the ID is an Apartment then return true. If it is a house return false.
-    	return true;
+    	if(_estates.containsKey(estateID) && _estates.get(estateID) instanceof Apartment)
+    		return true;
+
+    	boolean isApartment = false;
+        try {
+            _connection.setAutoCommit(false);
+                String insertSQL = "SELECT ID FROM INTO APARTMENT WHERE ID=?";
+                PreparedStatement pstmt = _connection.prepareStatement(insertSQL, Statement.RETURN_GENERATED_KEYS);
+                pstmt.setInt(1, estateID);
+                ResultSet result = pstmt.executeQuery();
+                if(result.first())isApartment=true;
+                result.close();
+                pstmt.close();
+            
+            _connection.setAutoCommit(true);
+        } catch (SQLException e) {
+            try {
+                _connection.rollback();
+            } catch (SQLException e1) {
+                e1.printStackTrace();
+            }
+            e.printStackTrace();
+        }
+    	return isApartment;
     }
 }

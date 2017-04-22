@@ -167,7 +167,7 @@ public class Main {
         person.setName(FormUtil.readString("Name"));
         person.setAddress(FormUtil.readString("Address"));
         
-        //_orm.persist(person);
+        _orm.persist(person);
         System.out.println("Person with the Name " + person.getFirstName() +" "+person.getName() + " was created.");
 	}
 
