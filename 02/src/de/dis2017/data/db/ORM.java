@@ -24,6 +24,7 @@ public class ORM {
     private Map<Integer, EstateAgent> _agents;
     private Map<String, EstateAgent> _agentsUsername;
     private Map<Integer, Estate> _estates;
+    private Map<Integer, Person> _persons;
     
     /**
      * Initializes the ORM.
@@ -596,7 +597,52 @@ public class ORM {
      */
     public void persist(Person person)
     {
-    	//TODO
+    	boolean changeFinished = false;
+        try {
+            _connection.setAutoCommit(false);
+            if (person.getId() == -1) {
+                String insertSQL = "INSERT INTO PERSON (firstname, name, address) " +
+                                   "VALUES (?, ?, ?)";
+                PreparedStatement pstmt = _connection.prepareStatement(insertSQL, Statement.RETURN_GENERATED_KEYS);
+                pstmt.setString(1, person.getFirstName());
+                pstmt.setString(2, person.getName());
+                pstmt.setString(3, person.getAddress());
+                pstmt.executeUpdate();
+                
+                ResultSet rs = pstmt.getGeneratedKeys();
+                if (rs.next()) {
+                    person.setId(rs.getInt(1));
+                }
+                rs.close();
+                pstmt.close();
+                changeFinished = true;
+            } else {
+                // create query
+                String updateSQL = "UPDATE PERSON SET firstname = ?, name = ?, address = ? WHERE ID = ?";
+                PreparedStatement pstmt = _connection.prepareStatement(updateSQL);
+                pstmt.setString(1, person.getFirstName());
+                pstmt.setString(2, person.getName());
+                pstmt.setString(3, person.getAddress());
+                pstmt.setInt(4, person.getId());
+                pstmt.executeUpdate();
+                pstmt.close();
+                changeFinished = true;
+            }
+            if (changeFinished) {
+                _connection.commit();
+                if (!_persons.containsKey(person.getId())) {
+                    _persons.put(person.getId(), person);
+                }
+            }
+            _connection.setAutoCommit(true);
+        } catch (SQLException e) {
+            try {
+                _connection.rollback();
+            } catch (SQLException e1) {
+                e1.printStackTrace();
+            }
+            e.printStackTrace();
+        }
     }
     /**
      * Persists the given contract.
