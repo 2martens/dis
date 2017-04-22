@@ -11,6 +11,7 @@ import de.dis2017.data.TenancyContract;
 import de.dis2017.data.db.ORM;
 import de.dis2017.data.db.Type;
 
+import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -144,7 +145,7 @@ public class Main {
 		printListOfPersons();
 		contract.setPerson(FormUtil.readInt("Person"));
 		contract.setPlace(FormUtil.readString("Place"));
-		contract.setDate(FormUtil.readString("Date"));
+		contract.setDate(Date.valueOf(FormUtil.readString("Date")));
 		if(_orm.isApartment(contract.getEstate())){
 			TenancyContract tenContract = new TenancyContract(contract);
 			System.out.println("Start Date:");

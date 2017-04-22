@@ -664,7 +664,7 @@ public class ORM {
                 String insertSQL = "INSERT INTO CONTRACT (date, place) " +
                                    "VALUES (?, ?)";
                 PreparedStatement pstmt = _connection.prepareStatement(insertSQL, Statement.RETURN_GENERATED_KEYS);
-                pstmt.setString(1, contract.getDate());
+                pstmt.setDate(1, contract.getDate());
                 pstmt.setString(2, contract.getPlace());
                 pstmt.executeUpdate();
                 
@@ -707,7 +707,7 @@ public class ORM {
                 // create query
                 String updateSQL = "UPDATE CONTRACT SET date = ?, place = ? WHERE ContractNumber = ?";
                 PreparedStatement pstmt = _connection.prepareStatement(updateSQL);
-                pstmt.setString(1, contract.getDate());
+                pstmt.setDate(1, contract.getDate());
                 pstmt.setString(2, contract.getPlace());
                 pstmt.setInt(3, contract.getContractNo());
                 

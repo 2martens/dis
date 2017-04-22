@@ -2,11 +2,11 @@ package de.dis2017.data;
 /**
  * Contract data class
  */
-import java.util.Date;
+import java.sql.Date;
 
 public class Contract {
 	private int contractNo = -1;
-	private String date;
+	private Date date;
 	private String place;
 	private int person;
 	private int estate;
@@ -24,10 +24,10 @@ public class Contract {
 	public void setContractNo(int contractNo) {
 		this.contractNo = contractNo;
 	}
-	public String getDate() {
+	public Date getDate() {
 		return date;
 	}
-	public void setDate(String date) {
+	public void setDate(Date date) {
 		this.date = date;
 	}
 	public String getPlace() {
