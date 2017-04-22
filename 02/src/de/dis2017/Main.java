@@ -145,13 +145,14 @@ public class Main {
 		printListOfPersons();
 		contract.setPerson(FormUtil.readInt("Person"));
 		contract.setPlace(FormUtil.readString("Place"));
-		contract.setDate(Date.valueOf(FormUtil.readString("Date")));
+		System.out.println("Please enter the date of the contract.");
+		contract.setDate(Date.valueOf(FormUtil.readInt("Year")+"-"+FormUtil.readInt("Month")+"-"+FormUtil.readInt("Day")));
 		if(_orm.isApartment(contract.getEstate())){
 			TenancyContract tenContract = new TenancyContract(contract);
-			System.out.println("Start Date:");
+			System.out.println("Please enter the start date of the tenancy.");
 			Timestamp startDate = Timestamp.valueOf(FormUtil.readInt("Year")+"-"+FormUtil.readInt("Month")+"-"+FormUtil.readInt("Day"));
 			tenContract.setStartDate(startDate);
-			System.out.println("Duration:");
+			System.out.println("Please enter the duration of the tenancy.");
 			Timestamp duration = Timestamp.valueOf(FormUtil.readInt("Year")+"-"+FormUtil.readInt("Month")+"-"+FormUtil.readInt("Day"));
 			tenContract.setDuration(duration);
 			tenContract.setAdditionalCost(FormUtil.readInt("Additional Costs"));

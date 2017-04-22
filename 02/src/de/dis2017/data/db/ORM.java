@@ -93,7 +93,7 @@ public class ORM {
         while (rs.next()) {
             Contract contract = new Contract();
             contract.setContractNo(rs.getInt("CONTRACTNUMBER"));
-            contract.setDate(rs.getDate("DATE").toString());
+            contract.setDate(rs.getDate("DATE"));
             contract.setPlace(rs.getString("PLACE"));
         
             contracts.add(contract);
@@ -677,30 +677,26 @@ public class ORM {
                 
                 if (contract instanceof TenancyContract) {
                     TenancyContract tenContract = (TenancyContract) contract;
-                    String insertSQLHouse = "INSERT INTO TENANCYCONTRACT (ContractNumber, StartDate, Duration, AdditionalCosts) VALUES (?, ?, ?, ?)";
-                    PreparedStatement pstmtHouse = _connection.prepareStatement(insertSQLHouse);
-                    pstmtHouse.setInt(1, tenContract.getContractNo());
-                    pstmtHouse.setTimestamp(2, tenContract.getStartDate());
-                    pstmtHouse.setTimestamp(3, tenContract.getDuration());
-                    pstmtHouse.setInt(4, tenContract.getAdditionalCost());
-                    pstmt.executeUpdate();
-                    pstmtHouse.executeUpdate();
-                    pstmt.close();
-                    pstmtHouse.close();
+                    String insertSQLTenancy = "INSERT INTO TENANCYCONTRACT (ContractNumber, StartDate, Duration, AdditionalCosts) VALUES (?, ?, ?, ?)";
+                    PreparedStatement pstmtTenancy = _connection.prepareStatement(insertSQLTenancy);
+                    pstmtTenancy.setInt(1, tenContract.getContractNo());
+                    pstmtTenancy.setTimestamp(2, tenContract.getStartDate());
+                    pstmtTenancy.setTimestamp(3, tenContract.getDuration());
+                    pstmtTenancy.setInt(4, tenContract.getAdditionalCost());
+                    pstmtTenancy.executeUpdate();
+                    pstmtTenancy.close();
                     changeFinished = true;
                 }
                 else if (contract instanceof PurchaseContract) {
                     PurchaseContract purContract = (PurchaseContract) contract;
-                    String insertSQLApartment = "INSERT INTO PURCHASECONTRACT (ContractNumber, NumberOfInstallments, InterestRate) " +
+                    String insertSQLPurchase = "INSERT INTO PURCHASECONTRACT (ContractNumber, NumberOfInstallments, InterestRate) " +
                                                 "VALUES (?, ?, ?)";
-                    PreparedStatement pstmtApartment = _connection.prepareStatement(insertSQLApartment);
-                    pstmtApartment.setInt(1, purContract.getContractNo());
-                    pstmtApartment.setInt(2, purContract.getNoOfInstallments());
-                    pstmtApartment.setInt(3, purContract.getInterestRate());
-                    pstmt.executeUpdate();
-                    pstmtApartment.executeUpdate();
-                    pstmt.close();
-                    pstmtApartment.close();
+                    PreparedStatement pstmtPurchase = _connection.prepareStatement(insertSQLPurchase);
+                    pstmtPurchase.setInt(1, purContract.getContractNo());
+                    pstmtPurchase.setInt(2, purContract.getNoOfInstallments());
+                    pstmtPurchase.setInt(3, purContract.getInterestRate());
+                    pstmtPurchase.executeUpdate();
+                    pstmtPurchase.close();
                     changeFinished = true;
                 }
             } else {
@@ -713,29 +709,29 @@ public class ORM {
                 
                 if (contract instanceof TenancyContract) {
                     TenancyContract tenContract = (TenancyContract) contract;
-                    String updateSQLHouse = "UPDATE TenancyContract SET startDate = ?, duration = ?, additionalcosts = ? WHERE contractNumber = ?";
-                    PreparedStatement pstmtHouse = _connection.prepareStatement(updateSQLHouse);
-                    pstmtHouse.setTimestamp(1, tenContract.getStartDate());
-                    pstmtHouse.setTimestamp(2, tenContract.getDuration());
-                    pstmtHouse.setInt(3, tenContract.getAdditionalCost());
-                    pstmtHouse.setInt(4, tenContract.getContractNo());
+                    String updateSQLTenancy = "UPDATE TenancyContract SET startDate = ?, duration = ?, additionalcosts = ? WHERE contractNumber = ?";
+                    PreparedStatement pstmtTenancy = _connection.prepareStatement(updateSQLTenancy);
+                    pstmtTenancy.setTimestamp(1, tenContract.getStartDate());
+                    pstmtTenancy.setTimestamp(2, tenContract.getDuration());
+                    pstmtTenancy.setInt(3, tenContract.getAdditionalCost());
+                    pstmtTenancy.setInt(4, tenContract.getContractNo());
                     pstmt.executeUpdate();
-                    pstmtHouse.executeUpdate();
+                    pstmtTenancy.executeUpdate();
                     pstmt.close();
-                    pstmtHouse.close();
+                    pstmtTenancy.close();
                     changeFinished = true;
                 }
                 else if (contract instanceof PurchaseContract) {
                     PurchaseContract purContract = (PurchaseContract) contract;
-                    String updateSQLApartment = "UPDATE PurchaseContract SET numberofinstallments = ?, interestrate = ? WHERE contractNumber = ?";
-                    PreparedStatement pstmtApartment = _connection.prepareStatement(updateSQLApartment);
-                    pstmtApartment.setInt(1, purContract.getNoOfInstallments());
-                    pstmtApartment.setInt(2, purContract.getInterestRate());
-                    pstmtApartment.setInt(3, purContract.getContractNo());
+                    String updateSQLPurchase = "UPDATE PurchaseContract SET numberofinstallments = ?, interestrate = ? WHERE contractNumber = ?";
+                    PreparedStatement pstmtPurchase = _connection.prepareStatement(updateSQLPurchase);
+                    pstmtPurchase.setInt(1, purContract.getNoOfInstallments());
+                    pstmtPurchase.setInt(2, purContract.getInterestRate());
+                    pstmtPurchase.setInt(3, purContract.getContractNo());
                     pstmt.executeUpdate();
-                    pstmtApartment.executeUpdate();
+                    pstmtPurchase.executeUpdate();
                     pstmt.close();
-                    pstmtApartment.close();
+                    pstmtPurchase.close();
                     changeFinished = true;
                 }
             }
@@ -768,11 +764,12 @@ public class ORM {
     	boolean isApartment = false;
         try {
             _connection.setAutoCommit(false);
-                String insertSQL = "SELECT ID FROM INTO APARTMENT WHERE ID=?";
+                String insertSQL = "SELECT ID FROM APARTMENT WHERE ID=?";
                 PreparedStatement pstmt = _connection.prepareStatement(insertSQL, Statement.RETURN_GENERATED_KEYS);
                 pstmt.setInt(1, estateID);
-                ResultSet result = pstmt.executeQuery();
-                if(result.first())isApartment=true;
+                pstmt.executeQuery();
+                ResultSet result = pstmt.getResultSet();
+                if(result.next())isApartment=true;
                 result.close();
                 pstmt.close();
             
