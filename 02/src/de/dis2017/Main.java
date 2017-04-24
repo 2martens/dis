@@ -83,7 +83,7 @@ public class Main {
 		
 		// create menu
 		Menu mainMenu = new Menu("Contract Menu");
-		mainMenu.addEntry("Insert person",INSERT_PERSON );
+		mainMenu.addEntry("Insert person", INSERT_PERSON );
 		mainMenu.addEntry("Create/Sign contract", CREATE_CONTRACT);
 		mainMenu.addEntry("Contracts overview", OVERVIEW_CONTRACTS);
 		mainMenu.addEntry("Back", BACK);
