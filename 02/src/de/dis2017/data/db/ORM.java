@@ -76,8 +76,56 @@ public class ORM {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        
+    
         return objects;
+    }
+    
+    /**
+     * Returns a list with the IDs of sold houses.
+     *
+     * @return a list of houseIDs
+     */
+    public List<Integer> getSoldHouses() {
+        List<Integer> soldHouses = new ArrayList<>();
+        
+        try {
+            String            selectSQL = "SELECT house FROM SALES";
+            PreparedStatement pstmt     = _connection.prepareStatement(selectSQL);
+            ResultSet         rs        = pstmt.executeQuery();
+            while (rs.next()) {
+                soldHouses.add(rs.getInt("house"));
+            }
+            rs.close();
+            pstmt.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        
+        return soldHouses;
+    }
+    
+    /**
+     * Returns a list with the IDs of rented apartments.
+     *
+     * @return a list of apartmentIDs
+     */
+    public List<Integer> getRentedApartments() {
+        List<Integer> rentedApartments = new ArrayList<>();
+        
+        try {
+            String            selectSQL = "SELECT apartment FROM RENTALS";
+            PreparedStatement pstmt     = _connection.prepareStatement(selectSQL);
+            ResultSet         rs        = pstmt.executeQuery();
+            while (rs.next()) {
+                rentedApartments.add(rs.getInt("apartment"));
+            }
+            rs.close();
+            pstmt.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        
+        return rentedApartments;
     }
     
     /**
