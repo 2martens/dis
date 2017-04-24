@@ -1,9 +1,6 @@
 package de.dis2017.data.db;
 
-import de.dis2017.data.Apartment;
-import de.dis2017.data.Estate;
-import de.dis2017.data.EstateAgent;
-import de.dis2017.data.House;
+import de.dis2017.data.*;
 import org.jetbrains.annotations.Nullable;
 
 import java.sql.*;
@@ -54,6 +51,9 @@ public class ORM {
                     break;
                 case ESTATE:
                     objects = processEstates(rs);
+                    break;
+                case CONTRACT:
+                    objects = processContracts(rs);
                     break;
             }
             rs.close();
@@ -114,6 +114,28 @@ public class ORM {
         }
         
         return agents;
+    }
+    
+    /**
+     * Process a select all query for contracts.
+     *
+     * @param rs the result set of such a query
+     * @return a list of contracts
+     * @throws SQLException when an error occurs during the rs.next call
+     */
+    private List<Contract> processContracts(ResultSet rs) throws SQLException {
+        List<Contract> contracts = new ArrayList<>();
+        
+        while (rs.next()) {
+            Contract contract = new Contract();
+            contract.setContractNo(rs.getInt("contractNumber"));
+            contract.setPlace(rs.getString("place"));
+            contract.setDate(rs.getString("date"));
+            
+            contracts.add(contract);
+        }
+        
+        return contracts;
     }
     
     /**
