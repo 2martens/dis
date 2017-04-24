@@ -29,6 +29,4 @@ public class PurchaseContract extends Contract {
 	public void setHouse(int house) {
 		this.house = house;
 	}
-	
-	
 }

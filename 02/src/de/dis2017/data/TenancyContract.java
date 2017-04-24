@@ -40,6 +40,4 @@ public class TenancyContract extends Contract {
 	public void setApartment(int apartment) {
 		this.apartment = apartment;
 	}
-	
-	
 }

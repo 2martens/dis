@@ -1,9 +1,8 @@
 package de.dis2017.data;
+
 /**
  * Contract data class
  */
-import java.util.Date;
-
 public class Contract {
 	private int contractNo = -1;
 	private String date;
@@ -34,6 +33,4 @@ public class Contract {
 	public void setPerson(int person) {
 		this.person = person;
 	}
-	
-	
 }
