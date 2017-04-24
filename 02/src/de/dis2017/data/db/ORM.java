@@ -815,6 +815,94 @@ public class ORM {
     }
     
     /**
+     * Persists the given contract.
+     *
+     * @param contract the contract that should be persisted
+     */
+    public void persist(Contract contract)
+    {
+        boolean changeFinished = false;
+        try {
+            _connection.setAutoCommit(false);
+            if (contract.getContractNo() == -1) {
+                String insertSQL = "INSERT INTO CONTRACT (date, place) " +
+                                   "VALUES (?, ?)";
+                PreparedStatement pstmt = _connection.prepareStatement(insertSQL, Statement.RETURN_GENERATED_KEYS);
+                pstmt.setString(1, contract.getDate());
+                pstmt.setString(2, contract.getPlace());
+                pstmt.executeUpdate();
+                
+                ResultSet rs = pstmt.getGeneratedKeys();
+                if (rs.next()) {
+                    contract.setContractNo(rs.getInt(1));
+                }
+                rs.close();
+                pstmt.close();
+                
+                if (contract instanceof PurchaseContract) {
+                    PurchaseContract purchaseContract = (PurchaseContract) contract;
+                    String insertSQLPurchaseContract = "INSERT INTO PURCHASECONTRACT " +
+                                                       "(contractNumber, numberOfInstallments, interestRate) " +
+                                                       "VALUES (?, ?, ?)";
+                    PreparedStatement pstmtPurchase = _connection.prepareStatement(insertSQLPurchaseContract);
+                    pstmtPurchase.setInt(1, purchaseContract.getContractNo());
+                    pstmtPurchase.setInt(2, purchaseContract.getNoOfInstallments());
+                    pstmtPurchase.setInt(3, purchaseContract.getInterestRate());
+                    pstmtPurchase.executeUpdate();
+                    pstmtPurchase.close();
+                    
+                    String insertSQLSale = "INSERT INTO SALES (contractNumber, house, person) VALUES (?, ?, ?)";
+                    PreparedStatement pstmtSale = _connection.prepareStatement(insertSQLSale);
+                    pstmtSale.setInt(1, purchaseContract.getContractNo());
+                    pstmtSale.setInt(2, purchaseContract.getHouse());
+                    pstmtSale.setInt(3, purchaseContract.getPerson());
+                    pstmtSale.executeUpdate();
+                    pstmtSale.close();
+                    changeFinished = true;
+                }
+                else if (contract instanceof TenancyContract) {
+                    TenancyContract tenancyContract = (TenancyContract) contract;
+                    String insertSQLTenancyContract = "INSERT INTO TENANCYCONTRACT " +
+                                                      "(contractNumber, startDate, duration, additionalCosts) " +
+                                                      "VALUES (?, ?, ?, ?)";
+                    PreparedStatement pstmtTenancy = _connection.prepareStatement(insertSQLTenancyContract);
+                    pstmtTenancy.setInt(1, tenancyContract.getContractNo());
+                    pstmtTenancy.setTimestamp(2, tenancyContract.getStartDate());
+                    pstmtTenancy.setTimestamp(3, new Timestamp(tenancyContract.getDuration().toMillis()));
+                    pstmtTenancy.setInt(4, tenancyContract.getAdditionalCost());
+                    pstmtTenancy.executeUpdate();
+                    pstmtTenancy.close();
+    
+                    String insertSQLRental = "INSERT INTO RENTALS (contractNumber, apartment, person) VALUES (?, ?, ?)";
+                    PreparedStatement pstmtRental = _connection.prepareStatement(insertSQLRental);
+                    pstmtRental.setInt(1, tenancyContract.getContractNo());
+                    pstmtRental.setInt(2, tenancyContract.getApartment());
+                    pstmtRental.setInt(3, tenancyContract.getPerson());
+                    pstmtRental.executeUpdate();
+                    pstmtRental.close();
+                    changeFinished = true;
+                }
+            } else {
+                System.err.println("Changing contracts is not supported.");
+            }
+            if (changeFinished) {
+                _connection.commit();
+                if (!_contracts.containsKey(contract.getContractNo())) {
+                    _contracts.put(contract.getContractNo(), contract);
+                }
+            }
+            _connection.setAutoCommit(true);
+        } catch (SQLException e) {
+            try {
+                _connection.rollback();
+            } catch (SQLException e1) {
+                e1.printStackTrace();
+            }
+            e.printStackTrace();
+        }
+    }
+    
+    /**
      * Persists the given person.
      *
      * @param person the person that should be persisted
