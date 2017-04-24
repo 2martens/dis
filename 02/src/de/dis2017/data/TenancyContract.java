@@ -3,17 +3,17 @@ package de.dis2017.data;
 import java.util.Date;
 
 public class TenancyContract extends Contract {
-	private String startDate;
+	private int startDate;
 	private int duration;
 	private int additionalCost;
 	
 	private int apartment;
 
-	public String getStartDate() {
+	public int getStartDate() {
 		return startDate;
 	}
 
-	public void setStartDate(String startDate) {
+	public void setStartDate(int startDate) {
 		this.startDate = startDate;
 	}
 
