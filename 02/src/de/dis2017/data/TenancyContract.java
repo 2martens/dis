@@ -1,27 +1,27 @@
 package de.dis2017.data;
 
-import java.util.Date;
+import java.sql.Timestamp;
 
 public class TenancyContract extends Contract {
-	private int startDate;
-	private int duration;
-	private int additionalCost;
+	private Timestamp startDate;
+	private Timestamp duration;
+	private int       additionalCost;
 	
 	private int apartment;
 
-	public int getStartDate() {
+	public Timestamp getStartDate() {
 		return startDate;
 	}
 
-	public void setStartDate(int startDate) {
+	public void setStartDate(Timestamp startDate) {
 		this.startDate = startDate;
 	}
 
-	public int getDuration() {
+	public Timestamp getDuration() {
 		return duration;
 	}
 
-	public void setDuration(int duration) {
+	public void setDuration(Timestamp duration) {
 		this.duration = duration;
 	}
 

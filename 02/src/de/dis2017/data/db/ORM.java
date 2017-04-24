@@ -220,8 +220,8 @@ public class ORM {
                     ((PurchaseContract) contract).setHouse(rs.getInt("house"));
                 }
                 if (contract instanceof TenancyContract) {
-                    ((TenancyContract) contract).setStartDate(rs.getInt("startDate"));
-                    ((TenancyContract) contract).setDuration(rs.getInt("duration"));
+                    ((TenancyContract) contract).setStartDate(rs.getTimestamp("startDate"));
+                    ((TenancyContract) contract).setDuration(rs.getTimestamp("duration"));
                     ((TenancyContract) contract).setAdditionalCost(rs.getInt("additionalCosts"));
                     ((TenancyContract) contract).setApartment(rs.getInt("apartment"));
                 }
