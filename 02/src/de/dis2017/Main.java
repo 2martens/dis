@@ -599,11 +599,15 @@ public class Main {
      */
     private static void printListOfHouses() {
         List<?> houses = _orm.getAll(Type.HOUSE);
-        System.out.println("List of Houses");
+        List<Integer> soldHouses = _orm.getSoldHouses();
+        System.out.println("List of available Houses");
         System.out.println("------------------");
         
         for (Object o : houses) {
             House house = (House) o;
+            if (soldHouses.contains(house.getId())) {
+                continue;
+            }
             System.out.println("ID: " + house.getId() + "; Address: " + house.getStreet() + " "
                                + house.getStreetNumber() + ", " + house.getPostalCode() + " " + house.getCity());
         }
@@ -615,11 +619,15 @@ public class Main {
      */
     private static void printListOfApartments() {
         List<?> apartments = _orm.getAll(Type.APARTMENT);
-        System.out.println("List of Apartments");
+        List<Integer> rentedApartments = _orm.getRentedApartments();
+        System.out.println("List of available Apartments");
         System.out.println("------------------");
         
         for (Object o : apartments) {
             Apartment apartment = (Apartment) o;
+            if (rentedApartments.contains(apartment.getId())) {
+                continue;
+            }
             System.out.println("ID: " + apartment.getId() + "; Address: " + apartment.getStreet() + " "
                                + apartment.getStreetNumber() + ", " + apartment.getPostalCode() + " " + apartment.getCity());
         }
