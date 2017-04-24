@@ -19,6 +19,7 @@ public class ORM {
     private Map<String, EstateAgent> _agentsUsername;
     private Map<Integer, Estate> _estates;
     private Map<Integer, Contract> _contracts;
+    private Map<Integer, Person> _persons;
     
     /**
      * Initializes the ORM.
@@ -30,6 +31,7 @@ public class ORM {
         _agentsUsername = new HashMap<>();
         _estates = new HashMap<>();
         _contracts = new HashMap<>();
+        _persons = new HashMap<>();
     }
     
     /**
@@ -352,6 +354,46 @@ public class ORM {
             pstmt.setInt(1, ID);
         
             return getAgent(pstmt);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        
+        return null;
+    }
+    
+    /**
+     * Loads the person with the given ID from database and returns the corresponding object.
+     *
+     * @param ID the ID of the person to load
+     * @return the Person or null if there is no such agent
+     */
+    public Person getPerson(int ID) {
+        if (_persons.containsKey(ID)) {
+            return _persons.get(ID);
+        }
+        
+        try {
+            // create query
+            String            selectSQL = "SELECT * FROM PERSON WHERE ID = ?";
+            PreparedStatement pstmt     = _connection.prepareStatement(selectSQL);
+            pstmt.setInt(1, ID);
+            ResultSet rs = pstmt.executeQuery();
+            Person person;
+            
+            if (rs.next()) {
+                person = new Person();
+                person.setId(rs.getInt("ID"));
+                person.setFirstName(rs.getString("firstName"));
+                person.setName(rs.getString("name"));
+                person.setAddress(rs.getString("address"));
+                
+                rs.close();
+                pstmt.close();
+                
+                _persons.put(person.getId(), person);
+                return person;
+            }
+            
         } catch (SQLException e) {
             e.printStackTrace();
         }
