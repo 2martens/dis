@@ -18,6 +18,7 @@ public class ORM {
     private Map<Integer, EstateAgent> _agents;
     private Map<String, EstateAgent> _agentsUsername;
     private Map<Integer, Estate> _estates;
+    private Map<Integer, Contract> _contracts;
     
     /**
      * Initializes the ORM.
@@ -28,6 +29,7 @@ public class ORM {
         _agents = new HashMap<>();
         _agentsUsername = new HashMap<>();
         _estates = new HashMap<>();
+        _contracts = new HashMap<>();
     }
     
     /**
@@ -136,6 +138,103 @@ public class ORM {
         }
         
         return contracts;
+    }
+    
+    /**
+     * Loads the contract with the given ID from database and returns the corresponding object.
+     *
+     * @param ID the id of the contract to load
+     * @return the Contract or null if there is no such object
+     */
+    public Contract getContract(int ID) {
+        if (_contracts.containsKey(ID)) {
+            return _contracts.get(ID);
+        }
+        
+        String            selectSQLPurchase = "SELECT * FROM PURCHASECONTRACT " +
+                                              "LEFT JOIN CONTRACT ON PURCHASECONTRACT.CONTRACTNUMBER = CONTRACT.CONTRACTNUMBER " +
+                                              "LEFT JOIN SALES ON PURCHASECONTRACT.CONTRACTNUMBER = SALES.CONTRACTNUMBER " +
+                                              "WHERE PURCHASECONTRACT.CONTRACTNUMBER = ?";
+        String selectSQLTenancy = "SELECT * FROM TENANCYCONTRACT " +
+                                  "LEFT JOIN CONTRACT ON TENANCYCONTRACT.CONTRACTNUMBER = CONTRACT.CONTRACTNUMBER " +
+                                  "LEFT JOIN RENTALS ON TENANCYCONTRACT.CONTRACTNUMBER = RENTALS.CONTRACTNUMBER " +
+                                  "WHERE TENANCYCONTRACT.CONTRACTNUMBER = ?";
+        
+        String countPurchase = "SELECT COUNT(contractNumber) AS count FROM PURCHASECONTRACT WHERE contractNumber = ?";
+        String countTenancy = "SELECT COUNT(contractNumber) AS count FROM TENANCYCONTRACT WHERE contractNumber = ?";
+        try {
+            // try purchase contract first
+            PreparedStatement preparedStatementCount = _connection.prepareStatement(countPurchase);
+            preparedStatementCount.setInt(1, ID);
+            ResultSet rs = preparedStatementCount.executeQuery();
+            rs.next();
+            int count = rs.getInt("count");
+            String type = "None";
+            if (count == 0) {
+                // try tenancy contract next
+                preparedStatementCount = _connection.prepareStatement(countTenancy);
+                preparedStatementCount.setInt(1, ID);
+                rs = preparedStatementCount.executeQuery();
+                rs.next();
+                count = rs.getInt("count");
+                if (count == 1) {
+                    type = "TenancyContract";
+                }
+            }
+            else {
+                type = "PurchaseContract";
+            }
+            rs.close();
+            preparedStatementCount.close();
+            
+            PreparedStatement pstmt;
+            Contract contract;
+            switch (type) {
+                case "PurchaseContract":
+                    pstmt = _connection.prepareStatement(selectSQLPurchase);
+                    pstmt.setInt(1, ID);
+                    rs = pstmt.executeQuery();
+                    contract = new PurchaseContract();
+                    break;
+                case "TenancyContract":
+                    pstmt = _connection.prepareStatement(selectSQLTenancy);
+                    pstmt.setInt(1, ID);
+                    rs = pstmt.executeQuery();
+                    contract = new TenancyContract();
+                    break;
+                default:
+                    return null;
+            }
+            
+            if (rs.next()) {
+                contract.setContractNo(ID);
+                contract.setPlace(rs.getString("place"));
+                contract.setDate(rs.getString("date"));
+                contract.setPerson(rs.getInt("person"));
+                
+                if (contract instanceof PurchaseContract) {
+                    ((PurchaseContract) contract).setInterestRate(rs.getInt("interestRate"));
+                    ((PurchaseContract) contract).setNoOfInstallments(rs.getInt("numberOfInstallments"));
+                    ((PurchaseContract) contract).setHouse(rs.getInt("house"));
+                }
+                if (contract instanceof TenancyContract) {
+                    ((TenancyContract) contract).setStartDate(rs.getInt("startDate"));
+                    ((TenancyContract) contract).setDuration(rs.getInt("duration"));
+                    ((TenancyContract) contract).setAdditionalCost(rs.getInt("additionalCosts"));
+                    ((TenancyContract) contract).setApartment(rs.getInt("apartment"));
+                }
+                
+                rs.close();
+                pstmt.close();
+                _contracts.put(ID, contract);
+                return contract;
+            }
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        
+        return null;
     }
     
     /**
