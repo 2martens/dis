@@ -2,6 +2,7 @@ package de.dis2017.data;
 
 import java.sql.Timestamp;
 import java.time.Duration;
+import java.util.Date;
 
 public class TenancyContract extends Contract {
 	private Timestamp startDate;
@@ -14,8 +15,8 @@ public class TenancyContract extends Contract {
 		return startDate;
 	}
 
-	public void setStartDate(Timestamp startDate) {
-		this.startDate = startDate;
+	public void setStartDate(Date startDate) {
+		this.startDate = new Timestamp(startDate.getTime());
 	}
 
 	public Duration getDuration() {
