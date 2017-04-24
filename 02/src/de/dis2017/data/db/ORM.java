@@ -697,4 +697,49 @@ public class ORM {
             e.printStackTrace();
         }
     }
+    
+    /**
+     * Persists the given person.
+     *
+     * @param person the person that should be persisted
+     */
+    public void persist(Person person)
+    {
+        try {
+            if (person.getId() == -1) {
+                String insertSQL = "INSERT INTO PERSON (firstName, name, address) VALUES (?, ?, ?)";
+                PreparedStatement pstmt = _connection.prepareStatement(insertSQL, Statement.RETURN_GENERATED_KEYS);
+                
+                pstmt.setString(1, person.getFirstName());
+                pstmt.setString(2, person.getName());
+                pstmt.setString(3, person.getAddress());
+                pstmt.executeUpdate();
+                
+                ResultSet rs = pstmt.getGeneratedKeys();
+                if (rs.next()) {
+                    person.setId(rs.getInt(1));
+                }
+                
+                rs.close();
+                pstmt.close();
+            } else {
+                // create query
+                String updateSQL = "UPDATE PERSON SET firstName = ?, name = ?, address = ? WHERE ID = ?";
+                PreparedStatement pstmt = _connection.prepareStatement(updateSQL);
+                pstmt.setString(1, person.getFirstName());
+                pstmt.setString(2, person.getName());
+                pstmt.setString(3, person.getAddress());
+                pstmt.setInt(4, person.getId());
+                
+                // execute query
+                pstmt.executeUpdate();
+                pstmt.close();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        if (!_persons.containsKey(person.getId())) {
+            _persons.put(person.getId(), person);
+        }
+    }
 }
