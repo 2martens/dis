@@ -7,5 +7,8 @@ package de.dis2017.data.db;
 public enum Type {
     ESTATEAGENT,
     ESTATE,
-    CONTRACT;
+    CONTRACT,
+    PERSON,
+    HOUSE,
+    APARTMENT;
 }
