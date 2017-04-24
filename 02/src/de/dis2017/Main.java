@@ -148,7 +148,7 @@ public class Main {
         estate.setSquareArea(FormUtil.readInt("Square Area"));
         estate.setAgent(FormUtil.readInt("EstateAgent ID"));
         if (isApartment) {
-            Apartment apartment = (Apartment) estate;
+            Apartment apartment = new Apartment(estate);
             apartment.setFloor(FormUtil.readInt("Floor"));
             apartment.setRooms(FormUtil.readInt("Rooms"));
             apartment.setRent(FormUtil.readInt("Rent"));
@@ -158,7 +158,7 @@ public class Main {
             apartment.setBuiltinKitchen(input.equals("Y") || input.equals("y"));
         }
         else {
-            House house = (House) estate;
+            House house = new House(estate);
             house.setPrice(FormUtil.readInt("Price"));
             house.setFloors(FormUtil.readInt("Floors"));
             input = FormUtil.readString("Garden(Y/N)");
@@ -562,7 +562,7 @@ public class Main {
             contract = tenancyContract;
             tenancyContract.setApartment(FormUtil.readInt("Apartment ID"));
             tenancyContract.setPlace(place);
-            tenancyContract.setDate(date);
+            tenancyContract.setDate(Date.valueOf(date));
             tenancyContract.setPerson(person);
             tenancyContract.setStartDate(Date.valueOf(FormUtil.readString("Start Date")));
             Date endDate = Date.valueOf(FormUtil.readString("End Date"));
@@ -580,7 +580,7 @@ public class Main {
             PurchaseContract purchaseContract = new PurchaseContract();
             contract = purchaseContract;
             purchaseContract.setPlace(place);
-            purchaseContract.setDate(date);
+            purchaseContract.setDate(Date.valueOf(date));
             purchaseContract.setPerson(person);
             purchaseContract.setHouse(FormUtil.readInt("House ID"));
             purchaseContract.setNoOfInstallments(FormUtil.readInt("No of Installments"));
@@ -599,7 +599,8 @@ public class Main {
         
         for (Object o : persons) {
             Person person = (Person) o;
-            System.out.println("ID: " + person.getId() + ", Name: " + person.getFirstName() + " "  + person.getName());
+            System.out.println("ID: " + person.getId() + ", Name: " + person.getFirstName() + " "  + person.getName()
+                               + " , Address: " + person.getAddress());
         }
         System.out.println("------------------");
     }

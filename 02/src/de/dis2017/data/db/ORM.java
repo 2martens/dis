@@ -1,6 +1,13 @@
 package de.dis2017.data.db;
 
-import de.dis2017.data.*;
+import de.dis2017.data.Apartment;
+import de.dis2017.data.Contract;
+import de.dis2017.data.Estate;
+import de.dis2017.data.EstateAgent;
+import de.dis2017.data.House;
+import de.dis2017.data.Person;
+import de.dis2017.data.PurchaseContract;
+import de.dis2017.data.TenancyContract;
 import org.jetbrains.annotations.Nullable;
 
 import java.sql.*;
@@ -20,6 +27,7 @@ public class ORM {
     private Map<Integer, Estate> _estates;
     private Map<Integer, Contract> _contracts;
     private Map<Integer, Person> _persons;
+
     
     /**
      * Initializes the ORM.
@@ -275,7 +283,7 @@ public class ORM {
             Contract contract = new Contract();
             contract.setContractNo(rs.getInt("contractNumber"));
             contract.setPlace(rs.getString("place"));
-            contract.setDate(rs.getString("date"));
+            contract.setDate(rs.getDate("date"));
             
             contracts.add(contract);
         }
@@ -375,7 +383,7 @@ public class ORM {
             if (rs.next()) {
                 contract.setContractNo(ID);
                 contract.setPlace(rs.getString("place"));
-                contract.setDate(rs.getString("date"));
+                contract.setDate(rs.getDate("date"));
                 contract.setPerson(rs.getInt("person"));
                 
                 if (contract instanceof PurchaseContract) {
@@ -876,7 +884,7 @@ public class ORM {
                 String insertSQL = "INSERT INTO CONTRACT (date, place) " +
                                    "VALUES (?, ?)";
                 PreparedStatement pstmt = _connection.prepareStatement(insertSQL, Statement.RETURN_GENERATED_KEYS);
-                pstmt.setString(1, contract.getDate());
+                pstmt.setDate(1, contract.getDate());
                 pstmt.setString(2, contract.getPlace());
                 pstmt.executeUpdate();
                 

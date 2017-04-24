@@ -8,9 +8,18 @@ public class TenancyContract extends Contract {
 	private Timestamp startDate;
 	private Duration  duration;
 	private int       additionalCost;
-	
-	private int apartment;
 
+	public TenancyContract(){
+		super();
+	}
+	
+	public TenancyContract(Contract contract){
+		this.setContractNo(contract.getContractNo());
+		this.setDate(contract.getDate());
+		this.setPlace(contract.getPlace());
+		this.setPerson(contract.getPerson());
+	}
+	
 	public Timestamp getStartDate() {
 		return startDate;
 	}
@@ -40,10 +49,10 @@ public class TenancyContract extends Contract {
 	}
 
 	public int getApartment() {
-		return apartment;
+		return super.getEstate();
 	}
 
 	public void setApartment(int apartment) {
-		this.apartment = apartment;
+		super.setEstate(apartment);
 	}
 }
