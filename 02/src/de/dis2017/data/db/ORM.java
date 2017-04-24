@@ -59,6 +59,17 @@ public class ORM {
                 case CONTRACT:
                     objects = processContracts(rs);
                     break;
+                case PERSON:
+                    objects = processPersons(rs);
+                    break;
+                case HOUSE:
+                    List<?> estates = getAll(Type.ESTATE);
+                    objects = processHouses(rs, estates);
+                    break;
+                case APARTMENT:
+                    estates = getAll(Type.ESTATE);
+                    objects = processApartments(rs, estates);
+                    break;
             }
             rs.close();
             pstmt.close();
@@ -93,6 +104,88 @@ public class ORM {
         }
         
         return estates;
+    }
+    
+    /**
+     * Process a select all query for houses.
+     *
+     * @param rs the result set of such a query
+     * @param estates a list of estates
+     * @return a list of houses
+     * @throws SQLException when an error occurs during the rs.next call
+     */
+    private List<House> processHouses(ResultSet rs, List<?> estates) throws SQLException {
+        List<House> houses = new ArrayList<>();
+        Map<Integer, House> housesMap = new HashMap<>();
+        
+        while (rs.next()) {
+            House house = new House();
+            house.setId(rs.getInt("ID"));
+            house.setPrice(rs.getInt("price"));
+            house.setGarden(rs.getBoolean("garden"));
+            house.setFloors(rs.getInt("floors"));
+            
+            houses.add(house);
+            housesMap.put(house.getId(), house);
+        }
+        
+        for (Object o : estates) {
+            Estate estate = (Estate) o;
+            if (!housesMap.containsKey(estate.getId())) {
+                continue;
+            }
+            House _house = housesMap.get(estate.getId());
+            _house.setCity(estate.getCity());
+            _house.setPostalCode(estate.getPostalCode());
+            _house.setStreet(estate.getStreet());
+            _house.setStreetNumber(estate.getStreetNumber());
+            _house.setSquareArea(estate.getSquareArea());
+            _house.setAgent(estate.getAgent());
+        }
+        
+        return houses;
+    }
+    
+    /**
+     * Process a select all query for houses.
+     *
+     * @param rs the result set of such a query
+     * @param estates a list of estates
+     * @return a list of houses
+     * @throws SQLException when an error occurs during the rs.next call
+     */
+    private List<Apartment> processApartments(ResultSet rs, List<?> estates) throws SQLException {
+        List<Apartment> apartments = new ArrayList<>();
+        Map<Integer, Apartment> apartmentsMap = new HashMap<>();
+        
+        while (rs.next()) {
+            Apartment apartment = new Apartment();
+            apartment.setId(rs.getInt("ID"));
+            apartment.setFloor(rs.getInt("floor"));
+            apartment.setRent(rs.getInt("rent"));
+            apartment.setRooms(rs.getInt("rooms"));
+            apartment.setBalcony(rs.getBoolean("balcony"));
+            apartment.setBuiltinKitchen(rs.getBoolean("builtInKitchen"));
+            
+            apartments.add(apartment);
+            apartmentsMap.put(apartment.getId(), apartment);
+        }
+        
+        for (Object o : estates) {
+            Estate estate = (Estate) o;
+            if (!apartmentsMap.containsKey(estate.getId())) {
+                continue;
+            }
+            Apartment _apartment = apartmentsMap.get(estate.getId());
+            _apartment.setCity(estate.getCity());
+            _apartment.setPostalCode(estate.getPostalCode());
+            _apartment.setStreet(estate.getStreet());
+            _apartment.setStreetNumber(estate.getStreetNumber());
+            _apartment.setSquareArea(estate.getSquareArea());
+            _apartment.setAgent(estate.getAgent());
+        }
+        
+        return apartments;
     }
     
     /**
@@ -140,6 +233,29 @@ public class ORM {
         }
         
         return contracts;
+    }
+    
+    /**
+     * Process a select all query for persons.
+     *
+     * @param rs the result set of such a query
+     * @return a list of persons
+     * @throws SQLException when an error occurs during the rs.next call
+     */
+    private List<Person> processPersons(ResultSet rs) throws SQLException {
+        List<Person> persons = new ArrayList<>();
+        
+        while (rs.next()) {
+            Person person = new Person();
+            person.setId(rs.getInt("ID"));
+            person.setFirstName(rs.getString("firstName"));
+            person.setName(rs.getString("name"));
+            person.setAddress(rs.getString("address"));
+            
+            persons.add(person);
+        }
+        
+        return persons;
     }
     
     /**
