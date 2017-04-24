@@ -11,6 +11,9 @@ import de.dis2017.data.TenancyContract;
 import de.dis2017.data.db.ORM;
 import de.dis2017.data.db.Type;
 
+import java.sql.Date;
+import java.text.DateFormat;
+import java.time.Duration;
 import java.util.List;
 
 /**
@@ -72,112 +75,6 @@ public class Main {
 					return;
 			}
 		}
-	}
-    
-    private static void showContractMenu() {
-    	// menu options
-		final int INSERT_PERSON = 0;
-		final int CREATE_CONTRACT = 1;
-		final int OVERVIEW_CONTRACTS = 2;
-		final int BACK = 3;
-		
-		// create menu
-		Menu mainMenu = new Menu("Contract Menu");
-		mainMenu.addEntry("Insert person", INSERT_PERSON );
-		mainMenu.addEntry("Create/Sign contract", CREATE_CONTRACT);
-		mainMenu.addEntry("Contracts overview", OVERVIEW_CONTRACTS);
-		mainMenu.addEntry("Back", BACK);
-		
-		// process input
-		while(true) {
-			int response = mainMenu.show();
-			
-			switch(response) {
-				case INSERT_PERSON:
-				    newPerson();
-					break;
-				case CREATE_CONTRACT:
-				    newContract();
-					break;
-				case OVERVIEW_CONTRACTS:
-				    showContractsOverview();
-				    break;
-				case BACK:
-					return;
-			}
-		}
-	}
-
-	private static void showContractsOverview() {
-		List<?> contracts = _orm.getAll(Type.CONTRACT);
-		Menu listContracts = new Menu("Contracts Overview");
-        
-        final int BACK = 0;
-        
-        for (Object o : contracts) {
-            Contract contract = (Contract) o;
-            if(contract instanceof TenancyContract){
-            	TenancyContract tenContract = (TenancyContract) contract;
-            	listContracts.addEntry("Contract No: " + tenContract.getContractNo() + " Place: "+tenContract.getPlace()
-            	+ "Date: "+tenContract.getDate()+" Start Date: "+tenContract.getStartDate()
-            	+" Duration: "+tenContract.getDuration()+" Additional Costs: "+tenContract.getAdditionalCost()
-            	,tenContract.getContractNo());
-            }
-            else{
-            	PurchaseContract purContract = (PurchaseContract) contract;
-            	listContracts.addEntry("Contract No: " + purContract.getContractNo() + " Place: "+purContract.getPlace()
-            	+ "Date: "+purContract.getDate()+" No of Installments: "+purContract.getNoOfInstallments()
-            	+" Interest Rate: "+purContract.getInterestRate()
-            	,purContract.getContractNo());
-            }
-        }
-        listContracts.addEntry("Back to the Contract management menu", BACK);
-        
-        // process input
-        while(true) {
-            int response = listContracts.show();
-            
-            switch (response) {
-                case BACK:
-                    return;
-                default:
-                    break;
-            }
-        }
-	}
-
-	private static void newContract() {
-		Contract contract = new Contract();
-		//choose Estate from List
-		Estate estate = new Estate();
-		//choose Person from List
-		contract.setPlace(FormUtil.readString("Place"));
-		contract.setDate(FormUtil.readString("Date"));
-		if(estate instanceof Apartment){
-			TenancyContract tenContract = (TenancyContract) contract;
-			tenContract.setStartDate(FormUtil.readString("Start Date"));
-			tenContract.setDuration(FormUtil.readInt("Duration"));
-			tenContract.setAdditionalCost(FormUtil.readInt("Additional Costs"));
-			
-			//_orm.persist(tenContract);
-		}
-		else{
-			PurchaseContract purContract = (PurchaseContract) contract;
-			purContract.setNoOfInstallments(FormUtil.readInt("No of Installments"));
-			purContract.setInterestRate(FormUtil.readInt("Interest Rate"));
-			
-			//_orm.persist(purContract);
-		}
-	}
-
-	private static void newPerson() {
-        Person person = new Person();
-        person.setFirstName(FormUtil.readString("First Name"));
-        person.setName(FormUtil.readString("Name"));
-        person.setAddress(FormUtil.readString("Address"));
-        
-        //_orm.persist(person);
-        System.out.println("Person with the Name " + person.getFirstName() +" "+person.getName() + " was created.");
 	}
 
 	/**
@@ -250,7 +147,7 @@ public class Main {
         estate.setCity(FormUtil.readString("City"));
         estate.setSquareArea(FormUtil.readInt("Square Area"));
         estate.setAgent(FormUtil.readInt("EstateAgent ID"));
-        if(isApartment){
+        if (isApartment) {
             Apartment apartment = (Apartment) estate;
             apartment.setFloor(FormUtil.readInt("Floor"));
             apartment.setRooms(FormUtil.readInt("Rooms"));
@@ -260,7 +157,7 @@ public class Main {
             input = FormUtil.readString("Built-in Kitchen(Y/N)");
             apartment.setBuiltinKitchen(input.equals("Y") || input.equals("y"));
         }
-        else{
+        else {
             House house = (House) estate;
             house.setPrice(FormUtil.readInt("Price"));
             house.setFloors(FormUtil.readInt("Floors"));
@@ -268,7 +165,7 @@ public class Main {
             house.setGarden(input.equals("Y") || input.equals("y"));
         }
         
-        //_orm.persist(estate);
+        _orm.persist(estate);
         System.out.println("Estate with the ID " + estate.getId() + " was created.");
     }
     
@@ -591,5 +488,217 @@ public class Main {
     private static void deleteEstateAgent(EstateAgent agent) {
         _orm.delete(agent);
         System.out.println("EstateAgent with the ID " + agent.getId() + " was deleted.");
+    }
+    
+    /**
+     * Shows the contract management menu.
+     */
+    private static void showContractMenu() {
+        // menu options
+        final int INSERT_PERSON = 0;
+        final int CREATE_CONTRACT = 1;
+        final int OVERVIEW_CONTRACTS = 2;
+        final int BACK = 3;
+        
+        // create menu
+        Menu mainMenu = new Menu("Contract Management");
+        mainMenu.addEntry("Insert person", INSERT_PERSON );
+        mainMenu.addEntry("Create/Sign contract", CREATE_CONTRACT);
+        mainMenu.addEntry("Contracts overview", OVERVIEW_CONTRACTS);
+        mainMenu.addEntry("Back", BACK);
+        
+        // process input
+        while(true) {
+            int response = mainMenu.show();
+            
+            switch(response) {
+                case INSERT_PERSON:
+                    newPerson();
+                    break;
+                case CREATE_CONTRACT:
+                    newContract();
+                    break;
+                case OVERVIEW_CONTRACTS:
+                    showContractsOverview();
+                    break;
+                case BACK:
+                    return;
+            }
+        }
+    }
+    
+    /**
+     * Creates a new person.
+     */
+    private static void newPerson() {
+        Person person = new Person();
+        person.setFirstName(FormUtil.readString("First Name"));
+        person.setName(FormUtil.readString("Name"));
+        person.setAddress(FormUtil.readString("Address"));
+        
+        _orm.persist(person);
+        System.out.println("Person with the Name " + person.getFirstName() + " " + person.getName() + " was created.");
+    }
+    
+    /**
+     * Creates a new contract.
+     */
+    private static void newContract() {
+        printListOfPersons();
+        Contract contract;
+        String place = FormUtil.readString("Place");
+        String date = FormUtil.readString("Date");
+        int person = FormUtil.readInt("Person ID");
+        String input = FormUtil.readString("Purchase Contract(P) / Tenancy Contract(T)");
+        boolean isTenancy = input.equals("T") || input.equals("t");
+        if (isTenancy) {
+            printListOfApartments();
+            TenancyContract tenancyContract = new TenancyContract();
+            contract = tenancyContract;
+            tenancyContract.setApartment(FormUtil.readInt("Apartment ID"));
+            tenancyContract.setPlace(place);
+            tenancyContract.setDate(date);
+            tenancyContract.setPerson(person);
+            tenancyContract.setStartDate(Date.valueOf(FormUtil.readString("Start Date")));
+            Date endDate = Date.valueOf(FormUtil.readString("End Date"));
+            long duration = endDate.getTime() - tenancyContract.getStartDate().getTime();
+            tenancyContract.setDuration(Duration.ofMillis(duration));
+            tenancyContract.setAdditionalCost(FormUtil.readInt("Additional Costs"));
+        }
+        else {
+            printListOfHouses();
+            PurchaseContract purchaseContract = new PurchaseContract();
+            contract = purchaseContract;
+            purchaseContract.setPlace(place);
+            purchaseContract.setDate(date);
+            purchaseContract.setPerson(person);
+            purchaseContract.setHouse(FormUtil.readInt("House ID"));
+            purchaseContract.setNoOfInstallments(FormUtil.readInt("No of Installments"));
+            purchaseContract.setInterestRate(FormUtil.readInt("Interest Rate"));
+        }
+        _orm.persist(contract);
+    }
+    
+    /**
+     * Print a list of persons.
+     */
+    private static void printListOfPersons() {
+        List<?> persons = _orm.getAll(Type.PERSON);
+        System.out.println("List of Persons");
+        System.out.println("------------------");
+        
+        for (Object o : persons) {
+            Person person = (Person) o;
+            System.out.println("ID: " + person.getId() + ", Name: " + person.getFirstName() + " "  + person.getName());
+        }
+        System.out.println("------------------");
+    }
+    
+    /**
+     * Print a list of houses.
+     */
+    private static void printListOfHouses() {
+        List<?> houses = _orm.getAll(Type.HOUSE);
+        System.out.println("List of Houses");
+        System.out.println("------------------");
+        
+        for (Object o : houses) {
+            House house = (House) o;
+            System.out.println("ID: " + house.getId() + "; Address: " + house.getStreet() + " "
+                               + house.getStreetNumber() + ", " + house.getPostalCode() + " " + house.getCity());
+        }
+        System.out.println("------------------");
+    }
+    
+    /**
+     * Print a list of houses.
+     */
+    private static void printListOfApartments() {
+        List<?> apartments = _orm.getAll(Type.APARTMENT);
+        System.out.println("List of Apartments");
+        System.out.println("------------------");
+        
+        for (Object o : apartments) {
+            Apartment apartment = (Apartment) o;
+            System.out.println("ID: " + apartment.getId() + "; Address: " + apartment.getStreet() + " "
+                               + apartment.getStreetNumber() + ", " + apartment.getPostalCode() + " " + apartment.getCity());
+        }
+        System.out.println("------------------");
+    }
+    
+    /**
+     * Shows the contracts overview.
+     */
+    private static void showContractsOverview() {
+        List<?> contracts = _orm.getAll(Type.CONTRACT);
+        Menu listContracts = new Menu("Select a contract to view the details");
+        
+        final int BACK = 0;
+        
+        for (Object o : contracts) {
+            Contract contract = (Contract) o;
+            listContracts.addEntry("Contract No: " + contract.getContractNo() + ", Place: " + contract.getPlace()
+                                   + ", Date: " + contract.getDate(), contract.getContractNo());
+        }
+        listContracts.addEntry("Back to the Contract management menu", BACK);
+        
+        // process input
+        while(true) {
+            int response = listContracts.show();
+            
+            switch (response) {
+                case BACK:
+                    return;
+                default:
+                    showContract(response);
+                    break;
+            }
+        }
+    }
+    
+    /**
+     * Prints the contract details to command line.
+     *
+     * @param contract the contract from which the details should be printed to commandline
+     */
+    private static void printContractDetails(Contract contract) {
+        System.out.println("------------------");
+        System.out.println("Contract No: " + contract.getContractNo());
+        System.out.println("Place: " + contract.getPlace());
+        System.out.println("Date: " + contract.getDate());
+        Person person = _orm.getPerson(contract.getPerson());
+        System.out.println("Person: " + person.getFirstName() + " " + person.getName());
+        Estate estate;
+        if (contract instanceof PurchaseContract) {
+            PurchaseContract purchaseContract = (PurchaseContract) contract;
+            System.out.println("Number of Installments: " + purchaseContract.getNoOfInstallments());
+            System.out.println("Interest Rate: " + purchaseContract.getInterestRate());
+            estate = _orm.getEstate(purchaseContract.getHouse());
+            System.out.println("House: " + estate.getStreet() + " " + estate.getStreetNumber() + ", "
+                               + estate.getPostalCode() + " " + estate.getCity());
+        }
+        else if (contract instanceof TenancyContract) {
+            TenancyContract tenancyContract = (TenancyContract) contract;
+            Duration        duration        = tenancyContract.getDuration();
+            System.out.println("Start Date: " + DateFormat.getInstance().format(tenancyContract.getStartDate()));
+            System.out.println("Duration: " + duration.toDays() + " days " + duration.toHours() + "hours");
+            System.out.println("Additional Costs: " + tenancyContract.getAdditionalCost());
+            estate = _orm.getEstate(tenancyContract.getApartment());
+            System.out.println("Apartment: " + estate.getStreet() + " " + estate.getStreetNumber() + ", "
+                               + estate.getPostalCode() + " " + estate.getCity());
+        }
+        System.out.println("------------------");
+    }
+    
+    /**
+     * Shows a selected contract.
+     *
+     * @param id the id of the selected contract
+     */
+    private static void showContract(int id) {
+        Contract contract = _orm.getContract(id);
+        
+        System.out.println("Contract");
+        printContractDetails(contract);
     }
 }
