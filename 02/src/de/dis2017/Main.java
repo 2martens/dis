@@ -552,7 +552,12 @@ public class Main {
         String input = FormUtil.readString("Purchase Contract(P) / Tenancy Contract(T)");
         boolean isTenancy = input.equals("T") || input.equals("t");
         if (isTenancy) {
-            printListOfApartments();
+            boolean apartmentsAvailable = printListOfApartments();
+            if (!apartmentsAvailable) {
+                System.out.println("No apartments available to rent.");
+                return;
+            }
+            
             TenancyContract tenancyContract = new TenancyContract();
             contract = tenancyContract;
             tenancyContract.setApartment(FormUtil.readInt("Apartment ID"));
@@ -566,7 +571,12 @@ public class Main {
             tenancyContract.setAdditionalCost(FormUtil.readInt("Additional Costs"));
         }
         else {
-            printListOfHouses();
+            boolean housesAvailable = printListOfHouses();
+            if (!housesAvailable) {
+                System.out.println("No houses available to sell.");
+                return;
+            }
+            
             PurchaseContract purchaseContract = new PurchaseContract();
             contract = purchaseContract;
             purchaseContract.setPlace(place);
@@ -596,10 +606,17 @@ public class Main {
     
     /**
      * Print a list of houses.
+     *
+     * @return true if houses are available, false otherwise
      */
-    private static void printListOfHouses() {
+    private static boolean printListOfHouses() {
         List<?> houses = _orm.getAll(Type.HOUSE);
         List<Integer> soldHouses = _orm.getSoldHouses();
+        
+        if (houses.size() <= soldHouses.size()) {
+            return false;
+        }
+        
         System.out.println("List of available Houses");
         System.out.println("------------------");
         
@@ -612,14 +629,22 @@ public class Main {
                                + house.getStreetNumber() + ", " + house.getPostalCode() + " " + house.getCity());
         }
         System.out.println("------------------");
+        
+        return true;
     }
     
     /**
      * Print a list of houses.
+     *
+     * @return true if apartments are available, false otherwise
      */
-    private static void printListOfApartments() {
+    private static boolean printListOfApartments() {
         List<?> apartments = _orm.getAll(Type.APARTMENT);
         List<Integer> rentedApartments = _orm.getRentedApartments();
+        if (apartments.size() <= rentedApartments.size()) {
+            return false;
+        }
+        
         System.out.println("List of available Apartments");
         System.out.println("------------------");
         
@@ -632,6 +657,8 @@ public class Main {
                                + apartment.getStreetNumber() + ", " + apartment.getPostalCode() + " " + apartment.getCity());
         }
         System.out.println("------------------");
+        
+        return true;
     }
     
     /**
