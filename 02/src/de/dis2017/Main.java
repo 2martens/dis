@@ -545,10 +545,12 @@ public class Main {
      */
     private static void newContract() {
         printListOfPersons();
-        Contract contract;
-        String place = FormUtil.readString("Place");
-        String date = FormUtil.readString("Date");
-        int person = FormUtil.readInt("Person ID");
+        Contract contract = new Contract();
+        contract.setPerson(FormUtil.readInt("Person ID"));
+        contract.setPlace(FormUtil.readString("Place"));
+        System.out.println("Please enter the date of the contract.");
+        contract.setDate(Date.valueOf(FormUtil.readInt("Year") + "-" + FormUtil.readInt("Month") + "-"
+                                      + FormUtil.readInt("Day")));
         String input = FormUtil.readString("Purchase Contract(P) / Tenancy Contract(T)");
         boolean isTenancy = input.equals("T") || input.equals("t");
         if (isTenancy) {
@@ -558,15 +560,16 @@ public class Main {
                 return;
             }
             
-            TenancyContract tenancyContract = new TenancyContract();
-            contract = tenancyContract;
+            TenancyContract tenancyContract = new TenancyContract(contract);
             tenancyContract.setApartment(FormUtil.readInt("Apartment ID"));
-            tenancyContract.setPlace(place);
-            tenancyContract.setDate(Date.valueOf(date));
-            tenancyContract.setPerson(person);
-            tenancyContract.setStartDate(Date.valueOf(FormUtil.readString("Start Date")));
-            Date endDate = Date.valueOf(FormUtil.readString("End Date"));
-            long duration = endDate.getTime() - tenancyContract.getStartDate().getTime();
+            System.out.println("Please enter the start date of the tenancy.");
+            Date startDate = Date.valueOf(FormUtil.readInt("Year") + "-" + FormUtil.readInt("Month") + "-"
+                                          + FormUtil.readInt("Day"));
+            tenancyContract.setStartDate(startDate);
+            System.out.println("Please enter the end date of the tenancy.");
+            Date endDate = Date.valueOf(FormUtil.readInt("Year") + "-" + FormUtil.readInt("Month") + "-"
+                                        + FormUtil.readInt("Day"));
+            long duration = endDate.getTime() - startDate.getTime();
             tenancyContract.setDuration(Duration.ofMillis(duration));
             tenancyContract.setAdditionalCost(FormUtil.readInt("Additional Costs"));
         }
@@ -577,11 +580,7 @@ public class Main {
                 return;
             }
             
-            PurchaseContract purchaseContract = new PurchaseContract();
-            contract = purchaseContract;
-            purchaseContract.setPlace(place);
-            purchaseContract.setDate(Date.valueOf(date));
-            purchaseContract.setPerson(person);
+            PurchaseContract purchaseContract = new PurchaseContract(contract);
             purchaseContract.setHouse(FormUtil.readInt("House ID"));
             purchaseContract.setNoOfInstallments(FormUtil.readInt("No of Installments"));
             purchaseContract.setInterestRate(FormUtil.readInt("Interest Rate"));
