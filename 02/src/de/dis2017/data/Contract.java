@@ -12,11 +12,11 @@ public class Contract {
     private int    person;
     private int    estate;
     
-    public int getEstate() {
+    int getEstate() {
         return estate;
     }
     
-    public void setEstate(int estate) {
+    void setEstate(int estate) {
         this.estate = estate;
     }
     
