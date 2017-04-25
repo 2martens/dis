@@ -23,11 +23,11 @@ public class ORM {
     private Connection _connection;
     
     private Map<Integer, EstateAgent> _agents;
-    private Map<String, EstateAgent> _agentsUsername;
-    private Map<Integer, Estate> _estates;
-    private Map<Integer, Contract> _contracts;
-    private Map<Integer, Person> _persons;
-
+    private Map<String, EstateAgent>  _agentsUsername;
+    private Map<Integer, Estate>      _estates;
+    private Map<Integer, Contract>    _contracts;
+    private Map<Integer, Person>      _persons;
+    
     
     /**
      * Initializes the ORM.
@@ -45,7 +45,8 @@ public class ORM {
     /**
      * Loads all objects from the database and returns a list of them.
      *
-     * @param objectType the type of objects to load
+     * @param objectType
+     *         the type of objects to load
      * @return a list of objects
      */
     public List<?> getAll(Type objectType) {
@@ -54,7 +55,7 @@ public class ORM {
             // create query
             String            selectSQL = "SELECT * FROM " + objectType.name();
             PreparedStatement pstmt     = _connection.prepareStatement(selectSQL);
-    
+            
             // execute query
             ResultSet rs = pstmt.executeQuery();
             switch (objectType) {
@@ -84,7 +85,7 @@ public class ORM {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-    
+        
         return objects;
     }
     
@@ -139,13 +140,16 @@ public class ORM {
     /**
      * Process a select all query for estates.
      *
-     * @param rs the result set of such a query
+     * @param rs
+     *         the result set of such a query
      * @return a list of estates
-     * @throws SQLException when an error occurs during the rs.next call
+     *
+     * @throws SQLException
+     *         when an error occurs during the rs.next call
      */
     private List<Estate> processEstates(ResultSet rs) throws SQLException {
         List<Estate> estates = new ArrayList<>();
-    
+        
         while (rs.next()) {
             Estate estate = new Estate();
             estate.setId(rs.getInt("ID"));
@@ -155,7 +159,7 @@ public class ORM {
             estate.setStreetNumber(rs.getInt("streetNumber"));
             estate.setSquareArea(rs.getInt("squareArea"));
             estate.setAgent(rs.getInt("agent"));
-        
+            
             estates.add(estate);
         }
         
@@ -165,13 +169,17 @@ public class ORM {
     /**
      * Process a select all query for houses.
      *
-     * @param rs the result set of such a query
-     * @param estates a list of estates
+     * @param rs
+     *         the result set of such a query
+     * @param estates
+     *         a list of estates
      * @return a list of houses
-     * @throws SQLException when an error occurs during the rs.next call
+     *
+     * @throws SQLException
+     *         when an error occurs during the rs.next call
      */
     private List<House> processHouses(ResultSet rs, List<?> estates) throws SQLException {
-        List<House> houses = new ArrayList<>();
+        List<House>         houses    = new ArrayList<>();
         Map<Integer, House> housesMap = new HashMap<>();
         
         while (rs.next()) {
@@ -205,13 +213,17 @@ public class ORM {
     /**
      * Process a select all query for houses.
      *
-     * @param rs the result set of such a query
-     * @param estates a list of estates
+     * @param rs
+     *         the result set of such a query
+     * @param estates
+     *         a list of estates
      * @return a list of houses
-     * @throws SQLException when an error occurs during the rs.next call
+     *
+     * @throws SQLException
+     *         when an error occurs during the rs.next call
      */
     private List<Apartment> processApartments(ResultSet rs, List<?> estates) throws SQLException {
-        List<Apartment> apartments = new ArrayList<>();
+        List<Apartment>         apartments    = new ArrayList<>();
         Map<Integer, Apartment> apartmentsMap = new HashMap<>();
         
         while (rs.next()) {
@@ -247,9 +259,12 @@ public class ORM {
     /**
      * Processes a select all query for estate agents.
      *
-     * @param rs the result set of such a query
+     * @param rs
+     *         the result set of such a query
      * @return a list of agents
-     * @throws SQLException when an error occurs during the rs.next call
+     *
+     * @throws SQLException
+     *         when an error occurs during the rs.next call
      */
     private List<EstateAgent> processAgents(ResultSet rs) throws SQLException {
         List<EstateAgent> agents = new ArrayList<>();
@@ -260,7 +275,7 @@ public class ORM {
             agent.setAddress(rs.getString("address"));
             agent.setLogin(rs.getString("login"));
             agent.setPassword(rs.getString("password"));
-
+            
             _agents.put(agent.getId(), agent);
             _agentsUsername.put(agent.getLogin(), agent);
             agents.add(agent);
@@ -272,9 +287,12 @@ public class ORM {
     /**
      * Process a select all query for contracts.
      *
-     * @param rs the result set of such a query
+     * @param rs
+     *         the result set of such a query
      * @return a list of contracts
-     * @throws SQLException when an error occurs during the rs.next call
+     *
+     * @throws SQLException
+     *         when an error occurs during the rs.next call
      */
     private List<Contract> processContracts(ResultSet rs) throws SQLException {
         List<Contract> contracts = new ArrayList<>();
@@ -294,9 +312,12 @@ public class ORM {
     /**
      * Process a select all query for persons.
      *
-     * @param rs the result set of such a query
+     * @param rs
+     *         the result set of such a query
      * @return a list of persons
-     * @throws SQLException when an error occurs during the rs.next call
+     *
+     * @throws SQLException
+     *         when an error occurs during the rs.next call
      */
     private List<Person> processPersons(ResultSet rs) throws SQLException {
         List<Person> persons = new ArrayList<>();
@@ -317,7 +338,8 @@ public class ORM {
     /**
      * Loads the contract with the given ID from database and returns the corresponding object.
      *
-     * @param ID the id of the contract to load
+     * @param ID
+     *         the id of the contract to load
      * @return the Contract or null if there is no such object
      */
     public Contract getContract(int ID) {
@@ -325,25 +347,25 @@ public class ORM {
             return _contracts.get(ID);
         }
         
-        String            selectSQLPurchase = "SELECT * FROM PURCHASECONTRACT " +
-                                              "LEFT JOIN CONTRACT ON PURCHASECONTRACT.CONTRACTNUMBER = CONTRACT.CONTRACTNUMBER " +
-                                              "LEFT JOIN SALES ON PURCHASECONTRACT.CONTRACTNUMBER = SALES.CONTRACTNUMBER " +
-                                              "WHERE PURCHASECONTRACT.CONTRACTNUMBER = ?";
+        String selectSQLPurchase = "SELECT * FROM PURCHASECONTRACT " +
+                                   "LEFT JOIN CONTRACT ON PURCHASECONTRACT.CONTRACTNUMBER = CONTRACT.CONTRACTNUMBER " +
+                                   "LEFT JOIN SALES ON PURCHASECONTRACT.CONTRACTNUMBER = SALES.CONTRACTNUMBER " +
+                                   "WHERE PURCHASECONTRACT.CONTRACTNUMBER = ?";
         String selectSQLTenancy = "SELECT * FROM TENANCYCONTRACT " +
                                   "LEFT JOIN CONTRACT ON TENANCYCONTRACT.CONTRACTNUMBER = CONTRACT.CONTRACTNUMBER " +
                                   "LEFT JOIN RENTALS ON TENANCYCONTRACT.CONTRACTNUMBER = RENTALS.CONTRACTNUMBER " +
                                   "WHERE TENANCYCONTRACT.CONTRACTNUMBER = ?";
         
         String countPurchase = "SELECT COUNT(contractNumber) AS count FROM PURCHASECONTRACT WHERE contractNumber = ?";
-        String countTenancy = "SELECT COUNT(contractNumber) AS count FROM TENANCYCONTRACT WHERE contractNumber = ?";
+        String countTenancy  = "SELECT COUNT(contractNumber) AS count FROM TENANCYCONTRACT WHERE contractNumber = ?";
         try {
             // try purchase contract first
             PreparedStatement preparedStatementCount = _connection.prepareStatement(countPurchase);
             preparedStatementCount.setInt(1, ID);
             ResultSet rs = preparedStatementCount.executeQuery();
             rs.next();
-            int count = rs.getInt("count");
-            String type = "None";
+            int    count = rs.getInt("count");
+            String type  = "None";
             if (count == 0) {
                 // try tenancy contract next
                 preparedStatementCount = _connection.prepareStatement(countTenancy);
@@ -354,15 +376,14 @@ public class ORM {
                 if (count == 1) {
                     type = "TenancyContract";
                 }
-            }
-            else {
+            } else {
                 type = "PurchaseContract";
             }
             rs.close();
             preparedStatementCount.close();
             
             PreparedStatement pstmt;
-            Contract contract;
+            Contract          contract;
             switch (type) {
                 case "PurchaseContract":
                     pstmt = _connection.prepareStatement(selectSQLPurchase);
@@ -414,20 +435,21 @@ public class ORM {
     /**
      * Loads the estate with the given ID from database and returns the corresponding object.
      *
-     * @param ID the id of the estate to load
+     * @param ID
+     *         the id of the estate to load
      * @return the Estate or null if there is no such object
      */
     public Estate getEstate(int ID) {
         if (_estates.containsKey(ID)) {
             return _estates.get(ID);
         }
-    
-        String            selectSQLHouse = "SELECT * FROM HOUSE LEFT JOIN ESTATE ON HOUSE.ID = ESTATE.ID " +
-                                           "WHERE HOUSE.ID = ?";
+        
+        String selectSQLHouse = "SELECT * FROM HOUSE LEFT JOIN ESTATE ON HOUSE.ID = ESTATE.ID " +
+                                "WHERE HOUSE.ID = ?";
         String selectSQLApartment = "SELECT * FROM APARTMENT LEFT JOIN ESTATE ON APARTMENT.ID = ESTATE.ID " +
                                     "WHERE APARTMENT.ID = ?";
-    
-        String countHouse = "SELECT COUNT(ID) AS count FROM HOUSE WHERE ID = ?";
+        
+        String countHouse     = "SELECT COUNT(ID) AS count FROM HOUSE WHERE ID = ?";
         String countApartment = "SELECT COUNT(ID) AS count FROM APARTMENT WHERE ID = ?";
         try {
             // try house first
@@ -435,8 +457,8 @@ public class ORM {
             preparedStatementCount.setInt(1, ID);
             ResultSet rs = preparedStatementCount.executeQuery();
             rs.next();
-            int count = rs.getInt("count");
-            String type = "None";
+            int    count = rs.getInt("count");
+            String type  = "None";
             if (count == 0) {
                 // try apartment next
                 preparedStatementCount = _connection.prepareStatement(countApartment);
@@ -447,15 +469,14 @@ public class ORM {
                 if (count == 1) {
                     type = "Apartment";
                 }
-            }
-            else {
+            } else {
                 type = "House";
             }
             rs.close();
             preparedStatementCount.close();
             
             PreparedStatement pstmt;
-            Estate estate;
+            Estate            estate;
             switch (type) {
                 case "House":
                     pstmt = _connection.prepareStatement(selectSQLHouse);
@@ -472,7 +493,7 @@ public class ORM {
                 default:
                     return null;
             }
-    
+            
             if (rs.next()) {
                 estate.setId(ID);
                 estate.setCity(rs.getString("city"));
@@ -494,7 +515,7 @@ public class ORM {
                     ((Apartment) estate).setBalcony(rs.getBoolean("balcony"));
                     ((Apartment) estate).setBuiltinKitchen(rs.getBoolean("builtInKitchen"));
                 }
-    
+                
                 rs.close();
                 pstmt.close();
                 _estates.put(ID, estate);
@@ -511,7 +532,8 @@ public class ORM {
     /**
      * Loads the estate agent with the given ID from database and returns the corresponding object.
      *
-     * @param ID the ID of the agent to load
+     * @param ID
+     *         the ID of the agent to load
      * @return the EstateAgent or null if there is no such agent
      */
     public EstateAgent getAgent(int ID) {
@@ -524,7 +546,7 @@ public class ORM {
             String            selectSQL = "SELECT * FROM ESTATEAGENT WHERE ID = ?";
             PreparedStatement pstmt     = _connection.prepareStatement(selectSQL);
             pstmt.setInt(1, ID);
-        
+            
             return getAgent(pstmt);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -536,7 +558,8 @@ public class ORM {
     /**
      * Loads the person with the given ID from database and returns the corresponding object.
      *
-     * @param ID the ID of the person to load
+     * @param ID
+     *         the ID of the person to load
      * @return the Person or null if there is no such agent
      */
     public Person getPerson(int ID) {
@@ -550,7 +573,7 @@ public class ORM {
             PreparedStatement pstmt     = _connection.prepareStatement(selectSQL);
             pstmt.setInt(1, ID);
             ResultSet rs = pstmt.executeQuery();
-            Person person;
+            Person    person;
             
             if (rs.next()) {
                 person = new Person();
@@ -576,7 +599,8 @@ public class ORM {
     /**
      * Loads the estate agent with the given username from database and returns the corresponding object,
      *
-     * @param username the username of the estate agent
+     * @param username
+     *         the username of the estate agent
      * @return the EstateAgent or null if there is no such agent
      */
     public EstateAgent getAgent(String username) {
@@ -601,12 +625,12 @@ public class ORM {
     /**
      * Executes the given statement and returns an estate agent.
      *
-     * @param pstmt the prepared statement with parameters already set
+     * @param pstmt
+     *         the prepared statement with parameters already set
      * @return the EstateAgent or null
      */
     @Nullable
-    private EstateAgent getAgent(PreparedStatement pstmt)
-    {
+    private EstateAgent getAgent(PreparedStatement pstmt) {
         try {
             // execute query
             ResultSet   rs = pstmt.executeQuery();
@@ -618,10 +642,10 @@ public class ORM {
                 agent.setAddress(rs.getString("address"));
                 agent.setLogin(rs.getString("login"));
                 agent.setPassword(rs.getString("password"));
-    
+                
                 rs.close();
                 pstmt.close();
-    
+                
                 _agents.put(agent.getId(), agent);
                 _agentsUsername.put(agent.getLogin(), agent);
                 return agent;
@@ -636,10 +660,10 @@ public class ORM {
     /**
      * Deletes the given agent from the database.
      *
-     * @param agent the agent that should be deleted
+     * @param agent
+     *         the agent that should be deleted
      */
-    public void delete(EstateAgent agent)
-    {
+    public void delete(EstateAgent agent) {
         if (agent.getId() == -1) {
             System.err.println("This agent is not yet persisted to the database and cannot be deleted.");
             return;
@@ -659,7 +683,8 @@ public class ORM {
     /**
      * Deletes an estate from the database.
      *
-     * @param estate the estate to be deleted
+     * @param estate
+     *         the estate to be deleted
      */
     public void delete(Estate estate) {
         if (estate.getId() == -1) {
@@ -682,15 +707,16 @@ public class ORM {
     /**
      * Deletes an object from the database.
      *
-     * @param sql the sql used for deletion
-     * @param id the id of the object to be deleted
+     * @param sql
+     *         the sql used for deletion
+     * @param id
+     *         the id of the object to be deleted
      */
-    private void delete(String sql, int id)
-    {
+    private void delete(String sql, int id) {
         try {
             PreparedStatement pstmt = _connection.prepareStatement(sql);
             pstmt.setInt(1, id);
-    
+            
             // execute query
             pstmt.executeUpdate();
             pstmt.close();
@@ -702,13 +728,14 @@ public class ORM {
     /**
      * Persists the given agent.
      *
-     * @param agent the agent that should be persisted
+     * @param agent
+     *         the agent that should be persisted
      */
-    public void persist(EstateAgent agent)
-    {
+    public void persist(EstateAgent agent) {
         try {
             if (agent.getId() == -1) {
-                String insertSQL = "INSERT INTO ESTATEAGENT (name, address, login, password) VALUES (?, ?, ?, ?)";
+                String            insertSQL
+                                        = "INSERT INTO ESTATEAGENT (name, address, login, password) VALUES (?, ?, ?, ?)";
                 PreparedStatement pstmt = _connection.prepareStatement(insertSQL, Statement.RETURN_GENERATED_KEYS);
                 
                 pstmt.setString(1, agent.getName());
@@ -716,7 +743,7 @@ public class ORM {
                 pstmt.setString(3, agent.getLogin());
                 pstmt.setString(4, agent.getPassword());
                 pstmt.executeUpdate();
-    
+                
                 ResultSet rs = pstmt.getGeneratedKeys();
                 if (rs.next()) {
                     agent.setId(rs.getInt(1));
@@ -726,13 +753,13 @@ public class ORM {
                 pstmt.close();
             } else {
                 // create query
-                String updateSQL = "UPDATE ESTATEAGENT SET name = ?, address = ?, password = ? WHERE ID = ?";
-                PreparedStatement pstmt = _connection.prepareStatement(updateSQL);
+                String            updateSQL = "UPDATE ESTATEAGENT SET name = ?, address = ?, password = ? WHERE ID = ?";
+                PreparedStatement pstmt     = _connection.prepareStatement(updateSQL);
                 pstmt.setString(1, agent.getName());
                 pstmt.setString(2, agent.getAddress());
                 pstmt.setString(3, agent.getPassword());
                 pstmt.setInt(4, agent.getId());
-    
+                
                 // execute query
                 pstmt.executeUpdate();
                 pstmt.close();
@@ -751,10 +778,10 @@ public class ORM {
     /**
      * Persists the given estate.
      *
-     * @param estate the estate that should be persisted
+     * @param estate
+     *         the estate that should be persisted
      */
-    public void persist(Estate estate)
-    {
+    public void persist(Estate estate) {
         boolean changeFinished = false;
         try {
             _connection.setAutoCommit(false);
@@ -778,9 +805,10 @@ public class ORM {
                 pstmt.close();
                 
                 if (estate instanceof House) {
-                    House house = (House) estate;
-                    String insertSQLHouse = "INSERT INTO HOUSE (ID, price, garden, floors) VALUES (?, ?, ?, ?)";
-                    PreparedStatement pstmtHouse = _connection.prepareStatement(insertSQLHouse);
+                    House             house          = (House) estate;
+                    String            insertSQLHouse
+                                                     = "INSERT INTO HOUSE (ID, price, garden, floors) VALUES (?, ?, ?, ?)";
+                    PreparedStatement pstmtHouse     = _connection.prepareStatement(insertSQLHouse);
                     pstmtHouse.setInt(1, house.getId());
                     pstmtHouse.setInt(2, house.getPrice());
                     pstmtHouse.setInt(3, house.hasGarden() ? 1 : 0);
@@ -790,11 +818,11 @@ public class ORM {
                     pstmt.close();
                     pstmtHouse.close();
                     changeFinished = true;
-                }
-                else if (estate instanceof Apartment) {
+                } else if (estate instanceof Apartment) {
                     Apartment apartment = (Apartment) estate;
-                    String insertSQLApartment = "INSERT INTO APARTMENT (ID, floor, rent, rooms, balcony, builtInKitchen) " +
-                                                "VALUES (?, ?, ?, ?, ?, ?)";
+                    String insertSQLApartment =
+                            "INSERT INTO APARTMENT (ID, floor, rent, rooms, balcony, builtInKitchen) " +
+                            "VALUES (?, ?, ?, ?, ?, ?)";
                     PreparedStatement pstmtApartment = _connection.prepareStatement(insertSQLApartment);
                     pstmtApartment.setInt(1, apartment.getId());
                     pstmtApartment.setInt(2, apartment.getFloor());
@@ -822,9 +850,10 @@ public class ORM {
                 pstmt.setInt(7, estate.getId());
                 
                 if (estate instanceof House) {
-                    House house = (House) estate;
-                    String updateSQLHouse = "UPDATE HOUSE SET floors = ?, garden = ?, price = ? WHERE ID = ?";
-                    PreparedStatement pstmtHouse = _connection.prepareStatement(updateSQLHouse);
+                    House             house          = (House) estate;
+                    String            updateSQLHouse
+                                                     = "UPDATE HOUSE SET floors = ?, garden = ?, price = ? WHERE ID = ?";
+                    PreparedStatement pstmtHouse     = _connection.prepareStatement(updateSQLHouse);
                     pstmtHouse.setInt(1, house.getFloors());
                     pstmtHouse.setInt(2, house.hasGarden() ? 1 : 0);
                     pstmtHouse.setInt(3, house.getPrice());
@@ -834,8 +863,7 @@ public class ORM {
                     pstmt.close();
                     pstmtHouse.close();
                     changeFinished = true;
-                }
-                else if (estate instanceof Apartment) {
+                } else if (estate instanceof Apartment) {
                     Apartment apartment = (Apartment) estate;
                     String updateSQLApartment = "UPDATE APARTMENT SET floor = ?, rent = ?, rooms = ?, " +
                                                 "balcony = ?, builtInKitchen = ? WHERE ID = ?";
@@ -873,10 +901,10 @@ public class ORM {
     /**
      * Persists the given contract.
      *
-     * @param contract the contract that should be persisted
+     * @param contract
+     *         the contract that should be persisted
      */
-    public void persist(Contract contract)
-    {
+    public void persist(Contract contract) {
         boolean changeFinished = false;
         try {
             _connection.setAutoCommit(false);
@@ -907,7 +935,8 @@ public class ORM {
                     pstmtPurchase.executeUpdate();
                     pstmtPurchase.close();
                     
-                    String insertSQLSale = "INSERT INTO SALES (contractNumber, house, person) VALUES (?, ?, ?)";
+                    String            insertSQLSale
+                                                = "INSERT INTO SALES (contractNumber, house, person) VALUES (?, ?, ?)";
                     PreparedStatement pstmtSale = _connection.prepareStatement(insertSQLSale);
                     pstmtSale.setInt(1, purchaseContract.getContractNo());
                     pstmtSale.setInt(2, purchaseContract.getHouse());
@@ -915,8 +944,7 @@ public class ORM {
                     pstmtSale.executeUpdate();
                     pstmtSale.close();
                     changeFinished = true;
-                }
-                else if (contract instanceof TenancyContract) {
+                } else if (contract instanceof TenancyContract) {
                     TenancyContract tenancyContract = (TenancyContract) contract;
                     String insertSQLTenancyContract = "INSERT INTO TENANCYCONTRACT " +
                                                       "(contractNumber, startDate, duration, additionalCosts) " +
@@ -928,8 +956,9 @@ public class ORM {
                     pstmtTenancy.setInt(4, tenancyContract.getAdditionalCost());
                     pstmtTenancy.executeUpdate();
                     pstmtTenancy.close();
-    
-                    String insertSQLRental = "INSERT INTO RENTALS (contractNumber, apartment, person) VALUES (?, ?, ?)";
+                    
+                    String            insertSQLRental
+                                                  = "INSERT INTO RENTALS (contractNumber, apartment, person) VALUES (?, ?, ?)";
                     PreparedStatement pstmtRental = _connection.prepareStatement(insertSQLRental);
                     pstmtRental.setInt(1, tenancyContract.getContractNo());
                     pstmtRental.setInt(2, tenancyContract.getApartment());
@@ -961,14 +990,14 @@ public class ORM {
     /**
      * Persists the given person.
      *
-     * @param person the person that should be persisted
+     * @param person
+     *         the person that should be persisted
      */
-    public void persist(Person person)
-    {
+    public void persist(Person person) {
         try {
             if (person.getId() == -1) {
-                String insertSQL = "INSERT INTO PERSON (firstName, name, address) VALUES (?, ?, ?)";
-                PreparedStatement pstmt = _connection.prepareStatement(insertSQL, Statement.RETURN_GENERATED_KEYS);
+                String            insertSQL = "INSERT INTO PERSON (firstName, name, address) VALUES (?, ?, ?)";
+                PreparedStatement pstmt     = _connection.prepareStatement(insertSQL, Statement.RETURN_GENERATED_KEYS);
                 
                 pstmt.setString(1, person.getFirstName());
                 pstmt.setString(2, person.getName());
@@ -984,8 +1013,8 @@ public class ORM {
                 pstmt.close();
             } else {
                 // create query
-                String updateSQL = "UPDATE PERSON SET firstName = ?, name = ?, address = ? WHERE ID = ?";
-                PreparedStatement pstmt = _connection.prepareStatement(updateSQL);
+                String            updateSQL = "UPDATE PERSON SET firstName = ?, name = ?, address = ? WHERE ID = ?";
+                PreparedStatement pstmt     = _connection.prepareStatement(updateSQL);
                 pstmt.setString(1, person.getFirstName());
                 pstmt.setString(2, person.getName());
                 pstmt.setString(3, person.getAddress());
