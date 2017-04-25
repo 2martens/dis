@@ -49,9 +49,19 @@ class FormUtil {
      * @return the entered password
      */
     static String readPassword() {
-        String password;
+        String password  = "";
         System.out.print("Password: ");
-        password = String.valueOf(System.console().readPassword());
+        if (System.console() != null) {
+            password = String.valueOf(System.console().readPassword());
+        } else {
+            try {
+                BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in));
+                password = stdin.readLine();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        
         return password;
     }
     
