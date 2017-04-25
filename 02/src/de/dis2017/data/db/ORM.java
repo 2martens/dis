@@ -964,7 +964,43 @@ public class ORM {
                     changeFinished = true;
                 }
             } else {
-                System.err.println("Changing contracts is not supported.");
+                // create query
+                String updateSQL = "UPDATE CONTRACT SET date = ?, place = ? WHERE ContractNumber = ?";
+                PreparedStatement pstmt = _connection.prepareStatement(updateSQL);
+                pstmt.setDate(1, contract.getDate());
+                pstmt.setString(2, contract.getPlace());
+                pstmt.setInt(3, contract.getContractNo());
+    
+                if (contract instanceof TenancyContract) {
+                    TenancyContract tenancyContract = (TenancyContract) contract;
+                    String updateSQLTenancy = "UPDATE TenancyContract SET startDate = ?, duration = ?, additionalcosts = ? " +
+                                              "WHERE contractNumber = ?";
+                    PreparedStatement pstmtTenancy = _connection.prepareStatement(updateSQLTenancy);
+                    pstmtTenancy.setTimestamp(1, tenancyContract.getStartDate());
+                    pstmtTenancy.setTimestamp(2, new Timestamp(tenancyContract.getDuration().toMillis()));
+                    pstmtTenancy.setInt(3, tenancyContract.getAdditionalCost());
+                    pstmtTenancy.setInt(4, tenancyContract.getContractNo());
+                    pstmt.executeUpdate();
+                    pstmtTenancy.executeUpdate();
+                    pstmt.close();
+                    pstmtTenancy.close();
+                    changeFinished = true;
+                }
+                else if (contract instanceof PurchaseContract) {
+                    PurchaseContract purContract = (PurchaseContract) contract;
+                    String updateSQLPurchase =
+                            "UPDATE PurchaseContract SET numberofinstallments = ?, interestrate = ? " +
+                            "WHERE contractNumber = ?";
+                    PreparedStatement pstmtPurchase = _connection.prepareStatement(updateSQLPurchase);
+                    pstmtPurchase.setInt(1, purContract.getNoOfInstallments());
+                    pstmtPurchase.setInt(2, purContract.getInterestRate());
+                    pstmtPurchase.setInt(3, purContract.getContractNo());
+                    pstmt.executeUpdate();
+                    pstmtPurchase.executeUpdate();
+                    pstmt.close();
+                    pstmtPurchase.close();
+                    changeFinished = true;
+                }
             }
             if (changeFinished) {
                 _connection.commit();
