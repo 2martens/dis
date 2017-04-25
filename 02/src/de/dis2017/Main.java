@@ -154,15 +154,16 @@ public class Main {
             apartment.setBalcony(input.equals("Y") || input.equals("y"));
             input = FormUtil.readString("Built-in Kitchen(Y/N)");
             apartment.setBuiltinKitchen(input.equals("Y") || input.equals("y"));
+            _orm.persist(apartment);
         } else {
             House house = new House(estate);
             house.setPrice(FormUtil.readInt("Price"));
             house.setFloors(FormUtil.readInt("Floors"));
             input = FormUtil.readString("Garden(Y/N)");
             house.setGarden(input.equals("Y") || input.equals("y"));
+            _orm.persist(house);
         }
         
-        _orm.persist(estate);
         System.out.println("Estate with the ID " + estate.getId() + " was created.");
     }
     
