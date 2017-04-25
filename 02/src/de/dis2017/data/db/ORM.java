@@ -815,7 +815,6 @@ public class ORM {
                     pstmtHouse.setInt(4, house.getFloors());
                     pstmt.executeUpdate();
                     pstmtHouse.executeUpdate();
-                    pstmt.close();
                     pstmtHouse.close();
                     changeFinished = true;
                 } else if (estate instanceof Apartment) {
@@ -832,7 +831,6 @@ public class ORM {
                     pstmtApartment.setInt(6, apartment.hasBuiltinKitchen() ? 1 : 0);
                     pstmt.executeUpdate();
                     pstmtApartment.executeUpdate();
-                    pstmt.close();
                     pstmtApartment.close();
                     changeFinished = true;
                 }
