@@ -813,7 +813,6 @@ public class ORM {
                     pstmtHouse.setInt(2, house.getPrice());
                     pstmtHouse.setInt(3, house.hasGarden() ? 1 : 0);
                     pstmtHouse.setInt(4, house.getFloors());
-                    pstmt.executeUpdate();
                     pstmtHouse.executeUpdate();
                     pstmtHouse.close();
                     changeFinished = true;
@@ -829,7 +828,6 @@ public class ORM {
                     pstmtApartment.setInt(4, apartment.getRooms());
                     pstmtApartment.setInt(5, apartment.hasBalcony() ? 1 : 0);
                     pstmtApartment.setInt(6, apartment.hasBuiltinKitchen() ? 1 : 0);
-                    pstmt.executeUpdate();
                     pstmtApartment.executeUpdate();
                     pstmtApartment.close();
                     changeFinished = true;
