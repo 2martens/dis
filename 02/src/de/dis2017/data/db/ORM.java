@@ -692,12 +692,25 @@ public class ORM {
             return;
         } else {
             // create query
-            String deleteSQL = "DELETE FROM HOUSE WHERE ID = ?";
-            delete(deleteSQL, estate.getId());
-            deleteSQL = "DELETE FROM APARTMENT WHERE ID = ?";
-            delete(deleteSQL, estate.getId());
-            deleteSQL = "DELETE FROM ESTATE WHERE ID = ?";
-            delete(deleteSQL, estate.getId());
+            try {
+                _connection.setAutoCommit(false);
+                String deleteSQL = "DELETE FROM HOUSE WHERE ID = ?";
+                delete(deleteSQL, estate.getId());
+                deleteSQL = "DELETE FROM APARTMENT WHERE ID = ?";
+                delete(deleteSQL, estate.getId());
+                deleteSQL = "DELETE FROM ESTATE WHERE ID = ?";
+                delete(deleteSQL, estate.getId());
+                _connection.commit();
+                _connection.setAutoCommit(true);
+            }
+            catch (SQLException e) {
+                try {
+                    _connection.rollback();
+                } catch (SQLException e1) {
+                    e1.printStackTrace();
+                }
+                e.printStackTrace();
+            }
         }
         if (_estates.containsKey(estate.getId())) {
             _estates.remove(estate.getId(), estate);
