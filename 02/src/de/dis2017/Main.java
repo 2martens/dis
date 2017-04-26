@@ -575,6 +575,7 @@ public class Main {
             long duration = endDate.getTime() - startDate.getTime();
             tenancyContract.setDuration(Duration.ofMillis(duration));
             tenancyContract.setAdditionalCost(FormUtil.readInt("Additional Costs"));
+            _orm.persist(tenancyContract);
         } else {
             boolean housesAvailable = printListOfHouses();
             if (!housesAvailable) {
@@ -586,8 +587,8 @@ public class Main {
             purchaseContract.setHouse(FormUtil.readInt("House ID"));
             purchaseContract.setNoOfInstallments(FormUtil.readInt("No of Installments"));
             purchaseContract.setInterestRate(FormUtil.readInt("Interest Rate"));
+            _orm.persist(purchaseContract);
         }
-        _orm.persist(contract);
     }
     
     /**
