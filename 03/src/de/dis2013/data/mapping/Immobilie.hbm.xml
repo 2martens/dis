@@ -7,12 +7,12 @@
 		<id name="id" column="id">
 			<generator class="increment" />
 		</id>
-		<property name="ort" type="string" column="ort" />
-		<property name="plz" type="integer" column="plz" />
-		<property name="strasse" type="string" column="strasse" />
-		<property name="hausnummer" type="string" column="hausnummer" />
-		<property name="flaeche" type="integer" column="flaeche" />
-		<many-to-one name="verwalter" class="de.dis2013.data.Makler" column="verwalter" not-null="true" />
+		<property name="ort" type="string" column="city" />
+		<property name="plz" type="integer" column="postalcode" />
+		<property name="strasse" type="string" column="street" />
+		<property name="hausnummer" type="string" column="streetnumber" />
+		<property name="flaeche" type="integer" column="squarearea" />
+		<property name="verwalter" type="integer" column="agent" not-null="true" />
 		
 		<union-subclass name="de.dis2013.data.Haus" table="house">
 			<property name="stockwerke" type="integer" column="floors" />

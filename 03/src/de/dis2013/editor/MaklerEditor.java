@@ -99,6 +99,8 @@ public class MaklerEditor {
 				m.setLogin(new_login);
 			if(!new_password.equals(""))
 				m.setPasswort(new_password);
+			
+			service.editEstateAgent(m);
 		}
 	}
 	

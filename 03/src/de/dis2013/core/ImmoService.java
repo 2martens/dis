@@ -3,6 +3,7 @@ package de.dis2013.core;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import org.hibernate.Session;
@@ -38,6 +39,14 @@ public class ImmoService {
 	
 	public ImmoService() {
 		sessionFactory = new Configuration().configure().buildSessionFactory();
+		//Open Hibernate Session
+		Session session = sessionFactory.openSession();
+		//GetAll EstateAgents from DB
+		session.beginTransaction();	
+		List<Makler> l = session.createCriteria(Makler.class).list();
+		System.out.println(l.size()+" Makler gefunden.");
+		makler = new HashSet<Makler>(l);
+		session.getTransaction().commit();
 	}
 	
 	/**
@@ -108,10 +117,11 @@ public class ImmoService {
 	public void addMakler(Makler m) {
 		//Open Hibernate Session
 		Session session = sessionFactory.openSession();
-		
+		//Add EstateAgent to DB
 		session.beginTransaction();		
 		session.save(m);
 		session.getTransaction().commit();
+		//Add EstateAgent to local buffer
 		makler.add(m);
 	}
 	
@@ -120,6 +130,13 @@ public class ImmoService {
 	 * @param m Der Makler
 	 */
 	public void deleteMakler(Makler m) {
+		//Open Hibernate Session
+		Session session = sessionFactory.openSession();
+		//Delete EstateAgent from DB
+		session.beginTransaction();		
+		session.delete(m);
+		session.getTransaction().commit();
+		//Delete EstateAgent from local buffer
 		makler.remove(m);
 	}
 	
@@ -508,5 +525,14 @@ public class ImmoService {
 		mv.setNebenkosten(65);
 		mv.setDauer(36);
 		this.addMietvertrag(mv);
+	}
+
+	public void editEstateAgent(Makler m) {
+		//Open Hibernate Session
+		Session session = sessionFactory.openSession();
+		//Update EstateAgent from DB
+		session.beginTransaction();		
+		session.merge(m);
+		session.getTransaction().commit();
 	}
 }

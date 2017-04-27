@@ -8,13 +8,8 @@
 			<generator class="native" />
 		</id>
 		<property name="name" type="string" column="name" />
-		<property name="adresse" type="string" column="adresse" />
+		<property name="adresse" type="string" column="adress" />
 		<property name="login" type="string" column="login" />
-		<property name="passwort" type="string" column="passwort" />
-		
-		<set name="immobilien" inverse="true">
-			<key column="verwalter" />
-			<one-to-many class="de.dis2013.data.Immobilie" />
-		</set>
+		<property name="passwort" type="string" column="password" />
 	</class>
 </hibernate-mapping>
