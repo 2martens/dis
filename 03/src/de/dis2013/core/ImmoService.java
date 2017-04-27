@@ -106,6 +106,12 @@ public class ImmoService {
 	 * @param m Der Makler
 	 */
 	public void addMakler(Makler m) {
+		//Open Hibernate Session
+		Session session = sessionFactory.openSession();
+		
+		session.beginTransaction();		
+		session.save(m);
+		session.getTransaction().commit();
 		makler.add(m);
 	}
 	
