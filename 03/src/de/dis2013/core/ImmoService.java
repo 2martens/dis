@@ -47,6 +47,7 @@ public class ImmoService {
 		System.out.println(l.size()+" Makler gefunden.");
 		makler = new HashSet<Makler>(l);
 		session.getTransaction().commit();
+		session.close();
 	}
 	
 	/**
@@ -121,6 +122,7 @@ public class ImmoService {
 		session.beginTransaction();		
 		session.save(m);
 		session.getTransaction().commit();
+		session.close();
 		//Add EstateAgent to local buffer
 		makler.add(m);
 	}
@@ -136,6 +138,7 @@ public class ImmoService {
 		session.beginTransaction();		
 		session.delete(m);
 		session.getTransaction().commit();
+		session.close();
 		//Delete EstateAgent from local buffer
 		makler.remove(m);
 	}
@@ -410,11 +413,7 @@ public class ImmoService {
 	 * Fügt einige Testdaten hinzu
 	 */
 	public void addTestData() {
-		//Hibernate Session erzeugen
-		Session session = sessionFactory.openSession();
-		
-		session.beginTransaction();
-		
+				
 		Makler m = new Makler();
 		m.setName("Max Mustermann");
 		m.setAdresse("Am Informatikum 9");
@@ -423,9 +422,9 @@ public class ImmoService {
 		
 		//TODO: Dieser Makler wird im Speicher und der DB gehalten
 		this.addMakler(m);
-		session.save(m);
-		session.getTransaction().commit();
 
+		//Hibernate Session erzeugen
+		Session session = sessionFactory.openSession();
 		session.beginTransaction();
 		
 		Person p1 = new Person();
@@ -471,12 +470,12 @@ public class ImmoService {
 		session.beginTransaction();
 		Makler m2 = (Makler)session.get(Makler.class, m.getId());
 		Set<Immobilie> immos = m2.getImmobilien();
-		Iterator<Immobilie> it = immos.iterator();
+		/*Iterator<Immobilie> it = immos.iterator();
 		
 		while(it.hasNext()) {
 			Immobilie i = it.next();
 			System.out.println("Immo: "+i.getOrt());
-		}
+		}*/
 		session.close();
 		
 		Wohnung w = new Wohnung();
@@ -534,5 +533,6 @@ public class ImmoService {
 		session.beginTransaction();		
 		session.merge(m);
 		session.getTransaction().commit();
+		session.close();
 	}
 }
