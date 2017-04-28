@@ -195,7 +195,7 @@ public class ImmoService {
 	
 	/**
 	 * Findet ein Haus mit gegebener ID
-	 * @param m Der Makler
+	 * @param id Der Makler
 	 * @return Das Haus oder null, falls nicht gefunden
 	 */
 	public Haus getHausById(int id) {
@@ -213,7 +213,7 @@ public class ImmoService {
 	
 	/**
 	 * Löscht ein Haus
-	 * @param p Das Haus
+	 * @param h Das Haus
 	 */
 	public void deleteHouse(Haus h) {
 		haeuser.remove(h);
@@ -266,7 +266,7 @@ public class ImmoService {
 	
 	/**
 	 * Löscht eine Wohnung
-	 * @param p Die Wohnung
+	 * @param w Die Wohnung
 	 */
 	public void deleteWohnung(Wohnung w) {
 		wohnungen.remove(w);
@@ -275,7 +275,7 @@ public class ImmoService {
 	
 	/**
 	 * Fügt einen Mietvertrag hinzu
-	 * @param w Der Mietvertrag
+	 * @param m Der Mietvertrag
 	 */
 	public void addMietvertrag(Mietvertrag m) {
 		mietvertraege.add(m);
@@ -283,7 +283,7 @@ public class ImmoService {
 	
 	/**
 	 * Fügt einen Kaufvertrag hinzu
-	 * @param w Der Kaufvertrag
+	 * @param k Der Kaufvertrag
 	 */
 	public void addKaufvertrag(Kaufvertrag k) {
 		kaufvertraege.add(k);
@@ -347,7 +347,7 @@ public class ImmoService {
 	
 	/**
 	 * Findet alle Mietverträge, die Wohnungen eines gegebenen Verwalters betreffen
-	 * @param id Der Verwalter
+	 * @param m Der Verwalter
 	 * @return Set aus Mietverträgen
 	 */
 	public Set<Mietvertrag> getMietvertragByVerwalter(Makler m) {
@@ -366,7 +366,7 @@ public class ImmoService {
 	
 	/**
 	 * Findet alle Kaufverträge, die Häuser eines gegebenen Verwalters betreffen
-	 * @param id Der Verwalter
+	 * @param m Der Verwalter
 	 * @return Set aus Kaufverträgen
 	 */
 	public Set<Kaufvertrag> getKaufvertragByVerwalter(Makler m) {
