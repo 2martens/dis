@@ -1,10 +1,6 @@
 package de.dis2013.core;
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -27,7 +23,7 @@ import de.dis2013.data.Wohnung;
  */
 public class ImmoService {
 	//Datensätze im Speicher
-	private Set<Makler> makler = new HashSet<Makler>();
+	private Set<Makler> makler;
 	private Set<Person> personen = new HashSet<Person>();
 	private Set<Haus> haeuser = new HashSet<Haus>();
 	private Set<Wohnung> wohnungen = new HashSet<Wohnung>();
@@ -43,9 +39,13 @@ public class ImmoService {
 		Session session = sessionFactory.openSession();
 		//GetAll EstateAgents from DB
 		session.beginTransaction();	
-		List<Makler> l = session.createCriteria(Makler.class).list();
-		System.out.println(l.size()+" Makler gefunden.");
-		makler = new HashSet<Makler>(l);
+		List<?> l = session.createCriteria(Makler.class).list();
+		List<Makler> l_makler = new ArrayList<>(l.size());
+        for (Object o : l) {
+            l_makler.add((Makler) o);
+        }
+		System.out.println(l_makler.size()+" Makler gefunden.");
+		makler = new HashSet<>(l_makler);
 		session.getTransaction().commit();
 		session.close();
 	}
