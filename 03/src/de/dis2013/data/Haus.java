@@ -52,20 +52,15 @@ public class Haus extends Immobilie {
 			return false;
 	
 		Haus other = (Haus)obj;
-	
-		if(other.getId() != getId() ||
-				other.getPlz() != getPlz() ||
-				other.getFlaeche() != getFlaeche() ||
-				!Helper.compareObjects(this.getOrt(), other.getOrt()) ||
-				!Helper.compareObjects(this.getStrasse(), other.getStrasse()) ||
-				!Helper.compareObjects(this.getHausnummer(), other.getHausnummer()) ||
-				getStockwerke() != other.getStockwerke() ||
-				getKaufpreis() != other.getKaufpreis() ||
-				isGarten() != other.isGarten())
-		{
-			return false;
-		}
 		
-		return true;
+		return !(other.getId() != getId() ||
+		         other.getPlz() != getPlz() ||
+		         other.getFlaeche() != getFlaeche() ||
+		         !Helper.compareObjects(this.getOrt(), other.getOrt()) ||
+		         !Helper.compareObjects(this.getStrasse(), other.getStrasse()) ||
+		         !Helper.compareObjects(this.getHausnummer(), other.getHausnummer()) ||
+		         getStockwerke() != other.getStockwerke() ||
+		         getKaufpreis() != other.getKaufpreis() ||
+		         isGarten() != other.isGarten());
 	}
 }

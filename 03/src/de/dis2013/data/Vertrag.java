@@ -11,9 +11,9 @@ public abstract class Vertrag {
 	private int vertragsnummer = -1;
 	private Date datum;
 	private String ort;
-	static int currentId = 0;
-	int id;
-	Person vertragspartner;
+	private static int currentId = 0;
+	private int    id;
+	private Person vertragspartner;
 	
 	public Vertrag() {
 		this.id = currentId++;
@@ -72,14 +72,9 @@ public abstract class Vertrag {
 			return false;
 	
 		Vertrag other = (Vertrag)obj;
-	
-		if(other.getVertragsnummer() != getVertragsnummer() ||
-				!Helper.compareObjects(this.getDatum(), other.getDatum()) ||
-				!Helper.compareObjects(this.getOrt(), other.getOrt()))
-		{
-			return false;
-		}
 		
-		return true;
+		return !(other.getVertragsnummer() != getVertragsnummer() ||
+		         !Helper.compareObjects(this.getDatum(), other.getDatum()) ||
+		         !Helper.compareObjects(this.getOrt(), other.getOrt()));
 	}
 }

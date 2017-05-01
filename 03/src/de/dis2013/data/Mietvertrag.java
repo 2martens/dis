@@ -63,17 +63,12 @@ public class Mietvertrag extends Vertrag {
 			return false;
 	
 		Mietvertrag other = (Mietvertrag)obj;
-	
-		if(other.getVertragsnummer() != getVertragsnummer() ||
-				!Helper.compareObjects(this.getDatum(), other.getDatum()) ||
-				!Helper.compareObjects(this.getOrt(), other.getOrt()) ||
-				other.getDauer() != getDauer() ||
-				other.getNebenkosten() != getNebenkosten() ||
-				!Helper.compareObjects(other.getMietbeginn(), getMietbeginn()))
-		{
-			return false;
-		}
 		
-		return true;
+		return !(other.getVertragsnummer() != getVertragsnummer() ||
+		         !Helper.compareObjects(this.getDatum(), other.getDatum()) ||
+		         !Helper.compareObjects(this.getOrt(), other.getOrt()) ||
+		         other.getDauer() != getDauer() ||
+		         other.getNebenkosten() != getNebenkosten() ||
+		         !Helper.compareObjects(other.getMietbeginn(), getMietbeginn()));
 	}
 }

@@ -53,16 +53,11 @@ public class Kaufvertrag extends Vertrag {
 			return false;
 	
 		Kaufvertrag other = (Kaufvertrag)obj;
-	
-		if(other.getVertragsnummer() != getVertragsnummer() ||
-				!Helper.compareObjects(this.getDatum(), other.getDatum()) ||
-				!Helper.compareObjects(this.getOrt(), other.getOrt()) ||
-				other.getAnzahlRaten() != getAnzahlRaten() ||
-				other.getRatenzins() != getRatenzins())
-		{
-			return false;
-		}
 		
-		return true;
+		return !(other.getVertragsnummer() != getVertragsnummer() ||
+		         !Helper.compareObjects(this.getDatum(), other.getDatum()) ||
+		         !Helper.compareObjects(this.getOrt(), other.getOrt()) ||
+		         other.getAnzahlRaten() != getAnzahlRaten() ||
+		         other.getRatenzins() != getRatenzins());
 	}
 }

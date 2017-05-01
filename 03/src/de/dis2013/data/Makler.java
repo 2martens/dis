@@ -87,16 +87,11 @@ public class Makler {
 			return false;
 	
 		Makler other = (Makler)obj;
-	
-		if(other.getId() != getId() ||
-				!Helper.compareObjects(getName(), other.getName()) ||
-				!Helper.compareObjects(getAdresse(), other.getAdresse()) ||
-				!Helper.compareObjects(getLogin(), other.getLogin()) ||
-				!Helper.compareObjects(getPasswort(), other.getPasswort()))
-		{
-			return false;
-		}
 		
-		return true;
+		return !(other.getId() != getId() ||
+		         !Helper.compareObjects(getName(), other.getName()) ||
+		         !Helper.compareObjects(getAdresse(), other.getAdresse()) ||
+		         !Helper.compareObjects(getLogin(), other.getLogin()) ||
+		         !Helper.compareObjects(getPasswort(), other.getPasswort()));
 	}
 }

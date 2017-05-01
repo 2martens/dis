@@ -58,15 +58,10 @@ public class Person {
 			return false;
 	
 		Person other = (Person)obj;
-	
-		if(other.getId() != getId() ||
-				!Helper.compareObjects(this.getVorname(), other.getVorname()) ||
-				!Helper.compareObjects(this.getNachname(), other.getNachname()) ||
-				!Helper.compareObjects(this.getAdresse(), other.getAdresse()))
-		{
-			return false;
-		}
 		
-		return true;
+		return !(other.getId() != getId() ||
+		         !Helper.compareObjects(this.getVorname(), other.getVorname()) ||
+		         !Helper.compareObjects(this.getNachname(), other.getNachname()) ||
+		         !Helper.compareObjects(this.getAdresse(), other.getAdresse()));
 	}
 }

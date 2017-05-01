@@ -69,22 +69,17 @@ public class Wohnung extends Immobilie {
 			return false;
 	
 		Wohnung other = (Wohnung)obj;
-	
-		if(other.getId() != getId() ||
-				other.getPlz() != getPlz() ||
-				other.getFlaeche() != getFlaeche() ||
-				!Helper.compareObjects(this.getOrt(), other.getOrt()) ||
-				!Helper.compareObjects(this.getStrasse(), other.getStrasse()) ||
-				!Helper.compareObjects(this.getHausnummer(), other.getHausnummer()) ||
-				getStockwerk() != other.getStockwerk() ||
-				getMietpreis() != other.getMietpreis() ||
-				getZimmer() != other.getZimmer() ||
-				isBalkon() != other.isBalkon() ||
-				isEbk() != other.isEbk())
-		{
-			return false;
-		}
 		
-		return true;
+		return !(other.getId() != getId() ||
+		         other.getPlz() != getPlz() ||
+		         other.getFlaeche() != getFlaeche() ||
+		         !Helper.compareObjects(this.getOrt(), other.getOrt()) ||
+		         !Helper.compareObjects(this.getStrasse(), other.getStrasse()) ||
+		         !Helper.compareObjects(this.getHausnummer(), other.getHausnummer()) ||
+		         getStockwerk() != other.getStockwerk() ||
+		         getMietpreis() != other.getMietpreis() ||
+		         getZimmer() != other.getZimmer() ||
+		         isBalkon() != other.isBalkon() ||
+		         isEbk() != other.isEbk());
 	}
 }

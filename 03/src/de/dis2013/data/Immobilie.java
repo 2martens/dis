@@ -13,7 +13,7 @@ public abstract class Immobilie {
 	private String hausnummer;
 	private int flaeche;
 	private Makler verwalter;
-	static int currentId = 0;
+	private static int currentId = 0;
 	
 	public Immobilie() {
 		this.id = currentId++;
@@ -83,17 +83,12 @@ public abstract class Immobilie {
 			return false;
 	
 		Immobilie other = (Immobilie)obj;
-	
-		if(other.getId() != getId() ||
-				other.getPlz() != getPlz() ||
-				other.getFlaeche() != getFlaeche() ||
-				!Helper.compareObjects(this.getOrt(), other.getOrt()) ||
-				!Helper.compareObjects(this.getStrasse(), other.getStrasse()) ||
-				!Helper.compareObjects(this.getHausnummer(), other.getHausnummer()))
-		{
-			return false;
-		}
 		
-		return true;
+		return !(other.getId() != getId() ||
+		         other.getPlz() != getPlz() ||
+		         other.getFlaeche() != getFlaeche() ||
+		         !Helper.compareObjects(this.getOrt(), other.getOrt()) ||
+		         !Helper.compareObjects(this.getStrasse(), other.getStrasse()) ||
+		         !Helper.compareObjects(this.getHausnummer(), other.getHausnummer()));
 	}
 }
