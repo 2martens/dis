@@ -50,7 +50,7 @@ public class Menu {
 	 */
 	public void addEntry(String label, int returnValue) {
 		this.labels.add(label);
-		this.returnValues.add(new Integer(returnValue));
+		this.returnValues.add(returnValue);
 	}
 	
 	/**
@@ -73,9 +73,7 @@ public class Menu {
 			System.out.print("-- ");
 			try {
 				selection = Integer.parseInt(stdin.readLine());
-			} catch (NumberFormatException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
+			} catch (NumberFormatException | IOException e) {
 				e.printStackTrace();
 			}
 			

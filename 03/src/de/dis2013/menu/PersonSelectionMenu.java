@@ -14,10 +14,8 @@ public class PersonSelectionMenu extends Menu {
 	public PersonSelectionMenu(String title, Set<Person> personen) {
 		super(title);
 		
-		Iterator<Person> it = personen.iterator();
-		while(it.hasNext()) {
-			Person p = it.next();
-			addEntry(p.getVorname()+" "+p.getNachname(), p.getId());
+		for (Person p : personen) {
+			addEntry(p.getVorname() + " " + p.getNachname(), p.getId());
 		}
 		addEntry("Zurück", BACK);
 	}

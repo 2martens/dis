@@ -58,7 +58,7 @@ public class MaklerEditor {
 	 * Legt einen neuen Makler an, nachdem der Benutzer
 	 * die entprechenden Daten eingegeben hat.
 	 */
-	public void newMakler() {
+	private void newMakler() {
 		Makler m = new Makler();
 		
 		m.setName(FormUtil.readString("Name"));
@@ -73,7 +73,7 @@ public class MaklerEditor {
 	/**
 	 * Berarbeitet einen Makler, nachdem der Benutzer ihn ausgewählt hat
 	 */
-	public void editMakler() {
+	private void editMakler() {
 		//Menü zum selektieren des Maklers
 		Menu maklerSelectionMenu = new MaklerSelectionMenu("Makler editieren", service.getAllMakler());
 		int id = maklerSelectionMenu.show();
@@ -108,7 +108,7 @@ public class MaklerEditor {
 	 * Löscht einen Makler, nachdem der Benutzer
 	 * ihn ausgewählt hat.
 	 */
-	public void deleteMakler() {
+	private void deleteMakler() {
 		//Menü zum selektieren des Maklers
 		Menu maklerSelectionMenu = new MaklerSelectionMenu("Makler löschen", service.getAllMakler());
 		int id = maklerSelectionMenu.show();

@@ -58,7 +58,7 @@ public class PersonEditor {
 	 * Legt eine neue Person an, nachdem der Benutzer
 	 * die entprechenden Daten eingegeben hat.
 	 */
-	public void newPerson() {
+	private void newPerson() {
 		Person p = new Person();
 		
 		p.setVorname(FormUtil.readString("Vorname"));
@@ -72,7 +72,7 @@ public class PersonEditor {
 	/**
 	 * Editiert eine Person, nachdem der Benutzer sie ausgewählt hat
 	 */
-	public void editPerson() {
+	private void editPerson() {
 		//Personenauswahlmenü
 		Menu personSelectionMenu = new PersonSelectionMenu("Person bearbeiten", service.getAllPersons());
 		int id = personSelectionMenu.show();
@@ -102,7 +102,7 @@ public class PersonEditor {
 	 * Löscht eine Person, nachdem der Benutzer
 	 * die entprechende ID eingegeben hat.
 	 */
-	public void deletePerson() {
+	private void deletePerson() {
 		//Auswahl der Person
 		Menu personSelectionMenu = new PersonSelectionMenu("Person bearbeiten", service.getAllPersons());
 		int id = personSelectionMenu.show();

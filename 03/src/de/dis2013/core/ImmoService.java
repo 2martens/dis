@@ -56,14 +56,12 @@ public class ImmoService {
 	 * @return Makler mit der ID oder null
 	 */
 	public Makler getMaklerById(int id) {
-		Iterator<Makler> it = makler.iterator();
-		
-		while(it.hasNext()) {
-			Makler m = it.next();
-			
-			if(m.getId() == id)
-				return m;
-		}
+        
+        for (Makler m : makler) {
+            if (m.getId() == id) {
+                return m;
+            }
+        }
 		
 		return null;
 	}
@@ -74,14 +72,12 @@ public class ImmoService {
 	 * @return Makler mit der ID oder null
 	 */
 	public Makler getMaklerByLogin(String login) {
-		Iterator<Makler> it = makler.iterator();
-		
-		while(it.hasNext()) {
-			Makler m = it.next();
-			
-			if(m.getLogin().equals(login))
-				return m;
-		}
+        
+        for (Makler m : makler) {
+            if (m.getLogin().equals(login)) {
+                return m;
+            }
+        }
 		
 		return null;
 	}
@@ -99,14 +95,12 @@ public class ImmoService {
 	 * @return Person mit der ID oder null
 	 */
 	public Person getPersonById(int id) {
-		Iterator<Person> it = personen.iterator();
-		
-		while(it.hasNext()) {
-			Person p = it.next();
-			
-			if(p.getId() == id)
-				return p;
-		}
+        
+        for (Person p : personen) {
+            if (p.getId() == id) {
+                return p;
+            }
+        }
 		
 		return null;
 	}
@@ -181,14 +175,12 @@ public class ImmoService {
 	 */
 	public Set<Haus> getAllHaeuserForMakler(Makler m) {
 		Set<Haus> ret = new HashSet<Haus>();
-		Iterator<Haus> it = haeuser.iterator();
-		
-		while(it.hasNext()) {
-			Haus h = it.next();
-			
-			if(h.getVerwalter().equals(m))
-				ret.add(h);
-		}
+        
+        for (Haus h : haeuser) {
+            if (h.getVerwalter().equals(m)) {
+                ret.add(h);
+            }
+        }
 		
 		return ret;
 	}
@@ -199,13 +191,11 @@ public class ImmoService {
 	 * @return Das Haus oder null, falls nicht gefunden
 	 */
 	public Haus getHausById(int id) {
-		Iterator<Haus> it = haeuser.iterator();
 		
-		while(it.hasNext()) {
-			Haus h = it.next();
-			
-			if(h.getId() == id)
+		for (Haus h : haeuser) {
+			if (h.getId() == id) {
 				return h;
+			}
 		}
 		
 		return null;
@@ -234,14 +224,12 @@ public class ImmoService {
 	 */
 	public Set<Wohnung> getAllWohnungenForMakler(Makler m) {
 		Set<Wohnung> ret = new HashSet<Wohnung>();
-		Iterator<Wohnung> it = wohnungen.iterator();
-		
-		while(it.hasNext()) {
-			Wohnung w = it.next();
-			
-			if(w.getVerwalter().equals(m))
-				ret.add(w);
-		}
+        
+        for (Wohnung w : wohnungen) {
+            if (w.getVerwalter().equals(m)) {
+                ret.add(w);
+            }
+        }
 		
 		return ret;
 	}
@@ -252,14 +240,12 @@ public class ImmoService {
 	 * @return Die Wohnung oder null, falls nicht gefunden
 	 */
 	public Wohnung getWohnungById(int id) {
-		Iterator<Wohnung> it = wohnungen.iterator();
-		
-		while(it.hasNext()) {
-			Wohnung w = it.next();
-			
-			if(w.getId() == id)
-				return w;
-		}
+        
+        for (Wohnung w : wohnungen) {
+            if (w.getId() == id) {
+                return w;
+            }
+        }
 		
 		return null;
 	}
@@ -296,14 +282,12 @@ public class ImmoService {
 	 */
 	public Set<Mietvertrag> getAllMietvertraegeForMakler(Makler m) {
 		Set<Mietvertrag> ret = new HashSet<Mietvertrag>();
-		Iterator<Mietvertrag> it = mietvertraege.iterator();
-		
-		while(it.hasNext()) {
-			Mietvertrag v = it.next();
-			
-			if(v.getWohnung().getVerwalter().equals(m))
-				ret.add(v);
-		}
+        
+        for (Mietvertrag v : mietvertraege) {
+            if (v.getWohnung().getVerwalter().equals(m)) {
+                ret.add(v);
+            }
+        }
 		
 		return ret;
 	}
@@ -315,14 +299,12 @@ public class ImmoService {
 	 */
 	public Set<Kaufvertrag> getAllKaufvertraegeForMakler(Makler m) {
 		Set<Kaufvertrag> ret = new HashSet<Kaufvertrag>();
-		Iterator<Kaufvertrag> it = kaufvertraege.iterator();
-		
-		while(it.hasNext()) {
-			Kaufvertrag k = it.next();
-			
-			if(k.getHaus().getVerwalter().equals(m))
-				ret.add(k);
-		}
+        
+        for (Kaufvertrag k : kaufvertraege) {
+            if (k.getHaus().getVerwalter().equals(m)) {
+                ret.add(k);
+            }
+        }
 		
 		return ret;
 	}
@@ -333,14 +315,12 @@ public class ImmoService {
 	 * @return Der Mietvertrag oder null, falls nicht gefunden
 	 */
 	public Mietvertrag getMietvertragById(int id) {
-		Iterator<Mietvertrag> it = mietvertraege.iterator();
-		
-		while(it.hasNext()) {
-			Mietvertrag m = it.next();
-			
-			if(m.getId() == id)
-				return m;
-		}
+        
+        for (Mietvertrag m : mietvertraege) {
+            if (m.getId() == id) {
+                return m;
+            }
+        }
 		
 		return null;
 	}
@@ -352,14 +332,12 @@ public class ImmoService {
 	 */
 	public Set<Mietvertrag> getMietvertragByVerwalter(Makler m) {
 		Set<Mietvertrag> ret = new HashSet<Mietvertrag>();
-		Iterator<Mietvertrag> it = mietvertraege.iterator();
-		
-		while(it.hasNext()) {
-			Mietvertrag mv = it.next();
-			
-			if(mv.getWohnung().getVerwalter().getId() == m.getId())
-				ret.add(mv);
-		}
+        
+        for (Mietvertrag mv : mietvertraege) {
+            if (mv.getWohnung().getVerwalter().getId() == m.getId()) {
+                ret.add(mv);
+            }
+        }
 		
 		return ret;
 	}
@@ -371,14 +349,12 @@ public class ImmoService {
 	 */
 	public Set<Kaufvertrag> getKaufvertragByVerwalter(Makler m) {
 		Set<Kaufvertrag> ret = new HashSet<Kaufvertrag>();
-		Iterator<Kaufvertrag> it = kaufvertraege.iterator();
-		
-		while(it.hasNext()) {
-			Kaufvertrag k = it.next();
-			
-			if(k.getHaus().getVerwalter().getId() == m.getId())
-				ret.add(k);
-		}
+        
+        for (Kaufvertrag k : kaufvertraege) {
+            if (k.getHaus().getVerwalter().getId() == m.getId()) {
+                ret.add(k);
+            }
+        }
 		
 		return ret;
 	}
@@ -389,14 +365,12 @@ public class ImmoService {
 	 * @return Der Kaufvertrag oder null, falls nicht gefunden
 	 */
 	public Kaufvertrag getKaufvertragById(int id) {
-		Iterator<Kaufvertrag> it = kaufvertraege.iterator();
-		
-		while(it.hasNext()) {
-			Kaufvertrag k = it.next();
-			
-			if(k.getId() == id)
-				return k;
-		}
+        
+        for (Kaufvertrag k : kaufvertraege) {
+            if (k.getId() == id) {
+                return k;
+            }
+        }
 		
 		return null;
 	}

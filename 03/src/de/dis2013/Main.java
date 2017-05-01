@@ -25,7 +25,7 @@ public class Main {
 	/**
 	 * Zeigt das Hauptmenü
 	 */
-	public static void showMainMenu() {
+	private static void showMainMenu() {
 		//Menüoptionen
 		final int MENU_MAKLER = 0;
 		final int MENU_PERSON= 1;

@@ -70,19 +70,22 @@ public class VertragsEditor {
 		}
 	}
 	
-	public void zeigeVertraege() {
+	private void zeigeVertraege() {
 		//Mietverträge anzeigen
 		System.out.println("Mietverträge\n-----------------");
 		Set<Mietvertrag> mvs = service.getAllMietvertraegeForMakler(verwalter);
-		Iterator<Mietvertrag> itmv = mvs.iterator();
-		while(itmv.hasNext()) {
-			Mietvertrag mv = itmv.next();
-			System.out.println("Mietvertrag "+mv.getVertragsnummer()+"\n"+
-							"\tGeschlossen am "+Helper.dateToString(mv.getDatum())+" in "+mv.getOrt()+"\n"+
-							"\tMieter:        "+mv.getVertragspartner().getVorname()+" "+mv.getVertragspartner().getNachname()+"\n"+
-							"\tWohnung:       "+mv.getWohnung().getStrasse()+" "+mv.getWohnung().getHausnummer()+", "+mv.getWohnung().getPlz()+" "+mv.getWohnung().getOrt()+"\n"+
-							"\tMietbeginn:    "+Helper.dateToString(mv.getMietbeginn())+", Dauer: "+mv.getDauer()+" Monate\n"+
-							"\tMietpreis:     "+mv.getWohnung().getMietpreis()+" Euro, Nebenkosten: "+mv.getNebenkosten()+" Euro\n");
+		for (Mietvertrag mv : mvs) {
+			System.out.println("Mietvertrag " + mv.getVertragsnummer() + "\n" +
+			                   "\tGeschlossen am " + Helper.dateToString(mv.getDatum()) + " in " + mv.getOrt() + "\n" +
+			                   "\tMieter:        " + mv.getVertragspartner().getVorname() + " " +
+			                   mv.getVertragspartner().getNachname() + "\n" +
+			                   "\tWohnung:       " + mv.getWohnung().getStrasse() + " " +
+			                   mv.getWohnung().getHausnummer() + ", " + mv.getWohnung().getPlz() + " " +
+			                   mv.getWohnung().getOrt() + "\n" +
+			                   "\tMietbeginn:    " + Helper.dateToString(mv.getMietbeginn()) + ", Dauer: " +
+			                   mv.getDauer() + " Monate\n" +
+			                   "\tMietpreis:     " + mv.getWohnung().getMietpreis() + " Euro, Nebenkosten: " +
+			                   mv.getNebenkosten() + " Euro\n");
 		}
 		
 		System.out.println("");
@@ -90,15 +93,15 @@ public class VertragsEditor {
 		//Kaufverträge anzeigen
 		System.out.println("Kaufverträge\n-----------------");
 		Set<Kaufvertrag> kvs = service.getAllKaufvertraegeForMakler(verwalter);
-		Iterator<Kaufvertrag> itkv = kvs.iterator();
-		while(itkv.hasNext()) {
-			Kaufvertrag kv = itkv.next();
-			System.out.println("Kaufvertrag "+kv.getVertragsnummer()+"\n"+
-							"\tGeschlossen am "+Helper.dateToString(kv.getDatum())+" in "+kv.getOrt()+"\n"+
-							"\tMieter:        "+kv.getVertragspartner().getVorname()+" "+kv.getVertragspartner().getNachname()+"\n"+
-							"\tHaus:          "+kv.getHaus().getStrasse()+" "+kv.getHaus().getHausnummer()+", "+kv.getHaus().getPlz()+" "+kv.getHaus().getOrt()+"\n"+
-							"\tKaufpreis:     "+kv.getHaus().getKaufpreis()+" Euro\n"+
-							"\tRaten:         "+kv.getAnzahlRaten()+", Ratenzins: "+kv.getRatenzins()+"%\n");
+		for (Kaufvertrag kv : kvs) {
+			System.out.println("Kaufvertrag " + kv.getVertragsnummer() + "\n" +
+			                   "\tGeschlossen am " + Helper.dateToString(kv.getDatum()) + " in " + kv.getOrt() + "\n" +
+			                   "\tMieter:        " + kv.getVertragspartner().getVorname() + " " +
+			                   kv.getVertragspartner().getNachname() + "\n" +
+			                   "\tHaus:          " + kv.getHaus().getStrasse() + " " + kv.getHaus().getHausnummer() +
+			                   ", " + kv.getHaus().getPlz() + " " + kv.getHaus().getOrt() + "\n" +
+			                   "\tKaufpreis:     " + kv.getHaus().getKaufpreis() + " Euro\n" +
+			                   "\tRaten:         " + kv.getAnzahlRaten() + ", Ratenzins: " + kv.getRatenzins() + "%\n");
 		}
 	}
 	
@@ -106,7 +109,7 @@ public class VertragsEditor {
 	/**
 	 * Menü zum anlegen eines neuen Mietvertrags
 	 */
-	public void newMietvertrag() {
+	private void newMietvertrag() {
 		//Alle Wohnungen des Maklers finden
 		Set<Wohnung> wohnungen = service.getAllWohnungenForMakler(verwalter);
 		

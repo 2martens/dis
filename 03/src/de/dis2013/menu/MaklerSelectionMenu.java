@@ -14,9 +14,7 @@ public class MaklerSelectionMenu extends Menu {
 	public MaklerSelectionMenu(String title, Set<Makler> makler) {
 		super(title);
 		
-		Iterator<Makler> it = makler.iterator();
-		while(it.hasNext()) {
-			Makler m = it.next();
+		for (Makler m : makler) {
 			addEntry(m.getName(), m.getId());
 		}
 		addEntry("Zurück", BACK);
