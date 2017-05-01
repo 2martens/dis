@@ -41,7 +41,12 @@ public class FormUtil {
 		
 		try {
 			System.out.print(label+": ");
-			ret = stdin.readLine();
+			if (System.console() != null) {
+				ret = String.valueOf(System.console().readPassword());
+			}
+			else {
+				ret = stdin.readLine();
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
