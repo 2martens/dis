@@ -40,12 +40,12 @@ public class ImmoService {
 		//GetAll EstateAgents from DB
 		session.beginTransaction();	
 		List<?> l = session.createCriteria(Makler.class).list();
-		List<Makler> l_makler = new ArrayList<>(l.size());
+		List<Makler> l_makler = new ArrayList<Makler>(l.size());
         for (Object o : l) {
             l_makler.add((Makler) o);
         }
 		System.out.println(l_makler.size()+" Makler gefunden.");
-		makler = new HashSet<>(l_makler);
+		makler = new HashSet<Makler>(l_makler);
 		session.getTransaction().commit();
 		session.close();
 	}
