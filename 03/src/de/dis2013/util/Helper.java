@@ -12,10 +12,7 @@ public class Helper {
 	 */
 	public static boolean compareObjects(Object a, Object b) {
 		if(a == null) {
-			if(b == null)
-				return true; //a and b both null
-			
-			return false; //a null, b not null
+			return b == null;
 		}
 		
 		if(b == null)
