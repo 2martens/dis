@@ -200,6 +200,14 @@ public class ImmoService {
 		//Add EstateAgent to local buffer
 		makler.add(m);
 	}
+    
+    /**
+     * Edits an estate agent.
+     * @param m Makler
+     */
+    public void editEstateAgent(Makler m) {
+        edit(m);
+    }
 	
 	/**
 	 * Löscht einen Makler
@@ -227,6 +235,14 @@ public class ImmoService {
 	public Set<Person> getAllPersons() {
 		return personen;
 	}
+    
+    /**
+     * Bearbeitet eine Person in der DB
+     * @param p Die Person
+     */
+    public void editPerson(Person p) {
+        edit(p);
+    }
 	
 	/**
 	 * Löscht eine Person
@@ -278,12 +294,20 @@ public class ImmoService {
 		
 		return null;
 	}
+    
+    /**
+     * Aktualisiert ein Haus in der DB
+     * @param h Das Haus
+     */
+    public void editHaus(Haus h) {
+        edit(h);
+    }
 	
 	/**
 	 * Löscht ein Haus
 	 * @param h Das Haus
 	 */
-	public void deleteHouse(Haus h) {
+	public void deleteHaus(Haus h) {
 	    delete(h);
 		haeuser.remove(h);
 	}
@@ -329,6 +353,14 @@ public class ImmoService {
 		
 		return null;
 	}
+    
+    /**
+     * Aktualisiert eine Wohnung in der DB
+     * @param w Die Wohnung
+     */
+    public void editWohnung(Wohnung w) {
+        edit(w);
+    }
 	
 	/**
 	 * Löscht eine Wohnung
@@ -457,6 +489,22 @@ public class ImmoService {
 		
 		return null;
 	}
+    
+    /**
+     * Aktualisiert einen Kaufvertrag in der DB.
+     * @param k Kaufvertrag
+     */
+	public void editKaufvertrag(Kaufvertrag k) {
+	    edit(k);
+    }
+    
+    /**
+     * Aktualisiert einen Mietvertrag in der DB.
+     * @param m Mietvertrag
+     */
+    public void editMietvertrag(Mietvertrag m) {
+        edit(m);
+    }
 	
 	/**
 	 * Löscht einen Mietvertrag
@@ -464,8 +512,17 @@ public class ImmoService {
 	 */
 	public void deleteMietvertrag(Mietvertrag m) {
 	    delete(m);
-		wohnungen.remove(m);
+		mietvertraege.remove(m);
 	}
+    
+    /**
+     * Löscht einen Kaufvertrag
+     * @param k Der Kaufvertrag
+     */
+    public void deleteKaufvertrag(Kaufvertrag k) {
+        delete(k);
+        kaufvertraege.remove(k);
+    }
 	
 	/**
 	 * Fügt einige Testdaten hinzu
@@ -582,9 +639,5 @@ public class ImmoService {
 		mv.setNebenkosten(65);
 		mv.setDauer(36);
 		this.addMietvertrag(mv);
-	}
-
-	public void editEstateAgent(Makler m) {
-		edit(m);
 	}
 }

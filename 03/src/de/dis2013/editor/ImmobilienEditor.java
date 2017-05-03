@@ -151,6 +151,8 @@ public class ImmobilienEditor {
 				h.setKaufpreis(newKaufpreis);
 			
 			h.setGarten(newGarten);
+			
+			service.editHaus(h);
 		}
 	}
 	
@@ -169,7 +171,7 @@ public class ImmobilienEditor {
 		//Falls nicht der Eintrag "zurück" gewählt wurde, Haus löschen
 		if(id != HouseSelectionMenu.BACK) {
 			Haus h = service.getHausById(id);
-			service.deleteHouse(h);
+			service.deleteHaus(h);
 		}
 	}
 	
@@ -247,6 +249,7 @@ public class ImmobilienEditor {
 			
 			w.setEbk(newEbk);
 			w.setBalkon(newBalkon);
+			service.editWohnung(w);
 		}
 	}
 	
