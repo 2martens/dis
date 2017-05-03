@@ -9,7 +9,7 @@
 		</id>
 		<property name="name" type="string" column="name" />
 		<property name="adresse" type="string" column="adress" />
-		<property name="login" type="string" column="login" />
+		<property name="login" type="string" column="login" unique="true" />
 		<property name="passwort" type="string" column="password" />
 	</class>
 </hibernate-mapping>
