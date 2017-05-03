@@ -45,7 +45,48 @@ public class ImmoService {
             l_makler.add((Makler) o);
         }
 		System.out.println(l_makler.size()+" Makler gefunden.");
-		makler = new HashSet<Makler>(l_makler);
+		makler = new HashSet<>(l_makler);
+  
+		// getAll Häuser from DB
+        l = session.createCriteria(Haus.class).list();
+        List<Haus> l_haus = new ArrayList<>(l.size());
+        for (Object o : l) {
+            l_haus.add((Haus) o);
+        }
+        haeuser = new HashSet<>(l_haus);
+        
+        // getAll Wohnungen from DB
+        l = session.createCriteria(Wohnung.class).list();
+        List<Wohnung> l_wohnung = new ArrayList<>(l.size());
+        for (Object o : l) {
+            l_wohnung.add((Wohnung) o);
+        }
+        wohnungen = new HashSet<>(l_wohnung);
+        
+        // getAll Personen from DB
+        l = session.createCriteria(Person.class).list();
+        List<Person> l_person = new ArrayList<>(l.size());
+        for (Object o : l) {
+            l_person.add((Person) o);
+        }
+        personen = new HashSet<>(l_person);
+        
+        // getAll Kaufverträge from DB
+        l = session.createCriteria(Kaufvertrag.class).list();
+        List<Kaufvertrag> l_kaufvertrag = new ArrayList<>(l.size());
+        for (Object o : l) {
+            l_kaufvertrag.add((Kaufvertrag) o);
+        }
+        kaufvertraege = new HashSet<>(l_kaufvertrag);
+        
+        // getAll Mietverträge from DB
+        l = session.createCriteria(Mietvertrag.class).list();
+        List<Mietvertrag> l_mietvertrag = new ArrayList<>(l.size());
+        for (Object o : l) {
+            l_mietvertrag.add((Mietvertrag) o);
+        }
+        mietvertraege = new HashSet<>(l_mietvertrag);
+        
 		session.getTransaction().commit();
 		session.close();
 	}
