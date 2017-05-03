@@ -5,7 +5,7 @@
 <hibernate-mapping>
 	<class name="de.dis2013.data.Immobilie" table="estate" schema="VSISP12">
 		<id name="id" column="id">
-			<generator class="increment" />
+			<generator class="identity" />
 		</id>
 		<property name="ort" type="string" column="city" />
 		<property name="plz" type="integer" column="postalcode" />

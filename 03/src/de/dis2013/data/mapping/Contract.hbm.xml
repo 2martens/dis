@@ -5,7 +5,7 @@
 <hibernate-mapping>
 	<class name="de.dis2013.data.Vertrag" table="contract" schema="VSISP12">
 		<id name="vertragsnummer" column="contractnumber">
-			<generator class="increment" />
+			<generator class="identity" />
 		</id>
 		<property name="datum" type="date" column="date" />
 		<property name="ort" type="string" column="place" />
