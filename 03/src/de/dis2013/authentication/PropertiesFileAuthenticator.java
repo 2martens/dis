@@ -33,11 +33,7 @@ public class PropertiesFileAuthenticator implements Authenticator {
 			
 			this.username = properties.getProperty("username");
 			this.password = properties.getProperty("password");
-		} catch (FileNotFoundException e1) {
-			e1.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (URISyntaxException e) {
+		} catch (IOException | URISyntaxException e) {
 			e.printStackTrace();
 		}
 	}
