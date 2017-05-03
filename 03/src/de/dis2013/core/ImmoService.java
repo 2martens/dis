@@ -2,6 +2,7 @@ package de.dis2013.core;
 
 import java.util.*;
 
+import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
@@ -13,78 +14,17 @@ import de.dis2013.data.Makler;
 import de.dis2013.data.Mietvertrag;
 import de.dis2013.data.Person;
 import de.dis2013.data.Wohnung;
+import org.hibernate.criterion.Restrictions;
 
 /**
  * Klasse zur Verwaltung aller Datenbank-Entitäten.
  */
 public class ImmoService {
-	// Datensätze im Speicher
-	private Set<Makler> makler;
-	private Set<Person> personen = new HashSet<Person>();
-	private Set<Haus> haeuser = new HashSet<Haus>();
-	private Set<Wohnung> wohnungen = new HashSet<Wohnung>();
-	private Set<Mietvertrag> mietvertraege = new HashSet<Mietvertrag>();
-	private Set<Kaufvertrag> kaufvertraege = new HashSet<Kaufvertrag>();
-	
 	// Hibernate Session
 	private SessionFactory sessionFactory;
 	
 	public ImmoService() {
 		sessionFactory = new Configuration().configure().buildSessionFactory();
-		// Open Hibernate Session
-		Session session = sessionFactory.openSession();
-		// GetAll EstateAgents from DB
-		session.beginTransaction();	
-		List<?> l = session.createCriteria(Makler.class).list();
-		List<Makler> l_makler = new ArrayList<Makler>(l.size());
-        for (Object o : l) {
-            l_makler.add((Makler) o);
-        }
-		System.out.println(l_makler.size()+" Makler gefunden.");
-		makler = new HashSet<>(l_makler);
-  
-		// getAll Häuser from DB
-        l = session.createCriteria(Haus.class).list();
-        List<Haus> l_haus = new ArrayList<>(l.size());
-        for (Object o : l) {
-            l_haus.add((Haus) o);
-        }
-        haeuser = new HashSet<>(l_haus);
-        
-        // getAll Wohnungen from DB
-        l = session.createCriteria(Wohnung.class).list();
-        List<Wohnung> l_wohnung = new ArrayList<>(l.size());
-        for (Object o : l) {
-            l_wohnung.add((Wohnung) o);
-        }
-        wohnungen = new HashSet<>(l_wohnung);
-        
-        // getAll Personen from DB
-        l = session.createCriteria(Person.class).list();
-        List<Person> l_person = new ArrayList<>(l.size());
-        for (Object o : l) {
-            l_person.add((Person) o);
-        }
-        personen = new HashSet<>(l_person);
-        
-        // getAll Kaufverträge from DB
-        l = session.createCriteria(Kaufvertrag.class).list();
-        List<Kaufvertrag> l_kaufvertrag = new ArrayList<>(l.size());
-        for (Object o : l) {
-            l_kaufvertrag.add((Kaufvertrag) o);
-        }
-        kaufvertraege = new HashSet<>(l_kaufvertrag);
-        
-        // getAll Mietverträge from DB
-        l = session.createCriteria(Mietvertrag.class).list();
-        List<Mietvertrag> l_mietvertrag = new ArrayList<>(l.size());
-        for (Object o : l) {
-            l_mietvertrag.add((Mietvertrag) o);
-        }
-        mietvertraege = new HashSet<>(l_mietvertrag);
-        
-		session.getTransaction().commit();
-		session.close();
 	}
     
     /**
@@ -138,10 +78,19 @@ public class ImmoService {
 	 * @return Makler mit der ID oder null
 	 */
 	public Makler getMaklerById(int id) {
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+        Criteria cr = session.createCriteria(Makler.class);
+        cr.add(Restrictions.eq("id", id));
+        List makler = cr.list();
+        session.getTransaction().commit();
         
-        for (Makler m : makler) {
-            if (m.getId() == id) {
-                return m;
+        for (Object o : makler) {
+            if (o instanceof Makler) {
+                Makler m = (Makler) o;
+                if (m.getId() == id) {
+                    return m;
+                }
             }
         }
 		
@@ -154,10 +103,19 @@ public class ImmoService {
 	 * @return Makler mit der ID oder null
 	 */
 	public Makler getMaklerByLogin(String login) {
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+        Criteria cr = session.createCriteria(Makler.class);
+        cr.add(Restrictions.eq("login", login));
+        List makler = cr.list();
+        session.getTransaction().commit();
         
-        for (Makler m : makler) {
-            if (m.getLogin().equals(login)) {
-                return m;
+        for (Object o : makler) {
+            if (o instanceof Makler) {
+                Makler m = (Makler) o;
+                if (m.getLogin().equals(login)) {
+                    return m;
+                }
             }
         }
 		
@@ -168,7 +126,17 @@ public class ImmoService {
 	 * Gibt alle Makler zurück
 	 */
 	public Set<Makler> getAllMakler() {
-		return makler;
+        // Open Hibernate Session
+        Session session = sessionFactory.openSession();
+        // GetAll EstateAgents from DB
+        session.beginTransaction();
+        List<?> l = session.createCriteria(Makler.class).list();
+        List<Makler> l_makler = new ArrayList<>(l.size());
+        for (Object o : l) {
+            l_makler.add((Makler) o);
+        }
+        session.getTransaction().commit();
+        return new HashSet<>(l_makler);
 	}
 	
 	/**
@@ -177,10 +145,18 @@ public class ImmoService {
 	 * @return Person mit der ID oder null
 	 */
 	public Person getPersonById(int id) {
-        
-        for (Person p : personen) {
-            if (p.getId() == id) {
-                return p;
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+        Criteria cr = session.createCriteria(Person.class);
+        cr.add(Restrictions.eq("id", id));
+        List personen = cr.list();
+        session.getTransaction().commit();
+        for (Object o : personen) {
+            if (o instanceof Person) {
+                Person m = (Person) o;
+                if (m.getId() == id) {
+                    return m;
+                }
             }
         }
 		
@@ -193,8 +169,6 @@ public class ImmoService {
 	 */
 	public void addMakler(Makler m) {
 		add(m);
-		//Add EstateAgent to local buffer
-		makler.add(m);
 	}
     
     /**
@@ -211,8 +185,6 @@ public class ImmoService {
 	 */
 	public void deleteMakler(Makler m) {
 		delete(m);
-		//Delete EstateAgent from local buffer
-		makler.remove(m);
 	}
 	
 	/**
@@ -221,15 +193,21 @@ public class ImmoService {
 	 */
 	public void addPerson(Person p) {
 		add(p);
-		//Add Person to local buffer
-		personen.add(p);
 	}
 	
 	/**
 	 * Gibt alle Personen zurück
 	 */
 	public Set<Person> getAllPersons() {
-		return personen;
+	    Session session = sessionFactory.openSession();
+	    session.beginTransaction();
+        List l = session.createCriteria(Person.class).list();
+        List<Person> l_person = new ArrayList<>(l.size());
+        for (Object o : l) {
+            l_person.add((Person) o);
+        }
+        session.getTransaction().commit();
+		return new HashSet<>(l_person);
 	}
     
     /**
@@ -246,7 +224,6 @@ public class ImmoService {
 	 */
 	public void deletePerson(Person p) {
 	    delete(p);
-		personen.remove(p);
 	}
 	
 	/**
@@ -255,7 +232,6 @@ public class ImmoService {
 	 */
 	public void addHaus(Haus h) {
 	    add(h);
-		haeuser.add(h);
 	}
 	
 	/**
@@ -264,9 +240,16 @@ public class ImmoService {
 	 * @return Alle Häuser, die vom Makler verwaltet werden
 	 */
 	public Set<Haus> getAllHaeuserForMakler(Makler m) {
-		Set<Haus> ret = new HashSet<Haus>();
-        
-        for (Haus h : haeuser) {
+		Set<Haus> ret = new HashSet<>();
+		Session session = sessionFactory.openSession();
+        session.beginTransaction();
+		List l = session.createCriteria(Haus.class).list();
+        List<Haus> l_haus = new ArrayList<>(l.size());
+        for (Object o : l) {
+            l_haus.add((Haus) o);
+        }
+        session.getTransaction().commit();
+        for (Haus h : l_haus) {
             if (h.getVerwalter().equals(m)) {
                 ret.add(h);
             }
@@ -281,12 +264,21 @@ public class ImmoService {
 	 * @return Das Haus oder null, falls nicht gefunden
 	 */
 	public Haus getHausById(int id) {
-		
-		for (Haus h : haeuser) {
-			if (h.getId() == id) {
-				return h;
-			}
-		}
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+        Criteria cr = session.createCriteria(Haus.class);
+        cr.add(Restrictions.eq("id", id));
+        List haeuser = cr.list();
+        session.getTransaction().commit();
+        
+        for (Object o : haeuser) {
+            if (o instanceof Haus) {
+                Haus m = (Haus) o;
+                if (m.getId() == id) {
+                    return m;
+                }
+            }
+        }
 		
 		return null;
 	}
@@ -305,7 +297,6 @@ public class ImmoService {
 	 */
 	public void deleteHaus(Haus h) {
 	    delete(h);
-		haeuser.remove(h);
 	}
 	
 	/**
@@ -314,7 +305,6 @@ public class ImmoService {
 	 */
 	public void addWohnung(Wohnung w) {
 	    add(w);
-		wohnungen.add(w);
 	}
 	
 	/**
@@ -323,9 +313,17 @@ public class ImmoService {
 	 * @return Alle Wohnungen, die vom Makler verwaltet werden
 	 */
 	public Set<Wohnung> getAllWohnungenForMakler(Makler m) {
-		Set<Wohnung> ret = new HashSet<Wohnung>();
-        
-        for (Wohnung w : wohnungen) {
+		Set<Wohnung> ret = new HashSet<>();
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+        List l = session.createCriteria(Wohnung.class).list();
+        List<Wohnung> l_wohnung = new ArrayList<>(l.size());
+        for (Object o : l) {
+            l_wohnung.add((Wohnung) o);
+        }
+        session.getTransaction().commit();
+		
+        for (Wohnung w : l_wohnung) {
             if (w.getVerwalter().equals(m)) {
                 ret.add(w);
             }
@@ -340,10 +338,19 @@ public class ImmoService {
 	 * @return Die Wohnung oder null, falls nicht gefunden
 	 */
 	public Wohnung getWohnungById(int id) {
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+        Criteria cr = session.createCriteria(Wohnung.class);
+        cr.add(Restrictions.eq("id", id));
+        List wohnungen = cr.list();
+        session.getTransaction().commit();
         
-        for (Wohnung w : wohnungen) {
-            if (w.getId() == id) {
-                return w;
+        for (Object o : wohnungen) {
+            if (o instanceof Wohnung) {
+                Wohnung m = (Wohnung) o;
+                if (m.getId() == id) {
+                    return m;
+                }
             }
         }
 		
@@ -364,7 +371,6 @@ public class ImmoService {
 	 */
 	public void deleteWohnung(Wohnung w) {
 	    delete(w);
-		wohnungen.remove(w);
 	}
 	
 	
@@ -374,7 +380,6 @@ public class ImmoService {
 	 */
 	public void addMietvertrag(Mietvertrag m) {
 	    add(m);
-		mietvertraege.add(m);
 	}
 	
 	/**
@@ -383,7 +388,6 @@ public class ImmoService {
 	 */
 	public void addKaufvertrag(Kaufvertrag k) {
 	    add(k);
-		kaufvertraege.add(k);
 	}
 	
 	/**
@@ -392,9 +396,16 @@ public class ImmoService {
 	 * @return Alle Mietverträge, die zu Wohnungen gehören, die vom Makler verwaltet werden
 	 */
 	public Set<Mietvertrag> getAllMietvertraegeForMakler(Makler m) {
-		Set<Mietvertrag> ret = new HashSet<Mietvertrag>();
-        
-        for (Mietvertrag v : mietvertraege) {
+		Set<Mietvertrag> ret = new HashSet<>();
+		Session session = sessionFactory.openSession();
+		session.beginTransaction();
+        List l = session.createCriteria(Mietvertrag.class).list();
+        List<Mietvertrag> l_mietvertrag = new ArrayList<>(l.size());
+        for (Object o : l) {
+            l_mietvertrag.add((Mietvertrag) o);
+        }
+        session.getTransaction().commit();
+        for (Mietvertrag v : l_mietvertrag) {
             if (v.getWohnung().getVerwalter().equals(m)) {
                 ret.add(v);
             }
@@ -404,14 +415,22 @@ public class ImmoService {
 	}
 	
 	/**
-	 * Gibt alle Kaufverträge zu Wohnungen eines Maklers zurück
+	 * Gibt alle Kaufverträge zu Häusern eines Maklers zurück
 	 * @param m Der Makler
 	 * @return Alle Kaufverträge, die zu Häusern gehören, die vom Makler verwaltet werden
 	 */
 	public Set<Kaufvertrag> getAllKaufvertraegeForMakler(Makler m) {
-		Set<Kaufvertrag> ret = new HashSet<Kaufvertrag>();
-        
-        for (Kaufvertrag k : kaufvertraege) {
+		Set<Kaufvertrag> ret = new HashSet<>();
+  
+		Session session = sessionFactory.openSession();
+		session.beginTransaction();
+        List l = session.createCriteria(Kaufvertrag.class).list();
+        List<Kaufvertrag> l_kaufvertrag = new ArrayList<>(l.size());
+        for (Object o : l) {
+            l_kaufvertrag.add((Kaufvertrag) o);
+        }
+        session.getTransaction().commit();
+        for (Kaufvertrag k : l_kaufvertrag) {
             if (k.getHaus().getVerwalter().equals(m)) {
                 ret.add(k);
             }
@@ -426,48 +445,23 @@ public class ImmoService {
 	 * @return Der Mietvertrag oder null, falls nicht gefunden
 	 */
 	public Mietvertrag getMietvertragByVertragsnummer(int vertragsnummer) {
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+        Criteria cr = session.createCriteria(Mietvertrag.class);
+        cr.add(Restrictions.eq("vertragsnummer", vertragsnummer));
+        List mietvertraege = cr.list();
+        session.getTransaction().commit();
         
-        for (Mietvertrag m : mietvertraege) {
-            if (m.getVertragsnummer() == vertragsnummer) {
-                return m;
+        for (Object o : mietvertraege) {
+            if (o instanceof Mietvertrag) {
+                Mietvertrag m = (Mietvertrag) o;
+                if (m.getVertragsnummer() == vertragsnummer) {
+                    return m;
+                }
             }
         }
 		
 		return null;
-	}
-	
-	/**
-	 * Findet alle Mietverträge, die Wohnungen eines gegebenen Verwalters betreffen
-	 * @param m Der Verwalter
-	 * @return Set aus Mietverträgen
-	 */
-	public Set<Mietvertrag> getMietvertragByVerwalter(Makler m) {
-		Set<Mietvertrag> ret = new HashSet<Mietvertrag>();
-        
-        for (Mietvertrag mv : mietvertraege) {
-            if (mv.getWohnung().getVerwalter().getId() == m.getId()) {
-                ret.add(mv);
-            }
-        }
-		
-		return ret;
-	}
-	
-	/**
-	 * Findet alle Kaufverträge, die Häuser eines gegebenen Verwalters betreffen
-	 * @param m Der Verwalter
-	 * @return Set aus Kaufverträgen
-	 */
-	public Set<Kaufvertrag> getKaufvertragByVerwalter(Makler m) {
-		Set<Kaufvertrag> ret = new HashSet<Kaufvertrag>();
-        
-        for (Kaufvertrag k : kaufvertraege) {
-            if (k.getHaus().getVerwalter().getId() == m.getId()) {
-                ret.add(k);
-            }
-        }
-		
-		return ret;
 	}
 	
 	/**
@@ -476,10 +470,19 @@ public class ImmoService {
 	 * @return Der Kaufvertrag oder null, falls nicht gefunden
 	 */
 	public Kaufvertrag getKaufvertragByVertragsnummer(int vertragsnummer) {
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+        Criteria cr = session.createCriteria(Kaufvertrag.class);
+        cr.add(Restrictions.eq("vertragsnummer", vertragsnummer));
+        List kaufvertraege = cr.list();
+        session.getTransaction().commit();
         
-        for (Kaufvertrag k : kaufvertraege) {
-            if (k.getVertragsnummer() == vertragsnummer) {
-                return k;
+        for (Object o : kaufvertraege) {
+            if (o instanceof Kaufvertrag) {
+                Kaufvertrag m = (Kaufvertrag) o;
+                if (m.getVertragsnummer() == vertragsnummer) {
+                    return m;
+                }
             }
         }
 		
@@ -508,7 +511,6 @@ public class ImmoService {
 	 */
 	public void deleteMietvertrag(Mietvertrag m) {
 	    delete(m);
-		mietvertraege.remove(m);
 	}
     
     /**
@@ -517,7 +519,6 @@ public class ImmoService {
      */
     public void deleteKaufvertrag(Kaufvertrag k) {
         delete(k);
-        kaufvertraege.remove(k);
     }
 	
 	/**
