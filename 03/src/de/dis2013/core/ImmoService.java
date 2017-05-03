@@ -16,10 +16,6 @@ import de.dis2013.data.Wohnung;
 
 /**
  * Klasse zur Verwaltung aller Datenbank-Entitäten.
- * 
- * TODO: Aktuell werden alle Daten im Speicher gehalten. Ziel der Übung
- * ist es, schrittweise die Datenverwaltung in die Datenbank auszulagern.
- * Wenn die Arbeit erledigt ist, werden alle Sets dieser Klasse überflüssig.
  */
 public class ImmoService {
 	// Datensätze im Speicher
@@ -535,7 +531,6 @@ public class ImmoService {
 		m.setLogin("max");
 		m.setPasswort("max");
 		
-		//TODO: Dieser Makler wird im Speicher und der DB gehalten
 		this.addMakler(m);
 
 		//Hibernate Session erzeugen
@@ -556,7 +551,6 @@ public class ImmoService {
 		session.save(p1);
 		session.save(p2);
 		
-		//TODO: Diese Personen werden im Speicher und der DB gehalten
 		this.addPerson(p1);
 		this.addPerson(p2);
 		session.getTransaction().commit();
@@ -575,8 +569,6 @@ public class ImmoService {
 		h.setVerwalter(m);
 		
 		session.save(h);
-		
-		//TODO: Dieses Haus wird im Speicher und der DB gehalten
 		this.addHaus(h);
 		session.getTransaction().commit();
 		
