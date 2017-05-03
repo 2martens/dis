@@ -22,7 +22,7 @@ import de.dis2013.data.Wohnung;
  * Wenn die Arbeit erledigt ist, werden alle Sets dieser Klasse überflüssig.
  */
 public class ImmoService {
-	//Datensätze im Speicher
+	// Datensätze im Speicher
 	private Set<Makler> makler;
 	private Set<Person> personen = new HashSet<Person>();
 	private Set<Haus> haeuser = new HashSet<Haus>();
@@ -30,14 +30,14 @@ public class ImmoService {
 	private Set<Mietvertrag> mietvertraege = new HashSet<Mietvertrag>();
 	private Set<Kaufvertrag> kaufvertraege = new HashSet<Kaufvertrag>();
 	
-	//Hibernate Session
+	// Hibernate Session
 	private SessionFactory sessionFactory;
 	
 	public ImmoService() {
 		sessionFactory = new Configuration().configure().buildSessionFactory();
-		//Open Hibernate Session
+		// Open Hibernate Session
 		Session session = sessionFactory.openSession();
-		//GetAll EstateAgents from DB
+		// GetAll EstateAgents from DB
 		session.beginTransaction();	
 		List<?> l = session.createCriteria(Makler.class).list();
 		List<Makler> l_makler = new ArrayList<Makler>(l.size());
@@ -49,6 +49,51 @@ public class ImmoService {
 		session.getTransaction().commit();
 		session.close();
 	}
+    
+    /**
+     * Adds an object to the database.
+     *
+     * @param o Object
+     */
+	private void add(Object o) {
+        // Open Hibernate Session
+        Session session = sessionFactory.openSession();
+        // Add object to DB
+        session.beginTransaction();
+        session.save(o);
+        session.getTransaction().commit();
+        session.close();
+    }
+    
+    /**
+     * Deletes an object from the database.
+     *
+     * @param o Object
+     */
+    private void delete(Object o) {
+        // Open Hibernate Session
+        Session session = sessionFactory.openSession();
+        // Delete object from DB
+        session.beginTransaction();
+        session.delete(o);
+        session.getTransaction().commit();
+        session.close();
+    }
+    
+    /**
+     * Edits the given object in the database.
+     *
+     * @param o Object
+     */
+    private void edit(Object o) {
+        // Open Hibernate Session
+        Session session = sessionFactory.openSession();
+        // Update object in DB
+        session.beginTransaction();
+        session.merge(o);
+        session.getTransaction().commit();
+        session.close();
+    }
 	
 	/**
 	 * Finde einen Makler mit gegebener Id
@@ -110,13 +155,7 @@ public class ImmoService {
 	 * @param m Der Makler
 	 */
 	public void addMakler(Makler m) {
-		//Open Hibernate Session
-		Session session = sessionFactory.openSession();
-		//Add EstateAgent to DB
-		session.beginTransaction();		
-		session.save(m);
-		session.getTransaction().commit();
-		session.close();
+		add(m);
 		//Add EstateAgent to local buffer
 		makler.add(m);
 	}
@@ -126,13 +165,7 @@ public class ImmoService {
 	 * @param m Der Makler
 	 */
 	public void deleteMakler(Makler m) {
-		//Open Hibernate Session
-		Session session = sessionFactory.openSession();
-		//Delete EstateAgent from DB
-		session.beginTransaction();		
-		session.delete(m);
-		session.getTransaction().commit();
-		session.close();
+		delete(m);
 		//Delete EstateAgent from local buffer
 		makler.remove(m);
 	}
@@ -142,6 +175,8 @@ public class ImmoService {
 	 * @param p Die Person
 	 */
 	public void addPerson(Person p) {
+		add(p);
+		//Add Person to local buffer
 		personen.add(p);
 	}
 	
@@ -157,6 +192,7 @@ public class ImmoService {
 	 * @param p Die Person
 	 */
 	public void deletePerson(Person p) {
+	    delete(p);
 		personen.remove(p);
 	}
 	
@@ -165,6 +201,7 @@ public class ImmoService {
 	 * @param h Das Haus
 	 */
 	public void addHaus(Haus h) {
+	    add(h);
 		haeuser.add(h);
 	}
 	
@@ -206,6 +243,7 @@ public class ImmoService {
 	 * @param h Das Haus
 	 */
 	public void deleteHouse(Haus h) {
+	    delete(h);
 		haeuser.remove(h);
 	}
 	
@@ -214,6 +252,7 @@ public class ImmoService {
 	 * @param w die Wohnung
 	 */
 	public void addWohnung(Wohnung w) {
+	    add(w);
 		wohnungen.add(w);
 	}
 	
@@ -255,6 +294,7 @@ public class ImmoService {
 	 * @param w Die Wohnung
 	 */
 	public void deleteWohnung(Wohnung w) {
+	    delete(w);
 		wohnungen.remove(w);
 	}
 	
@@ -264,6 +304,7 @@ public class ImmoService {
 	 * @param m Der Mietvertrag
 	 */
 	public void addMietvertrag(Mietvertrag m) {
+	    add(m);
 		mietvertraege.add(m);
 	}
 	
@@ -272,6 +313,7 @@ public class ImmoService {
 	 * @param k Der Kaufvertrag
 	 */
 	public void addKaufvertrag(Kaufvertrag k) {
+	    add(k);
 		kaufvertraege.add(k);
 	}
 	
@@ -380,6 +422,7 @@ public class ImmoService {
 	 * @param m Der Mietvertrag
 	 */
 	public void deleteMietvertrag(Mietvertrag m) {
+	    delete(m);
 		wohnungen.remove(m);
 	}
 	
@@ -501,12 +544,6 @@ public class ImmoService {
 	}
 
 	public void editEstateAgent(Makler m) {
-		//Open Hibernate Session
-		Session session = sessionFactory.openSession();
-		//Update EstateAgent from DB
-		session.beginTransaction();		
-		session.merge(m);
-		session.getTransaction().commit();
-		session.close();
+		edit(m);
 	}
 }
