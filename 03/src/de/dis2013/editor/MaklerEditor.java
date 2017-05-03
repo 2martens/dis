@@ -85,20 +85,16 @@ public class MaklerEditor {
 			System.out.println("Makler "+m.getName()+" wird bearbeitet. Leere Felder bleiben unverändert.");
 			
 			//Neue Daten abfragen
-			String new_name = FormUtil.readString("Name ("+m.getName()+")");
-			String new_address = FormUtil.readString("Adresse ("+m.getAdresse()+")");
-			String new_login = FormUtil.readString("Login ("+m.getLogin()+")");
-			String new_password = FormUtil.readString("Passwort ("+m.getPasswort()+")");
+			String new_name = FormUtil.readString("Name", m.getName());
+			String new_address = FormUtil.readString("Adresse", m.getAdresse());
+			String new_login = FormUtil.readString("Login", m.getLogin());
+			String new_password = FormUtil.readString("Passwort", m.getPasswort());
 			
 			//Neue Daten setzen
-			if(!new_name.equals(""))
-				m.setName(new_name);
-			if(!new_address.equals(""))
-				m.setAdresse(new_address);
-			if(!new_login.equals(""))
-				m.setLogin(new_login);
-			if(!new_password.equals(""))
-				m.setPasswort(new_password);
+			m.setName(new_name);
+			m.setAdresse(new_address);
+			m.setLogin(new_login);
+			m.setPasswort(new_password);
 			
 			service.editEstateAgent(m);
 		}

@@ -84,17 +84,14 @@ public class PersonEditor {
 			System.out.println("Person "+p.getVorname()+" "+p.getNachname()+" wird bearbeitet. Leere Felder bleiben unverändert.");
 			
 			//Neue Daten einlesen
-			String newVorname = FormUtil.readString("Vorname ("+p.getVorname()+")");
-			String newNachname = FormUtil.readString("Nachname ("+p.getNachname()+")");
-			String newAddress = FormUtil.readString("Adresse ("+p.getAdresse()+")");
+			String newVorname = FormUtil.readString("Vorname", p.getVorname());
+			String newNachname = FormUtil.readString("Nachname", p.getNachname());
+			String newAddress = FormUtil.readString("Adresse", p.getAdresse());
 			
 			//Neue Daten setzen
-			if(!newVorname.equals(""))
-				p.setVorname(newVorname);
-			if(!newNachname.equals(""))
-				p.setNachname(newNachname);
-			if(!newAddress.equals(""))
-				p.setAdresse(newAddress);
+			p.setVorname(newVorname);
+			p.setNachname(newNachname);
+			p.setAdresse(newAddress);
 			service.editPerson(p);
 		}
 	}

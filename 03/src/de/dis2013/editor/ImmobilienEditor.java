@@ -119,37 +119,23 @@ public class ImmobilienEditor {
 			System.out.println("Haus "+h.getStrasse()+" "+h.getHausnummer()+", "+h.getPlz()+" "+h.getOrt()+" wird bearbeitet. Leere Felder bzw. Eingabe von 0 lässt Feld unverändert.");
 			
 			//Neue Daten abfragen
-			String newOrt = FormUtil.readString("Ort ("+h.getOrt()+")");
-			int newPlz = FormUtil.readInt("PLZ ("+h.getPlz()+")");
-			String newStrasse = FormUtil.readString("Straße ("+h.getStrasse()+")");
-			String newHausNummer = FormUtil.readString("Hausnummer ("+h.getHausnummer()+")");
-			int newFlaeche = FormUtil.readInt("Fläche ("+h.getFlaeche()+")");
-			int newStockwerke = FormUtil.readInt("Stockwerke ("+h.getStockwerke()+")");
-			int newKaufpreis = FormUtil.readInt("Kaufpreis ("+h.getKaufpreis()+")");
-			boolean newGarten = FormUtil.readBoolean("Garten ("+(h.isGarten() ? "j" : "n")+")");
+			String newOrt = FormUtil.readString("Ort", h.getOrt());
+			int newPlz = FormUtil.readInt("PLZ", h.getPlz());
+			String newStrasse = FormUtil.readString("Straße", h.getStrasse());
+			String newHausNummer = FormUtil.readString("Hausnummer", h.getHausnummer());
+			int newFlaeche = FormUtil.readInt("Fläche", h.getFlaeche());
+			int newStockwerke = FormUtil.readInt("Stockwerke", h.getStockwerke());
+			int newKaufpreis = FormUtil.readInt("Kaufpreis", h.getKaufpreis());
+			boolean newGarten = FormUtil.readBoolean("Garten", h.isGarten());
 			
 			//Neue Daten setzen
-			if(!newOrt.equals(""))
-				h.setOrt(newOrt);
-			
-			if(!newStrasse.equals(""))
-				h.setStrasse(newStrasse);
-			
-			if(!newHausNummer.equals(""))
-				h.setHausnummer(newHausNummer);
-			
-			if(newPlz != 0)
-				h.setPlz(newPlz);
-			
-			if(newFlaeche != 0)
-				h.setFlaeche(newFlaeche);
-			
-			if(newStockwerke != 0)
-				h.setStockwerke(newStockwerke);
-			
-			if(newKaufpreis != 0)
-				h.setKaufpreis(newKaufpreis);
-			
+			h.setOrt(newOrt);
+			h.setStrasse(newStrasse);
+			h.setHausnummer(newHausNummer);
+			h.setPlz(newPlz);
+			h.setFlaeche(newFlaeche);
+			h.setStockwerke(newStockwerke);
+			h.setKaufpreis(newKaufpreis);
 			h.setGarten(newGarten);
 			
 			service.editHaus(h);
@@ -215,38 +201,24 @@ public class ImmobilienEditor {
 			System.out.println("Haus "+w.getStrasse()+" "+w.getHausnummer()+", "+w.getPlz()+" "+w.getOrt()+" wird bearbeitet. Leere Felder bzw. Eingabe von 0 lässt Feld unverändert.");
 			
 			//Neue Daten abfragen
-			String newOrt = FormUtil.readString("Ort ("+w.getOrt()+")");
-			int newPlz = FormUtil.readInt("PLZ ("+w.getPlz()+")");
-			String newStrasse = FormUtil.readString("Straße ("+w.getStrasse()+")");
-			String newHausNummer = FormUtil.readString("Hausnummer ("+w.getHausnummer()+")");
-			int newFlaeche = FormUtil.readInt("Fläche ("+w.getFlaeche()+")");
-			int newStockwerk = FormUtil.readInt("Stockwerk ("+w.getStockwerk()+")");
-			int newMietpreis = FormUtil.readInt("Mietpreis ("+w.getMietpreis()+")");
-			boolean newEbk = FormUtil.readBoolean("EBK ("+(w.isEbk() ? "j" : "n")+")");
-			boolean newBalkon = FormUtil.readBoolean("Balkon ("+(w.isBalkon() ? "j" : "n")+")");
+			String newOrt = FormUtil.readString("Ort", w.getOrt());
+			int newPlz = FormUtil.readInt("PLZ", w.getPlz());
+			String newStrasse = FormUtil.readString("Straße", w.getStrasse());
+			String newHausNummer = FormUtil.readString("Hausnummer", w.getHausnummer());
+			int newFlaeche = FormUtil.readInt("Fläche", w.getFlaeche());
+			int newStockwerk = FormUtil.readInt("Stockwerk", w.getStockwerk());
+			int newMietpreis = FormUtil.readInt("Mietpreis", w.getMietpreis());
+			boolean newEbk = FormUtil.readBoolean("EBK", w.isEbk());
+			boolean newBalkon = FormUtil.readBoolean("Balkon", w.isBalkon());
 			
 			//Neue Daten setzen
-			if(!newOrt.equals(""))
-				w.setOrt(newOrt);
-			
-			if(!newStrasse.equals(""))
-				w.setStrasse(newStrasse);
-			
-			if(!newHausNummer.equals(""))
-				w.setHausnummer(newHausNummer);
-			
-			if(newPlz != 0)
-				w.setPlz(newPlz);
-			
-			if(newFlaeche != 0)
-				w.setFlaeche(newFlaeche);
-			
-			if(newStockwerk != 0)
-				w.setStockwerk(newStockwerk);
-			
-			if(newMietpreis != 0)
-				w.setMietpreis(newMietpreis);
-			
+			w.setOrt(newOrt);
+			w.setStrasse(newStrasse);
+			w.setHausnummer(newHausNummer);
+			w.setPlz(newPlz);
+			w.setFlaeche(newFlaeche);
+			w.setStockwerk(newStockwerk);
+			w.setMietpreis(newMietpreis);
 			w.setEbk(newEbk);
 			w.setBalkon(newBalkon);
 			service.editWohnung(w);
