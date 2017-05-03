@@ -421,14 +421,14 @@ public class ImmoService {
 	}
 	
 	/**
-	 * Findet einen Mietvertrag mit gegebener ID
-	 * @param id Die ID
+	 * Findet einen Mietvertrag mit gegebener Vertragsnummer
+	 * @param vertragsnummer Die Vertragsnummer
 	 * @return Der Mietvertrag oder null, falls nicht gefunden
 	 */
-	public Mietvertrag getMietvertragById(int id) {
+	public Mietvertrag getMietvertragByVertragsnummer(int vertragsnummer) {
         
         for (Mietvertrag m : mietvertraege) {
-            if (m.getId() == id) {
+            if (m.getVertragsnummer() == vertragsnummer) {
                 return m;
             }
         }
@@ -471,14 +471,14 @@ public class ImmoService {
 	}
 	
 	/**
-	 * Findet einen Kaufvertrag mit gegebener ID
-	 * @param id Die ID
+	 * Findet einen Kaufvertrag mit gegebener Vertragsnummer
+	 * @param vertragsnummer Die Vertragsnummer
 	 * @return Der Kaufvertrag oder null, falls nicht gefunden
 	 */
-	public Kaufvertrag getKaufvertragById(int id) {
+	public Kaufvertrag getKaufvertragByVertragsnummer(int vertragsnummer) {
         
         for (Kaufvertrag k : kaufvertraege) {
-            if (k.getId() == id) {
+            if (k.getVertragsnummer() == vertragsnummer) {
                 return k;
             }
         }

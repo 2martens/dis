@@ -11,13 +11,9 @@ public abstract class Vertrag {
 	private int vertragsnummer = -1;
 	private Date datum;
 	private String ort;
-	private static int currentId = 0;
-	private int    id;
 	private Person vertragspartner;
 	
-	public Vertrag() {
-		this.id = currentId++;
-	}
+	public Vertrag() {}
 	
 	public int getVertragsnummer() {
 		return vertragsnummer;
@@ -36,14 +32,6 @@ public abstract class Vertrag {
 	}
 	public void setOrt(String ort) {
 		this.ort = ort;
-	}
-	
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
 	}
 
 	public Person getVertragspartner() {

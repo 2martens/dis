@@ -132,7 +132,6 @@ public class VertragsEditor {
 		
 				m.setWohnung(service.getWohnungById(wid));
 				m.setVertragspartner(service.getPersonById(pid));
-				m.setVertragsnummer(FormUtil.readInt("Vertragsnummer"));
 				m.setDatum(FormUtil.readDate("Datum"));
 				m.setOrt(FormUtil.readString("Ort"));
 				m.setMietbeginn(FormUtil.readDate("Mietbeginn"));
@@ -141,7 +140,7 @@ public class VertragsEditor {
 				
 				service.addMietvertrag(m);
 				
-				System.out.println("Mietvertrag mit der ID "+m.getId()+" wurde erzeugt.");
+				System.out.println("Mietvertrag mit der Nummer "+m.getVertragsnummer()+" wurde erzeugt.");
 			}
 		}
 	}
@@ -172,7 +171,6 @@ public class VertragsEditor {
 		
 				k.setHaus(service.getHausById(hid));
 				k.setVertragspartner(service.getPersonById(pid));
-				k.setVertragsnummer(FormUtil.readInt("Vertragsnummer"));
 				k.setDatum(FormUtil.readDate("Datum"));
 				k.setOrt(FormUtil.readString("Ort"));
 				k.setAnzahlRaten(FormUtil.readInt("Anzahl Raten"));
@@ -180,7 +178,7 @@ public class VertragsEditor {
 				
 				service.addKaufvertrag(k);
 				
-				System.out.println("Kaufvertrag mit der ID "+k.getId()+" wurde erzeugt.");
+				System.out.println("Kaufvertrag mit der Vertragsnummer "+k.getVertragsnummer()+" wurde erzeugt.");
 			}
 		}
 	}
