@@ -45,9 +45,6 @@ public class Main {
 		PropertiesFileAuthenticator pfa = new PropertiesFileAuthenticator("admin.properties");
 		MaklerAuthenticator ma = new MaklerAuthenticator(service);
 		
-		//Testdaten
-		service.addTestData();
-		
 		//Verarbeite Eingabe
 		while(true) {
 			int response = mainMenu.show();
