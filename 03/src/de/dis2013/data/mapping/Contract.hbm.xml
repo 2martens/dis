@@ -20,7 +20,7 @@
 		<joined-subclass name="de.dis2013.data.Mietvertrag" table="tenancycontract" schema="VSISP12">
         	<key column="contractnumber"/>
 			<property name="mietbeginn" type="timestamp" column="startdate" />
-			<property name="dauer" type="timestamp" column="duration" />
+			<property name="dauer" type="integer" column="duration" />
 			<property name="nebenkosten" type="integer" column="additionalcosts" />
 			<many-to-one name="wohnung" class="de.dis2013.data.Wohnung" column="apartment" not-null="true" />
 		</joined-subclass>
