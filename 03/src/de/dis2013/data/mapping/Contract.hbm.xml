@@ -10,7 +10,7 @@
 		<property name="vertragsnummer" type="integer" column="contractnumber" />
 		<property name="datum" type="date" column="date" />
 		<property name="ort" type="string" column="place" />
-		<many-to-one name="person" class="de.dis2013.data.Person" column="person" not-null="true" />
+		<many-to-one name="vertragspartner" class="de.dis2013.data.Person" column="person" not-null="true" />
 		
 		<joined-subclass name="de.dis2013.data.Kaufvertrag" table="purchasecontract" schema="VSISP12">
         	<key column="id"/>
