@@ -25,6 +25,7 @@ public class ImmoService {
 	
 	public ImmoService() {
 		sessionFactory = new Configuration().configure().buildSessionFactory();
+		sessionFactory.openSession();
 	}
     
     /**
@@ -34,12 +35,11 @@ public class ImmoService {
      */
 	private void add(Object o) {
         // Open Hibernate Session
-        Session session = sessionFactory.openSession();
+        Session session = sessionFactory.getCurrentSession();
         // Add object to DB
         session.beginTransaction();
         session.save(o);
         session.getTransaction().commit();
-        session.close();
     }
     
     /**
@@ -49,12 +49,11 @@ public class ImmoService {
      */
     private void delete(Object o) {
         // Open Hibernate Session
-        Session session = sessionFactory.openSession();
+        Session session = sessionFactory.getCurrentSession();
         // Delete object from DB
         session.beginTransaction();
         session.delete(o);
         session.getTransaction().commit();
-        session.close();
     }
     
     /**
@@ -64,12 +63,11 @@ public class ImmoService {
      */
     private void edit(Object o) {
         // Open Hibernate Session
-        Session session = sessionFactory.openSession();
+        Session session = sessionFactory.getCurrentSession();
         // Update object in DB
         session.beginTransaction();
         session.merge(o);
         session.getTransaction().commit();
-        session.close();
     }
 	
 	/**
@@ -78,7 +76,7 @@ public class ImmoService {
 	 * @return Makler mit der ID oder null
 	 */
 	public Makler getMaklerById(int id) {
-        Session session = sessionFactory.openSession();
+        Session session = sessionFactory.getCurrentSession();
         session.beginTransaction();
         Criteria cr = session.createCriteria(Makler.class);
         cr.add(Restrictions.eq("id", id));
@@ -103,7 +101,7 @@ public class ImmoService {
 	 * @return Makler mit der ID oder null
 	 */
 	public Makler getMaklerByLogin(String login) {
-        Session session = sessionFactory.openSession();
+        Session session = sessionFactory.getCurrentSession();
         session.beginTransaction();
         Criteria cr = session.createCriteria(Makler.class);
         cr.add(Restrictions.eq("login", login));
@@ -127,7 +125,7 @@ public class ImmoService {
 	 */
 	public Set<Makler> getAllMakler() {
         // Open Hibernate Session
-        Session session = sessionFactory.openSession();
+        Session session = sessionFactory.getCurrentSession();
         // GetAll EstateAgents from DB
         session.beginTransaction();
         List<?> l = session.createCriteria(Makler.class).list();
@@ -145,7 +143,7 @@ public class ImmoService {
 	 * @return Person mit der ID oder null
 	 */
 	public Person getPersonById(int id) {
-        Session session = sessionFactory.openSession();
+        Session session = sessionFactory.getCurrentSession();
         session.beginTransaction();
         Criteria cr = session.createCriteria(Person.class);
         cr.add(Restrictions.eq("id", id));
@@ -199,7 +197,7 @@ public class ImmoService {
 	 * Gibt alle Personen zurück
 	 */
 	public Set<Person> getAllPersons() {
-	    Session session = sessionFactory.openSession();
+	    Session session = sessionFactory.getCurrentSession();
 	    session.beginTransaction();
         List l = session.createCriteria(Person.class).list();
         List<Person> l_person = new ArrayList<>(l.size());
@@ -264,7 +262,7 @@ public class ImmoService {
 	 * @return Das Haus oder null, falls nicht gefunden
 	 */
 	public Haus getHausById(int id) {
-        Session session = sessionFactory.openSession();
+        Session session = sessionFactory.getCurrentSession();
         session.beginTransaction();
         Criteria cr = session.createCriteria(Haus.class);
         cr.add(Restrictions.eq("id", id));
@@ -314,7 +312,7 @@ public class ImmoService {
 	 */
 	public Set<Wohnung> getAllWohnungenForMakler(Makler m) {
 		Set<Wohnung> ret = new HashSet<>();
-        Session session = sessionFactory.openSession();
+        Session session = sessionFactory.getCurrentSession();
         session.beginTransaction();
         List l = session.createCriteria(Wohnung.class).list();
         List<Wohnung> l_wohnung = new ArrayList<>(l.size());
@@ -338,7 +336,7 @@ public class ImmoService {
 	 * @return Die Wohnung oder null, falls nicht gefunden
 	 */
 	public Wohnung getWohnungById(int id) {
-        Session session = sessionFactory.openSession();
+        Session session = sessionFactory.getCurrentSession();
         session.beginTransaction();
         Criteria cr = session.createCriteria(Wohnung.class);
         cr.add(Restrictions.eq("id", id));
@@ -397,7 +395,7 @@ public class ImmoService {
 	 */
 	public Set<Mietvertrag> getAllMietvertraegeForMakler(Makler m) {
 		Set<Mietvertrag> ret = new HashSet<>();
-		Session session = sessionFactory.openSession();
+		Session session = sessionFactory.getCurrentSession();
 		session.beginTransaction();
         List l = session.createCriteria(Mietvertrag.class).list();
         List<Mietvertrag> l_mietvertrag = new ArrayList<>(l.size());
@@ -422,7 +420,7 @@ public class ImmoService {
 	public Set<Kaufvertrag> getAllKaufvertraegeForMakler(Makler m) {
 		Set<Kaufvertrag> ret = new HashSet<>();
   
-		Session session = sessionFactory.openSession();
+		Session session = sessionFactory.getCurrentSession();
 		session.beginTransaction();
         List l = session.createCriteria(Kaufvertrag.class).list();
         List<Kaufvertrag> l_kaufvertrag = new ArrayList<>(l.size());
@@ -445,7 +443,7 @@ public class ImmoService {
 	 * @return Der Mietvertrag oder null, falls nicht gefunden
 	 */
 	public Mietvertrag getMietvertragByVertragsnummer(int vertragsnummer) {
-        Session session = sessionFactory.openSession();
+        Session session = sessionFactory.getCurrentSession();
         session.beginTransaction();
         Criteria cr = session.createCriteria(Mietvertrag.class);
         cr.add(Restrictions.eq("vertragsnummer", vertragsnummer));
@@ -470,7 +468,7 @@ public class ImmoService {
 	 * @return Der Kaufvertrag oder null, falls nicht gefunden
 	 */
 	public Kaufvertrag getKaufvertragByVertragsnummer(int vertragsnummer) {
-        Session session = sessionFactory.openSession();
+        Session session = sessionFactory.getCurrentSession();
         session.beginTransaction();
         Criteria cr = session.createCriteria(Kaufvertrag.class);
         cr.add(Restrictions.eq("vertragsnummer", vertragsnummer));
@@ -535,7 +533,7 @@ public class ImmoService {
 		this.addMakler(m);
 
 		//Hibernate Session erzeugen
-		Session session = sessionFactory.openSession();
+		Session session = sessionFactory.getCurrentSession();
 		session.beginTransaction();
 		
 		Person p1 = new Person();
@@ -551,9 +549,6 @@ public class ImmoService {
 		
 		session.save(p1);
 		session.save(p2);
-		
-		this.addPerson(p1);
-		this.addPerson(p2);
 		session.getTransaction().commit();
 		
 		//Hibernate Session erzeugen
@@ -570,11 +565,10 @@ public class ImmoService {
 		h.setVerwalter(m);
 		
 		session.save(h);
-		this.addHaus(h);
 		session.getTransaction().commit();
 		
 		//Hibernate Session erzeugen
-		session = sessionFactory.openSession();
+		session = sessionFactory.getCurrentSession();
 		session.beginTransaction();
 		Makler m2 = (Makler)session.get(Makler.class, m.getId());
 		Set<Immobilie> immos = m2.getImmobilien();
@@ -584,7 +578,6 @@ public class ImmoService {
 			Immobilie i = it.next();
 			System.out.println("Immo: "+i.getOrt());
 		}*/
-		session.close();
 		
 		Wohnung w = new Wohnung();
 		w.setOrt("Hamburg");
