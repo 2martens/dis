@@ -13,10 +13,8 @@ public abstract class Immobilie {
 	private String hausnummer;
 	private int flaeche;
 	private Makler verwalter;
-	private static int currentId = 0;
 	
 	public Immobilie() {
-		this.id = currentId++;
 	}
 	
 	public int getId() {
