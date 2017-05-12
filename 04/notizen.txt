@@ -1,0 +1,406 @@
+> db2 connect to VSISP user vsisp12
+
+Database Connection Information
+
+ Database server        = DB2/LINUX 9.7.0
+ SQL authorization ID   = VSISP12
+ Local database alias   = VSISP
+
+> db2 attach to vsisls4 user vsisp12
+
+Instance Attachment Information
+
+ Instance server        = DB2/LINUX 9.7.0
+ Authorization ID       = VSISP12
+ Local instance alias   = VSISLS4
+
+> db2 list applications
+
+Auth Id  Application    Appl.      Application Id                                                 DB       # of
+         Name           Handle                                                                    Name    Agents
+-------- -------------- ---------- -------------------------------------------------------------- -------- -----
+VSISP12  db2bp          56197      134.100.11.72.6819.170512104138                                VSISP    1 
+
+> db2 get snapshot for locks for application agentid 56197
+
+Application Lock Snapshot
+
+Snapshot timestamp                         = 05/12/2017 13:30:53.596938
+
+Application handle                         = 56197
+Application ID                             = 134.100.11.72.6819.170512104138
+Sequence number                            = 00003
+Application name                           = db2bp
+CONNECT Authorization ID                   = VSISP12
+Application status                         = UOW Waiting
+Status change time                         = Not Collected
+Application code page                      = 1208
+Locks held                                 = 0
+Total wait time (ms)                       = Not Collected
+
+# set isolation level
+SET [CURRENT] ISOLATION [=] {UR | CS | RR | RS | RESET}
+VALUES CURRENT ISOLATION
+
+# 4.1
+
+a)
+
+> VALUES CURRENT ISOLATION
+
+<blank>
+
+b)
+
+CREATE TABLE OPK (ID INT, NAME VARCHAR(255));
+INSERT INTO OPK (ID, NAME) VALUES 
+(1, 'trump'),
+(2, 'merkel'),
+(3, 'walter'),
+(4, 'schulz'),
+(1, 'test');
+
+c)
+
+List Of Locks
+ Lock Name                   = 0x53514C43324832307F4760B841
+ Lock Attributes             = 0x00000000
+ Release Flags               = 0x40000000
+ Lock Count                  = 1
+ Hold Count                  = 0
+ Lock Object Name            = 0
+ Object Type                 = Internal Plan Lock
+ Mode                        = S
+
+ Lock Name                   = 0x00001101000000000000000054
+ Lock Attributes             = 0x00000000
+ Release Flags               = 0x40000000
+ Lock Count                  = 1
+ Hold Count                  = 0
+ Lock Object Name            = 273
+ Object Type                 = Table
+ Tablespace Name             = SYSCATSPACE
+ Table Schema                = SYSIBM
+ Table Name                  = SYSUSERAUTH
+ Mode                        = IS
+
+d)
+
+List Of Locks
+ Lock Name                   = 0x02000F01050000000000000052
+ Lock Attributes             = 0x00000000
+ Release Flags               = 0x00000001
+ Lock Count                  = 1
+ Hold Count                  = 0
+ Lock Object Name            = 5
+ Object Type                 = Row
+ Tablespace Name             = USERSPACE1
+ Table Schema                = VSISP12
+ Table Name                  = OPK
+ Mode                        = NS
+
+ Lock Name                   = 0x53514C43324832307F4760B841
+ Lock Attributes             = 0x00000000
+ Release Flags               = 0x40000000
+ Lock Count                  = 1
+ Hold Count                  = 0
+ Lock Object Name            = 0
+ Object Type                 = Internal Plan Lock
+ Mode                        = S
+
+ Lock Name                   = 0x02000F01000000000000000054
+ Lock Attributes             = 0x00000000
+ Release Flags               = 0x00000001
+ Lock Count                  = 1
+ Hold Count                  = 0
+ Lock Object Name            = 271
+ Object Type                 = Table
+ Tablespace Name             = USERSPACE1
+ Table Schema                = VSISP12
+ Table Name                  = OPK
+ Mode                        = IS
+
+ Lock Name                   = 0x00001101000000000000000054
+ Lock Attributes             = 0x00000000
+ Release Flags               = 0x40000000
+ Lock Count                  = 1
+ Hold Count                  = 0
+ Lock Object Name            = 273
+ Object Type                 = Table
+ Tablespace Name             = SYSCATSPACE
+ Table Schema                = SYSIBM
+ Table Name                  = SYSUSERAUTH
+ Mode                        = IS
+
+# 4.2
+
+a)
+
+INSERT INTO OPK (ID, NAME) VALUES (5, 'hbf');
+
+insert does happen
+
+new row appears when querying for it
+
+upon commit, nothing changes
+
+b)
+
+> db2 set isolation RR
+
+INSERT INTO OPK (ID, NAME) VALUES (6, 'hbf');
+
+insert doesn't finish
+
+the new row is not appearing upon querying
+
+List Of Locks
+ Lock Name                   = 0x53514C43324832307F4760B841
+ Lock Attributes             = 0x00000000
+ Release Flags               = 0x40000000
+ Lock Count                  = 1
+ Hold Count                  = 0
+ Lock Object Name            = 0
+ Object Type                 = Internal Plan Lock
+ Mode                        = S
+
+ Lock Name                   = 0x02000F01000000000000000054
+ Lock Attributes             = 0x00000010
+ Release Flags               = 0x0000000F
+ Lock Count                  = 2
+ Hold Count                  = 0
+ Lock Object Name            = 271
+ Object Type                 = Table
+ Tablespace Name             = USERSPACE1
+ Table Schema                = VSISP12
+ Table Name                  = OPK
+ Mode                        = S
+
+ Lock Name                   = 0x00001101000000000000000054
+ Lock Attributes             = 0x00000000
+ Release Flags               = 0x40000000
+ Lock Count                  = 1
+ Hold Count                  = 0
+ Lock Object Name            = 273
+ Object Type                 = Table
+ Tablespace Name             = SYSCATSPACE
+ Table Schema                = SYSIBM
+ Table Name                  = SYSUSERAUTH
+ Mode                        = IS
+
+after the commit of first transaction the content is inserted
+
+c) 
+
+held locks
+
+List Of Locks
+ Lock Name                   = 0x53514C43324832307F4760B841
+ Lock Attributes             = 0x00000000
+ Release Flags               = 0x40000000
+ Lock Count                  = 1
+ Hold Count                  = 0
+ Lock Object Name            = 0
+ Object Type                 = Internal Plan Lock
+ Mode                        = S
+
+ Lock Name                   = 0x02000F01000000000000000054
+ Lock Attributes             = 0x00000010
+ Release Flags               = 0x0000000F
+ Lock Count                  = 1
+ Hold Count                  = 0
+ Lock Object Name            = 271
+ Object Type                 = Table
+ Tablespace Name             = USERSPACE1
+ Table Schema                = VSISP12
+ Table Name                  = OPK
+ Mode                        = S
+
+ Lock Name                   = 0x00001101000000000000000054
+ Lock Attributes             = 0x00000000
+ Release Flags               = 0x40000000
+ Lock Count                  = 1
+ Hold Count                  = 0
+ Lock Object Name            = 273
+ Object Type                 = Table
+ Tablespace Name             = SYSCATSPACE
+ Table Schema                = SYSIBM
+ Table Name                  = SYSUSERAUTH
+ Mode                        = IS
+
+update doesn't finish
+
+d)
+
+CREATE TABLE MPK (ID INT NOT NULL PRIMARY KEY, NAME VARCHAR (255));
+
+INSERT INTO MPK (ID, NAME) VALUES
+(1, 'niendorf'),
+(2, 'markt'),
+(3, 'hagenbecks'),
+(4, 'hbf');
+
+update is happening
+
+locks
+
+List Of Locks
+ Lock Name                   = 0x02001001070000000000000052
+ Lock Attributes             = 0x00000010
+ Release Flags               = 0x00000001
+ Lock Count                  = 1
+ Hold Count                  = 0
+ Lock Object Name            = 7
+ Object Type                 = Row
+ Tablespace Name             = USERSPACE1
+ Table Schema                = VSISP12
+ Table Name                  = MPK
+ Mode                        = S
+
+ Lock Name                   = 0x53514C43324832307F4760B841
+ Lock Attributes             = 0x00000000
+ Release Flags               = 0x40000000
+ Lock Count                  = 1
+ Hold Count                  = 0
+ Lock Object Name            = 0
+ Object Type                 = Internal Plan Lock
+ Mode                        = S
+
+ Lock Name                   = 0x00001101000000000000000054
+ Lock Attributes             = 0x00000000
+ Release Flags               = 0x40000000
+ Lock Count                  = 1
+ Hold Count                  = 0
+ Lock Object Name            = 273
+ Object Type                 = Table
+ Tablespace Name             = SYSCATSPACE
+ Table Schema                = SYSIBM
+ Table Name                  = SYSUSERAUTH
+ Mode                        = IS
+
+ Lock Name                   = 0x02001001000000000000000054
+ Lock Attributes             = 0x00000010
+ Release Flags               = 0x00000001
+ Lock Count                  = 1
+ Hold Count                  = 0
+ Lock Object Name            = 272
+ Object Type                 = Table
+ Tablespace Name             = USERSPACE1
+ Table Schema                = VSISP12
+ Table Name                  = MPK
+ Mode                        = IS
+
+# 4.3
+
+a)
+
+the update command of the first connection is completed,
+the update command of the second connection (no isolation set) is stalled
+
+locks
+
+List Of Locks
+ Lock Name                   = 0x02000F01060000000000000052
+ Lock Attributes             = 0x00000000
+ Release Flags               = 0x40000000
+ Lock Count                  = 1
+ Hold Count                  = 0
+ Lock Object Name            = 6
+ Object Type                 = Row
+ Tablespace Name             = USERSPACE1
+ Table Schema                = VSISP12
+ Table Name                  = OPK
+ Mode                        = X
+
+ Lock Name                   = 0x53514C43324832307F4760B841
+ Lock Attributes             = 0x00000000
+ Release Flags               = 0x40000000
+ Lock Count                  = 1
+ Hold Count                  = 0
+ Lock Object Name            = 0
+ Object Type                 = Internal Plan Lock
+ Mode                        = S
+
+ Lock Name                   = 0x02000F01000000000000000054
+ Lock Attributes             = 0x00000010
+ Release Flags               = 0x4000000F
+ Lock Count                  = 2
+ Hold Count                  = 0
+ Lock Object Name            = 271
+ Object Type                 = Table
+ Tablespace Name             = USERSPACE1
+ Table Schema                = VSISP12
+ Table Name                  = OPK
+ Mode                        = SIX
+
+ Lock Name                   = 0x00001101000000000000000054
+ Lock Attributes             = 0x00000000
+ Release Flags               = 0x40000000
+ Lock Count                  = 2
+ Hold Count                  = 0
+ Lock Object Name            = 273
+ Object Type                 = Table
+ Tablespace Name             = SYSCATSPACE
+ Table Schema                = SYSIBM
+ Table Name                  = SYSUSERAUTH
+ Mode                        = IS
+
+b)
+
+both transactions stall
+
+the command of the first connection succeeds
+the command of the second connection is rolled back because of a deadlock
+
+the table content doesn't change
+
+locks
+
+List Of Locks
+ Lock Name                   = 0x02000F01060000000000000052
+ Lock Attributes             = 0x00000000
+ Release Flags               = 0x40000000
+ Lock Count                  = 1
+ Hold Count                  = 0
+ Lock Object Name            = 6
+ Object Type                 = Row
+ Tablespace Name             = USERSPACE1
+ Table Schema                = VSISP12
+ Table Name                  = OPK
+ Mode                        = X
+
+ Lock Name                   = 0x53514C43324832307F4760B841
+ Lock Attributes             = 0x00000000
+ Release Flags               = 0x40000000
+ Lock Count                  = 1
+ Hold Count                  = 0
+ Lock Object Name            = 0
+ Object Type                 = Internal Plan Lock
+ Mode                        = S
+
+ Lock Name                   = 0x00001101000000000000000054
+ Lock Attributes             = 0x00000000
+ Release Flags               = 0x40000000
+ Lock Count                  = 1
+ Hold Count                  = 0
+ Lock Object Name            = 273
+ Object Type                 = Table
+ Tablespace Name             = SYSCATSPACE
+ Table Schema                = SYSIBM
+ Table Name                  = SYSUSERAUTH
+ Mode                        = IS
+
+ Lock Name                   = 0x02000F01000000000000000054
+ Lock Attributes             = 0x00000010
+ Release Flags               = 0x4000000F
+ Lock Count                  = 2
+ Hold Count                  = 0
+ Lock Object Name            = 271
+ Object Type                 = Table
+ Tablespace Name             = USERSPACE1
+ Table Schema                = VSISP12
+ Table Name                  = OPK
+ Mode                        = SIX
+
+after committing both transactions only the change from the first connection
+is persisted
