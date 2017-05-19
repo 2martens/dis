@@ -1,5 +1,7 @@
 import org.jetbrains.annotations.Contract;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -111,6 +113,16 @@ public class PersistenceManager {
      * @return log sequence number
      */
     private int log(int taid, int pageid, String data) {
+        try {
+            FileWriter fw = new FileWriter("../data/log.txt", true);
+            // TODO properly create redo data
+            fw.write("" + _nextLogSequenceNumber + "," + taid + "," + pageid + "," + data);
+            fw.write("\n");
+            fw.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        
         return _nextLogSequenceNumber++;
     }
     
