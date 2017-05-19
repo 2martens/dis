@@ -134,7 +134,6 @@ public class PersistenceManager {
             return;
         }
         
-        // TODO persist the data of committed transactions
         Enumeration<Integer> transactionIDs       = _transactions.keys();
         List<Integer>        commitedTransactions = new ArrayList<>();
         while (transactionIDs.hasMoreElements()) {
@@ -145,11 +144,19 @@ public class PersistenceManager {
             }
         }
         
+        // TODO update log file as needed
         for (int taid : commitedTransactions) {
-            // TODO persist data of committed transaction
             Set<Integer> pageIDs = _transactionPageBuffer.get(taid);
             for (int pageid : pageIDs) {
-                // TODO persist data of pageID
+                int lsn = _pageLSN.get(pageid);
+                try {
+                    FileWriter fw = new FileWriter("../data/" + pageid + ".txt", false);
+                    fw.write(pageid + "," + lsn + "," + _pageBuffer.get(pageid));
+                    fw.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                _pageLSN.remove(pageid);
                 _pageBuffer.remove(pageid);
             }
             _transactionPageBuffer.remove(taid);
