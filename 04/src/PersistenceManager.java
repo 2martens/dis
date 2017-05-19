@@ -1,20 +1,28 @@
+import org.jetbrains.annotations.Contract;
+
 /**
  * Persistence manager using the Singleton pattern.
  */
 public class PersistenceManager
 {
-    private static PersistenceManager instance = null;
+    private final static PersistenceManager instance;
+    
+    static {
+        try {
+            instance = new PersistenceManager();
+        }
+        catch (Throwable e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
     
     /**
      * Returns an instance of the persistence manager.
      * @return instance
      */
+    @Contract(pure = true)
     public static PersistenceManager getInstance()
     {
-        if (instance == null) {
-            instance = new PersistenceManager();
-        }
-        
         return instance;
     }
     
