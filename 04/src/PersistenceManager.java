@@ -1,7 +1,6 @@
 import org.jetbrains.annotations.Contract;
 
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 
 /**
@@ -101,6 +100,53 @@ public class PersistenceManager {
         _pageLSN.put(pageid, lsn);
         // call persist
         persist();
+    }
+    
+    /**
+     * Performs the recovery actions.
+     */
+    public void recovery() {
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader("../data/log.txt"));
+            String line;
+            List<Integer> winner_tas = new ArrayList<>();
+            while ((line = reader.readLine()) != null) {
+                String[] cols = line.split(",");
+                if (cols[2].equals("COMMIT")) {
+                    winner_tas.add(Integer.valueOf(cols[1]));
+                }
+            }
+            reader.close();
+            
+            reader = new BufferedReader(new FileReader("../data/log.txt"));
+            while ((line = reader.readLine()) != null) {
+                String[] cols = line.split(",");
+                if (!cols[2].equals("WRITE") || !winner_tas.contains(Integer.valueOf(cols[1]))) {
+                    continue;
+                }
+                
+                int lsn = Integer.valueOf(cols[0]);
+                int pageID = Integer.valueOf(cols[3]);
+                String data = cols[4];
+                
+                BufferedReader readPage = new BufferedReader(new FileReader("../data/" + pageID + ".txt"));
+                String pageLine = readPage.readLine();
+                readPage.close();
+                String[] pageCols = pageLine.split(",");
+                int pageLSN = Integer.parseInt(pageCols[1]);
+                if (pageLSN >= lsn) {
+                    continue;
+                }
+                
+                FileWriter writer = new FileWriter("../data/" + pageID + ".txt");
+                writer.write("" + pageID + "," + lsn + "," + data + "\n");
+                writer.close();
+            }
+            reader.close();
+            
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
     
     /**
