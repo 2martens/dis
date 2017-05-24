@@ -53,6 +53,7 @@ public class PersistenceManager {
      */
     public int beginTransaction() {
         _transactions.put(_nextTransactionNumber, false);
+        logSimple(_nextTransactionNumber, "BOT");
         // return the next transaction number and increase it by one afterwards
         return _nextTransactionNumber++;
     }
@@ -70,6 +71,7 @@ public class PersistenceManager {
         // only perform commit actions if transaction isn't commited yet
         if (!_transactions.get(taid)) {
             _transactions.replace(taid, true);
+            logSimple(taid, "COMMIT");
         }
     }
     
@@ -95,14 +97,14 @@ public class PersistenceManager {
         _transactionPageBuffer.put(taid, pageIDs);
         _pageBuffer.put(pageid, data);
         // log changes
-        int lsn = log(taid, pageid, data);
+        int lsn = logWrite(taid, pageid, data);
         _pageLSN.put(pageid, lsn);
         // call persist
         persist();
     }
     
     /**
-     * Logs the necessary information to the log file.
+     * Logs a write to the log file.
      *
      * @param taid
      *         affected transaction
@@ -112,11 +114,32 @@ public class PersistenceManager {
      *         written data
      * @return log sequence number
      */
-    private int log(int taid, int pageid, String data) {
+    private int logWrite(int taid, int pageid, String data) {
         try {
             FileWriter fw = new FileWriter("../data/log.txt", true);
-            // TODO properly create redo data
-            fw.write("" + _nextLogSequenceNumber + "," + taid + "," + pageid + "," + data);
+            fw.write("" + _nextLogSequenceNumber + "," + taid + ",WRITE," + pageid + "," +  data);
+            fw.write("\n");
+            fw.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        
+        return _nextLogSequenceNumber++;
+    }
+    
+    /**
+     * Logs a BOT to the log file.
+     *
+     * @param taid
+     *         affected transaction
+     * @param type
+     *         log type
+     * @return log sequence number
+     */
+    private int logSimple(int taid, String type) {
+        try {
+            FileWriter fw = new FileWriter("../data/log.txt", true);
+            fw.write("" + _nextLogSequenceNumber + "," + taid + "," + type + "\n");
             fw.write("\n");
             fw.close();
         } catch (IOException e) {
@@ -144,7 +167,6 @@ public class PersistenceManager {
             }
         }
         
-        // TODO update log file as needed
         for (int taid : commitedTransactions) {
             Set<Integer> pageIDs = _transactionPageBuffer.get(taid);
             for (int pageid : pageIDs) {
