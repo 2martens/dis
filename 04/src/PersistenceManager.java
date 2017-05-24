@@ -50,9 +50,9 @@ public class PersistenceManager {
      *
      * @return transaction ID
      */
-    public int beginTransaction() {
+    public synchronized int beginTransaction() {
         _transactions.put(_nextTransactionNumber, false);
-        logSimple(_nextTransactionNumber, "BOT");
+        log(_nextTransactionNumber, -1, "BOT", "");
         // return the next transaction number and increase it by one afterwards
         return _nextTransactionNumber++;
     }
@@ -70,7 +70,7 @@ public class PersistenceManager {
         // only perform commit actions if transaction isn't commited yet
         if (!_transactions.get(taid)) {
             _transactions.replace(taid, true);
-            logSimple(taid, "COMMIT");
+            log(taid, -1, "COMMIT", "");
         }
     }
     
@@ -96,7 +96,7 @@ public class PersistenceManager {
         _transactionPageBuffer.put(taid, pageIDs);
         _pageBuffer.put(pageid, data);
         // log changes
-        int lsn = logWrite(taid, pageid, data);
+        int lsn = log(taid, pageid, "WRITE", data);
         _pageLSN.put(pageid, lsn);
         // call persist
         persist();
@@ -150,42 +150,22 @@ public class PersistenceManager {
     }
     
     /**
-     * Logs a write to the log file.
+     * Logs to the log file.
      *
      * @param taid
      *         affected transaction
      * @param pageid
-     *         modified page
-     * @param data
-     *         written data
-     * @return log sequence number
-     */
-    private int logWrite(int taid, int pageid, String data) {
-        try {
-            FileWriter fw = new FileWriter("../data/log.txt", true);
-            fw.write("" + _nextLogSequenceNumber + "," + taid + ",WRITE," + pageid + "," +  data);
-            fw.write("\n");
-            fw.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        
-        return _nextLogSequenceNumber++;
-    }
-    
-    /**
-     * Logs a BOT to the log file.
-     *
-     * @param taid
-     *         affected transaction
+     *         modified page or -1 if not relevant
      * @param type
      *         log type
+     * @param data
+     *         written data or empty string if not relevant
      * @return log sequence number
      */
-    private int logSimple(int taid, String type) {
+    private synchronized int log(int taid, int pageid, String type, String data) {
         try {
             FileWriter fw = new FileWriter("../data/log.txt", true);
-            fw.write("" + _nextLogSequenceNumber + "," + taid + "," + type + "\n");
+            fw.write("" + _nextLogSequenceNumber + "," + taid + "," + type + "," + pageid + "," +  data);
             fw.write("\n");
             fw.close();
         } catch (IOException e) {
