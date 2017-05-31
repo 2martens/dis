@@ -107,7 +107,7 @@ public class PersistenceManager {
     /**
      * Performs the recovery actions.
      */
-    public synchronized void recovery() {
+    synchronized void recovery() {
         try {
             BufferedReader reader     = new BufferedReader(new FileReader(_dataPath + "log.txt"));
             String         line;

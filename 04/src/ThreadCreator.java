@@ -3,6 +3,7 @@
  */
 public class ThreadCreator {
     public static void main(String[] args) {
+        PersistenceManager.getInstance().recovery();
         Thread t1 = new ClientThread(1, 1, 10);
         Thread t2 = new ClientThread(2, 11, 20);
         Thread t3 = new ClientThread(3, 21, 30);
