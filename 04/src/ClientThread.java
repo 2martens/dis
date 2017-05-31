@@ -46,7 +46,7 @@ public class ClientThread extends Thread {
      */
     private int beginTransaction() throws InterruptedException {
         int taid = _manager.beginTransaction();
-        Thread.sleep(2000);
+        Thread.sleep(200);
         return taid;
     }
     
@@ -56,7 +56,7 @@ public class ClientThread extends Thread {
      */
     private void commit(int taid) throws InterruptedException {
         _manager.commit(taid);
-        Thread.sleep(2000);
+        Thread.sleep(200);
     }
     
     /**
@@ -66,6 +66,6 @@ public class ClientThread extends Thread {
     private void write(int taid) throws InterruptedException {
         int pageID = ThreadLocalRandom.current().nextInt(_lowerPageBound, _upperPageBound + 1);
         _manager.write(taid, pageID, "transaction " + taid + " of client " + _id);
-        Thread.sleep(2000);
+        Thread.sleep(200);
     }
 }
