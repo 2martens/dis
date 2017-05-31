@@ -12,7 +12,7 @@ public class ClientThread extends Thread {
     /**
      * Initializes the thread.
      * @param id             the ID of this client
-     * @param lowerPageBound smalles page ID that can be accessed by this client
+     * @param lowerPageBound smallest page ID that can be accessed by this client
      * @param upperPageBound highest page ID that can be accessed by this client
      */
     ClientThread(int id, int lowerPageBound, int upperPageBound) {
