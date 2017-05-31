@@ -29,7 +29,7 @@ public class ClientThread extends Thread {
         while(true) {
             try {
                 int taid = beginTransaction();
-                int numberOfWrites = ThreadLocalRandom.current().nextInt(0, 10);
+                int numberOfWrites = ThreadLocalRandom.current().nextInt(1, 11);
                 for (int i = 0; i < numberOfWrites; ++i) {
                     write(taid);
                 }
