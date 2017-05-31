@@ -14,6 +14,7 @@ public class PersistenceManager {
     private              Hashtable<Integer, Integer>      _pageLSN;
     private              int                              _nextTransactionNumber;
     private              int                              _nextLogSequenceNumber;
+    private              String                           _dataPath;
     
     static {
         try {
@@ -43,6 +44,7 @@ public class PersistenceManager {
         _pageLSN = new Hashtable<>();
         _nextTransactionNumber = 1;
         _nextLogSequenceNumber = 1;
+        _dataPath = "/home/jim/git-repos/dis/04/data/";
     }
     
     /**
@@ -107,7 +109,7 @@ public class PersistenceManager {
      */
     public void recovery() {
         try {
-            BufferedReader reader = new BufferedReader(new FileReader("../data/log.txt"));
+            BufferedReader reader = new BufferedReader(new FileReader(_dataPath + "log.txt"));
             String line;
             List<Integer> winner_tas = new ArrayList<>();
             while ((line = reader.readLine()) != null) {
@@ -118,7 +120,7 @@ public class PersistenceManager {
             }
             reader.close();
             
-            reader = new BufferedReader(new FileReader("../data/log.txt"));
+            reader = new BufferedReader(new FileReader(_dataPath + "log.txt"));
             while ((line = reader.readLine()) != null) {
                 String[] cols = line.split(",");
                 if (!cols[2].equals("WRITE") || !winner_tas.contains(Integer.valueOf(cols[1]))) {
@@ -129,7 +131,7 @@ public class PersistenceManager {
                 int pageID = Integer.valueOf(cols[3]);
                 String data = cols[4];
                 
-                BufferedReader readPage = new BufferedReader(new FileReader("../data/" + pageID + ".txt"));
+                BufferedReader readPage = new BufferedReader(new FileReader(_dataPath + pageID + ".txt"));
                 String pageLine = readPage.readLine();
                 readPage.close();
                 String[] pageCols = pageLine.split(",");
@@ -138,7 +140,7 @@ public class PersistenceManager {
                     continue;
                 }
                 
-                FileWriter writer = new FileWriter("../data/" + pageID + ".txt");
+                FileWriter writer = new FileWriter(_dataPath + pageID + ".txt");
                 writer.write("" + pageID + "," + lsn + "," + data + "\n");
                 writer.close();
             }
@@ -164,7 +166,7 @@ public class PersistenceManager {
      */
     private synchronized int log(int taid, int pageid, String type, String data) {
         try {
-            FileWriter fw = new FileWriter("../data/log.txt", true);
+            FileWriter fw = new FileWriter(_dataPath + "log.txt", true);
             fw.write("" + _nextLogSequenceNumber + "," + taid + "," + type + "," + pageid + "," +  data);
             fw.write("\n");
             fw.close();
@@ -198,7 +200,7 @@ public class PersistenceManager {
             for (int pageid : pageIDs) {
                 int lsn = _pageLSN.get(pageid);
                 try {
-                    FileWriter fw = new FileWriter("../data/" + pageid + ".txt", false);
+                    FileWriter fw = new FileWriter(_dataPath + pageid + ".txt", false);
                     fw.write(pageid + "," + lsn + "," + _pageBuffer.get(pageid));
                     fw.close();
                 } catch (IOException e) {
