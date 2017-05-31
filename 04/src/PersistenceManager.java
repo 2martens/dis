@@ -107,45 +107,62 @@ public class PersistenceManager {
     /**
      * Performs the recovery actions.
      */
-    public void recovery() {
+    public synchronized void recovery() {
         try {
-            BufferedReader reader = new BufferedReader(new FileReader(_dataPath + "log.txt"));
-            String line;
-            List<Integer> winner_tas = new ArrayList<>();
+            BufferedReader reader     = new BufferedReader(new FileReader(_dataPath + "log.txt"));
+            String         line;
+            List<Integer>  winner_tas = new ArrayList<>();
+            int            lsnMax     = 0;
+            int            taidMax    = 0;
             while ((line = reader.readLine()) != null) {
                 String[] cols = line.split(",");
                 if (cols[2].equals("COMMIT")) {
                     winner_tas.add(Integer.valueOf(cols[1]));
                 }
+                if (Integer.valueOf(cols[0]) >= lsnMax) {
+                    lsnMax = Integer.valueOf(cols[0]);
+                }
+                if (Integer.valueOf(cols[1]) >= taidMax) {
+                    taidMax = Integer.valueOf(cols[1]);
+                }
             }
             reader.close();
-            
+            _nextLogSequenceNumber = lsnMax + 1;
+            _nextTransactionNumber = taidMax + 1;
+    
             reader = new BufferedReader(new FileReader(_dataPath + "log.txt"));
             while ((line = reader.readLine()) != null) {
                 String[] cols = line.split(",");
                 if (!cols[2].equals("WRITE") || !winner_tas.contains(Integer.valueOf(cols[1]))) {
                     continue;
                 }
-                
-                int lsn = Integer.valueOf(cols[0]);
-                int pageID = Integer.valueOf(cols[3]);
-                String data = cols[4];
-                
-                BufferedReader readPage = new BufferedReader(new FileReader(_dataPath + pageID + ".txt"));
-                String pageLine = readPage.readLine();
-                readPage.close();
-                String[] pageCols = pageLine.split(",");
-                int pageLSN = Integer.parseInt(pageCols[1]);
+    
+                int    lsn    = Integer.valueOf(cols[0]);
+                int    pageID = Integer.valueOf(cols[3]);
+                String data   = cols[4];
+                int pageLSN = -1;
+                try {
+                    BufferedReader readPage = new BufferedReader(new FileReader(_dataPath + pageID + ".txt"));
+                    String         pageLine = readPage.readLine();
+                    readPage.close();
+                    String[] pageCols = pageLine.split(",");
+                    pageLSN = Integer.parseInt(pageCols[1]);
+                }
+                catch (FileNotFoundException fne) {
+                    //;
+                }
+                catch (IOException ioe) {
+                    ioe.printStackTrace();
+                }
                 if (pageLSN >= lsn) {
                     continue;
                 }
-                
+    
                 FileWriter writer = new FileWriter(_dataPath + pageID + ".txt");
                 writer.write("" + pageID + "," + lsn + "," + data + "\n");
                 writer.close();
             }
             reader.close();
-            
         } catch (IOException e) {
             e.printStackTrace();
         }
