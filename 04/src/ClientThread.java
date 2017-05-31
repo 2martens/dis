@@ -15,7 +15,7 @@ public class ClientThread extends Thread {
      * @param lowerPageBound smalles page ID that can be accessed by this client
      * @param upperPageBound highest page ID that can be accessed by this client
      */
-    public ClientThread(int id, int lowerPageBound, int upperPageBound) {
+    ClientThread(int id, int lowerPageBound, int upperPageBound) {
         _id = id;
         _lowerPageBound = lowerPageBound;
         _upperPageBound = upperPageBound;
