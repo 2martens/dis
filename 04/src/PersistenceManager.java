@@ -30,7 +30,7 @@ public class PersistenceManager {
      * @return instance
      */
     @Contract(pure = true)
-    public static PersistenceManager getInstance() {
+    static PersistenceManager getInstance() {
         return instance;
     }
     
@@ -52,7 +52,7 @@ public class PersistenceManager {
      *
      * @return transaction ID
      */
-    public synchronized int beginTransaction() {
+    synchronized int beginTransaction() {
         _transactions.put(_nextTransactionNumber, false);
         log(_nextTransactionNumber, -1, "BOT", "");
         // return the next transaction number and increase it by one afterwards
@@ -65,7 +65,7 @@ public class PersistenceManager {
      * @param taid
      *         transaction ID
      */
-    public void commit(int taid) {
+    void commit(int taid) {
         if (!_transactions.containsKey(taid)) {
             throw new IllegalArgumentException("No transaction with given ID exists.");
         }
@@ -86,7 +86,7 @@ public class PersistenceManager {
      * @param data
      *         data
      */
-    public void write(int taid, int pageid, String data) {
+    void write(int taid, int pageid, String data) {
         if (!_transactions.containsKey(taid)) {
             throw new IllegalArgumentException("No transaction with given ID exists.");
         }
