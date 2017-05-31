@@ -198,7 +198,7 @@ public class PersistenceManager {
      * Checks for full buffer and persists data of committed transactions to storage if buffer is full.
      */
     private synchronized void persist() {
-        if (_pageBuffer.size() <= 5) {
+        if (_pageBuffer.size() <= 50) {
             return;
         }
         
