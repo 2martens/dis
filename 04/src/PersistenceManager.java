@@ -53,8 +53,8 @@ public class PersistenceManager {
      * @return transaction ID
      */
     synchronized int beginTransaction() {
-        _transactions.put(_nextTransactionNumber, false);
         log(_nextTransactionNumber, -1, "BOT", "");
+        _transactions.put(_nextTransactionNumber, false);
         // return the next transaction number and increase it by one afterwards
         return _nextTransactionNumber++;
     }
@@ -71,8 +71,8 @@ public class PersistenceManager {
         }
         // only perform commit actions if transaction isn't commited yet
         if (!_transactions.get(taid)) {
-            _transactions.replace(taid, true);
             log(taid, -1, "COMMIT", "");
+            _transactions.replace(taid, true);
         }
     }
     
