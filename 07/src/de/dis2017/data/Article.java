@@ -2,9 +2,10 @@ package de.dis2017.data;
 
 public class Article {
     private int _articleID;
-    private int _productGroupID;
     private String _name;
-    private float _price;
+    private String _productGroup;
+    private String _productFamily;
+    private String _productCategory;
     
     public int get_articleID() {
         return _articleID;
@@ -12,14 +13,6 @@ public class Article {
     
     public void set_articleID(int articleID) {
         _articleID = articleID;
-    }
-    
-    public int get_productGroupID() {
-        return _productGroupID;
-    }
-    
-    public void set_productGroupID(int productGroupID) {
-        _productGroupID = productGroupID;
     }
     
     public String get_name() {
@@ -30,11 +23,28 @@ public class Article {
         _name = name;
     }
     
-    public float get_price() {
-        return _price;
+    public String get_productGroup() {
+        return _productGroup;
     }
     
-    public void set_price(float price) {
-        _price = price;
+    public void set_productGroup(String productGroup) {
+        _productGroup = productGroup;
+    }
+    
+    
+    public String get_productFamily() {
+        return _productFamily;
+    }
+    
+    public void set_productFamily(String _productFamily) {
+        this._productFamily = _productFamily;
+    }
+    
+    public String get_productCategory() {
+        return _productCategory;
+    }
+    
+    public void set_productCategory(String _productCategory) {
+        this._productCategory = _productCategory;
     }
 }
