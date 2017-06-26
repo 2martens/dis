@@ -12,14 +12,19 @@ public class CSVScanner {
      * @return a list of csv entries
      * @throws FileNotFoundException if file doesn't exist
      */
-    public List<String> scan() throws FileNotFoundException {
-        List<String> entries = new ArrayList<>();
+    public List<List<String>> scan() throws FileNotFoundException {
+        List<List<String>> entries = new ArrayList<>();
         
         Scanner scanner = new Scanner(new File("sales.csv"));
-        scanner.useDelimiter(";");
-        while (scanner.hasNext()) {
-            String current = scanner.next();
-            entries.add(current);
+        while (scanner.hasNextLine()) {
+            List<String> line = new ArrayList<>();
+            String line_str = scanner.nextLine();
+            Scanner line_scanner = new Scanner(line_str);
+            line_scanner.useDelimiter(";");
+            while (line_scanner.hasNext()) {
+                line.add(line_scanner.next());
+            }
+            entries.add(line);
         }
         scanner.close();
         
