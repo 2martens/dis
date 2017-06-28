@@ -23,6 +23,9 @@ public class CSVScanner {
         while (scanner.hasNextLine()) {
             List<String> line = new ArrayList<>();
             String line_str = scanner.nextLine();
+            if (line_str.isEmpty()) {
+                continue;
+            }
             Scanner line_scanner = new Scanner(line_str);
             line_scanner.useDelimiter(";");
             while (line_scanner.hasNext()) {
