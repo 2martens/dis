@@ -19,6 +19,7 @@ public class CSVScanner {
         
         Scanner scanner = new Scanner(new FileInputStream(new File(file)));
         scanner.useDelimiter("\n");
+        scanner.nextLine();
         while (scanner.hasNextLine()) {
             List<String> line = new ArrayList<>();
             String line_str = scanner.nextLine();
