@@ -8,7 +8,7 @@ public class Sale {
     private int _shopID;
     private int _articleID;
     private int _sold;
-    private int _earnings;
+    private float _earnings;
     
     
     public int get_dateID() {
@@ -43,11 +43,11 @@ public class Sale {
         _sold = sold;
     }
     
-    public int get_earnings() {
+    public float get_earnings() {
         return _earnings;
     }
     
-    public void set_earnings(int earnings) {
+    public void set_earnings(float earnings) {
         _earnings = earnings;
     }
 }
