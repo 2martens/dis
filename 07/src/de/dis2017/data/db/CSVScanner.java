@@ -1,6 +1,7 @@
 package de.dis2017.data.db;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +17,8 @@ public class CSVScanner {
     public static List<List<String>> scan(String file) throws FileNotFoundException {
         List<List<String>> entries = new ArrayList<>();
         
-        Scanner scanner = new Scanner(new File(file));
+        Scanner scanner = new Scanner(new FileInputStream(new File(file)));
+        scanner.useDelimiter("\n");
         while (scanner.hasNextLine()) {
             List<String> line = new ArrayList<>();
             String line_str = scanner.nextLine();
