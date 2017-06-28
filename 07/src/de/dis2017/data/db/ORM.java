@@ -2,6 +2,7 @@ package de.dis2017.data.db;
 
 import de.dis2017.data.Article;
 import de.dis2017.data.Date;
+import de.dis2017.data.Sale;
 import de.dis2017.data.Shop;
 
 import java.sql.Connection;
@@ -140,6 +141,26 @@ public class ORM {
                 pstmt.setInt(3, date.get_month());
                 pstmt.setInt(4, date.get_quarter());
                 pstmt.setInt(5, date.get_year());
+                pstmt.addBatch();
+            }
+            pstmt.executeBatch();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public void createSales(List<Sale> sales) {
+        String insertSQL = "INSERT INTO VSISP12.SALES (dateID, storeID, articleID, soldunits, earnings)" +
+                           "VALUES (?, ?, ?, ?, ?)";
+        try {
+            PreparedStatement pstmt = _connection.prepareStatement(insertSQL);
+            
+            for (Sale sale: sales) {
+                pstmt.setInt(1, sale.get_dateID());
+                pstmt.setInt(2, sale.get_shopID());
+                pstmt.setInt(3, sale.get_articleID());
+                pstmt.setInt(4, sale.get_sold());
+                pstmt.setFloat(5, sale.get_earnings());
                 pstmt.addBatch();
             }
             pstmt.executeBatch();
