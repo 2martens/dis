@@ -47,12 +47,12 @@ public class Main {
             List<List<String>> csvEntries = CSVScanner.scan("sales.csv");
             List<Sale>         sales      = new ArrayList<>();
             for (List<String> row : csvEntries) {
-                Sale sale = new Sale();
-                String date = row.get(0);
-                String shop = row.get(1);
+                Sale   sale    = new Sale();
+                String date    = row.get(0);
+                String shop    = row.get(1);
                 String article = row.get(2);
-                int sold = Integer.valueOf(row.get(3));
-                float earned = Float.valueOf(row.get(4).replace(',', '.'));
+                int    sold    = Integer.valueOf(row.get(3));
+                float  earned  = Float.valueOf(row.get(4).replace(',', '.'));
     
                 sale.set_dateID(Date.parse(date).get_dateID());
                 sale.set_shopID(shopNames.get(shop));
