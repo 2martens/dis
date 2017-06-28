@@ -71,6 +71,12 @@ public class Main {
     
     private static void load()
     {
-    
+        _orm.setAutoCommit(false);
+        _orm.createArticles(_articles);
+        _orm.createDates(_dates);
+        _orm.createShops(_shops);
+        _orm.createSales(_sales);
+        _orm.commit();
+        _orm.setAutoCommit(true);
     }
 }
