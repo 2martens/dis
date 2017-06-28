@@ -23,6 +23,22 @@ public class ORM {
         _connection = _dbManager.getConnection();
     }
     
+    public void setAutoCommit(boolean autoCommit) {
+        try {
+            _connection.setAutoCommit(autoCommit);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public void commit() {
+        try {
+            _connection.commit();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    
     public List<Article> getArticles()
     {
         List<Article> articles = new ArrayList<>();
