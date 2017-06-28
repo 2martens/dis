@@ -52,7 +52,7 @@ public class Main {
                 String shop = row.get(1);
                 String article = row.get(2);
                 int sold = Integer.valueOf(row.get(3));
-                int earned = Integer.valueOf(row.get(4));
+                float earned = Float.valueOf(row.get(4).replace(',', '.'));
     
                 sale.set_dateID(Date.parse(date).get_dateID());
                 sale.set_shopID(shopNames.get(shop));
