@@ -89,7 +89,7 @@ public class Date {
             return _dates.get(date);
         }
         
-        String[] elements = date.split(".");
+        String[] elements = date.split("\\.");
         Date newDate = new Date();
         newDate.set_dateID(Integer.parseInt(elements[2] + elements[1] + elements[0]));
         newDate.set_day(Integer.parseInt(elements[0]));
