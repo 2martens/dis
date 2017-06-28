@@ -4,19 +4,19 @@ package de.dis2017.data;
 import java.util.Date;
 
 public class Sale {
-    private Date _date;
+    private int _dateID;
     private int _shopID;
     private int _articleID;
     private int _sold;
     private int _earnings;
     
     
-    public Date get_date() {
-        return _date;
+    public int get_dateID() {
+        return _dateID;
     }
     
-    public void set_date(Date date) {
-        _date = date;
+    public void set_dateID(int dateID) {
+        _dateID = dateID;
     }
     
     public int get_shopID() {
