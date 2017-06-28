@@ -1,6 +1,7 @@
 package de.dis2017.data.db;
 
 import de.dis2017.data.Article;
+import de.dis2017.data.Date;
 import de.dis2017.data.Shop;
 
 import java.sql.Connection;
@@ -85,5 +86,65 @@ public class ORM {
         }
     
         return shops;
+    }
+    
+    public void createArticles(List<Article> articles) {
+        String insertSQL = "INSERT INTO VSISP12.ARTICLE (ID, name, productgroup, productfamily, productcategory)" +
+                           "VALUES (?, ?, ?, ?, ?)";
+        try {
+            PreparedStatement pstmt = _connection.prepareStatement(insertSQL);
+            
+            for (Article article : articles) {
+                pstmt.setInt(1, article.get_articleID());
+                pstmt.setString(2, article.get_name());
+                pstmt.setString(3, article.get_productGroup());
+                pstmt.setString(4, article.get_productFamily());
+                pstmt.setString(5, article.get_productCategory());
+                pstmt.addBatch();
+            }
+            pstmt.executeBatch();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public void createShops(List<Shop> shops) {
+        String insertSQL = "INSERT INTO VSISP12.SHOP (ID, name, city, region, country)" +
+                           "VALUES (?, ?, ?, ?, ?)";
+        try {
+            PreparedStatement pstmt = _connection.prepareStatement(insertSQL);
+            
+            for (Shop shop : shops) {
+                pstmt.setInt(1, shop.get_shopID());
+                pstmt.setString(2, shop.get_name());
+                pstmt.setString(3, shop.get_city());
+                pstmt.setString(4, shop.get_region());
+                pstmt.setString(5, shop.get_country());
+                pstmt.addBatch();
+            }
+            pstmt.executeBatch();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public void createDates(List<Date> dates) {
+        String insertSQL = "INSERT INTO VSISP12.DATETABLE (ID, day, month, quarter, year)" +
+                           "VALUES (?, ?, ?, ?, ?)";
+        try {
+            PreparedStatement pstmt = _connection.prepareStatement(insertSQL);
+            
+            for (Date date : dates) {
+                pstmt.setInt(1, date.get_dateID());
+                pstmt.setInt(2, date.get_day());
+                pstmt.setInt(3, date.get_month());
+                pstmt.setInt(4, date.get_quarter());
+                pstmt.setInt(5, date.get_year());
+                pstmt.addBatch();
+            }
+            pstmt.executeBatch();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }
