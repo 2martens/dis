@@ -118,7 +118,6 @@ public class ORM {
                            "VALUES (?, ?, ?, ?, ?)";
         try {
             PreparedStatement pstmt = _connection.prepareStatement(insertSQL);
-            
             for (Article article : articles) {
                 pstmt.setInt(1, article.get_articleID());
                 pstmt.setString(2, article.get_name());
@@ -191,5 +190,38 @@ public class ORM {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+    
+    // --- analysis part starts here
+    
+    public List<Integer> getSalesCrossTable(int year) {
+        String querySQL = "SELECT COUNT(s.ID) AS sales, a.NAME AS article, sh.CITY AS city, d.QUARTER AS quarter " +
+                          "FROM VSISP12.SALES AS s, " +
+                          "VSISP12.DATETABLE AS d, " +
+                          "VSISP12.SHOP AS sh, " +
+                          "VSISP12.ARTICLE AS a " +
+                          "WHERE s.DATEID = d.ID " +
+                          "AND s.STOREID = sh.ID " +
+                          "AND s.ARTICLEID = a.ID " +
+                          "AND d.YEAR = " + year + " " +
+                          "GROUP BY GROUPING SETS ( (), (sh.CITY), (a.NAME), (sh.CITY, a.NAME), " +
+                          "(d.QUARTER, sh.CITY), (sh.CITY, a.NAME, d.QUARTER) )";
+        List<Integer> sales = new ArrayList<>();
+        try {
+            PreparedStatement pstmt = _connection.prepareStatement(querySQL);
+            ResultSet rs = pstmt.executeQuery();
+            
+            while (rs.next()) {
+                // TODO finish method
+                int salesnr = rs.getInt("sales");
+                String article = rs.getString("article");
+                String city = rs.getString("city");
+                int quarter = rs.getInt("quarter");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        
+        return sales;
     }
 }
