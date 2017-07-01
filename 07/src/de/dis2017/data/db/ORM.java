@@ -39,6 +39,14 @@ public class ORM {
         }
     }
     
+    public void rollback() {
+        try {
+            _connection.rollback();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    
     public List<Article> getArticles()
     {
         List<Article> articles = new ArrayList<>();
