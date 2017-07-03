@@ -10,7 +10,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ORM {
     private Connection _connection;
@@ -194,7 +196,7 @@ public class ORM {
     
     // --- analysis part starts here
     
-    public List<Integer> getSalesCrossTable(int year) {
+    public Map<String,Map<String, Map<String, Integer>>> getSalesCrossTable(int year) {
         String querySQL = "SELECT COUNT(s.ID) AS sales, a.NAME AS article, sh.CITY AS city, d.QUARTER AS quarter " +
                           "FROM VSISP12.SALES AS s, " +
                           "VSISP12.DATETABLE AS d, " +
@@ -206,17 +208,58 @@ public class ORM {
                           "AND d.YEAR = " + year + " " +
                           "GROUP BY GROUPING SETS ( (), (sh.CITY), (a.NAME), (sh.CITY, a.NAME), " +
                           "(d.QUARTER, sh.CITY), (sh.CITY, a.NAME, d.QUARTER) )";
-        List<Integer> sales = new ArrayList<>();
+        Map<String,Map<String, Map<String, Integer>>> sales = new HashMap<>();
+        
         try {
             PreparedStatement pstmt = _connection.prepareStatement(querySQL);
             ResultSet rs = pstmt.executeQuery();
             
             while (rs.next()) {
-                // TODO finish method
                 int salesnr = rs.getInt("sales");
                 String article = rs.getString("article");
                 String city = rs.getString("city");
                 int quarter = rs.getInt("quarter");
+    
+                Map<String, Map<String, Integer>> timeMap;
+                if (city == null) {
+                    timeMap = sales.getOrDefault("total", new HashMap<>());
+                }
+                else {
+                    timeMap = sales.getOrDefault(city, new HashMap<>());
+                }
+    
+                Map<String, Integer> productMap;
+                if (quarter == 0) {
+                    productMap = timeMap.getOrDefault("total", new HashMap<>());
+                }
+                else {
+                    productMap = timeMap.getOrDefault(String.valueOf(quarter), new HashMap<>());
+                }
+                
+                // add specific sales number to product map
+                if (article == null) {
+                    productMap.put("total", salesnr);
+                }
+                else {
+                    productMap.put(article, salesnr);
+                }
+                
+                // add product map to time map
+                if (quarter == 0) {
+                    timeMap.put("total", productMap);
+                }
+                else {
+                    timeMap.put(String.valueOf(quarter), productMap);
+                }
+                
+                // add time map to sales map
+                if (city == null) {
+                    sales.put("total", timeMap);
+                }
+                else {
+                    sales.put(city, timeMap);
+                }
+                
             }
         } catch (SQLException e) {
             e.printStackTrace();
