@@ -18,8 +18,8 @@ public class MainAnalysis {
         Map<String,Map<String, Map<String, Integer>>> sales = _orm.getSalesCrossTable(2017);
         List<String>                                  articleNames = new ArrayList<>(sales.get("total").get("total").keySet());
         Collections.sort(articleNames);
-        System.out.print("City | Time | Sales | ");
-        int chars = 27;
+        System.out.print("City | Time | ");
+        int chars = 19;
         for (String article : articleNames) {
             if (article.equals("total")) continue;
             System.out.print(article + " | ");
@@ -40,7 +40,7 @@ public class MainAnalysis {
             for (String time : times) {
                 if (time.equals("total")) continue;
                 Map<String, Integer> productMap = timeMap.get(time);
-                System.out.print(city + " | " + time + " | " );
+                System.out.print(city + " | quarter " + time + ", 2017 | " );
                 for (String article : articleNames) {
                     if (article.equals("total")) continue;
                     System.out.print(productMap.get(article) + " | ");
