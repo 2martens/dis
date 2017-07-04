@@ -197,7 +197,7 @@ public class ORM {
     // --- analysis part starts here
     
     public Map<String,Map<String, Map<String, Integer>>> getSalesCrossTable(int year) {
-        String querySQL = "SELECT COUNT(s.ID) AS sales, a.NAME AS article, sh.CITY AS city, d.QUARTER AS quarter " +
+        String querySQL = "SELECT SUM(s.SOLDUNITS) AS sales, a.NAME AS article, sh.CITY AS city, d.QUARTER AS quarter " +
                           "FROM VSISP12.SALES AS s, " +
                           "VSISP12.DATETABLE AS d, " +
                           "VSISP12.SHOP AS sh, " +
