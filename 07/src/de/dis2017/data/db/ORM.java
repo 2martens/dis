@@ -196,8 +196,17 @@ public class ORM {
     
     // --- analysis part starts here
     
-    public Map<String,Map<String, Map<String, Integer>>> getSalesCrossTable(int year) {
-        String querySQL = "SELECT SUM(s.SOLDUNITS) AS sales, a.NAME AS article, sh.CITY AS city, d.QUARTER AS quarter " +
+    /**
+     * Queries the cross table.
+     *
+     * @param year the year to be queried
+     * @param productDimension the column of the productDimension to be used (name for article name, productgroup,
+     *                         productfamily, productcategory)
+     * @return the cross table
+     */
+    public Map<String,Map<String, Map<String, Integer>>> getSalesCrossTable(int year, String productDimension) {
+        String querySQL = "SELECT SUM(s.SOLDUNITS) AS sales, a." + productDimension + " AS article, sh.CITY AS city, " +
+                          "d.QUARTER AS quarter " +
                           "FROM VSISP12.SALES AS s, " +
                           "VSISP12.DATETABLE AS d, " +
                           "VSISP12.SHOP AS sh, " +
@@ -206,8 +215,9 @@ public class ORM {
                           "AND s.STOREID = sh.ID " +
                           "AND s.ARTICLEID = a.ID " +
                           "AND d.YEAR = " + year + " " +
-                          "GROUP BY GROUPING SETS ( (), (sh.CITY), (a.NAME), (sh.CITY, a.NAME), " +
-                          "(d.QUARTER, sh.CITY), (sh.CITY, a.NAME, d.QUARTER) )";
+                          "GROUP BY GROUPING SETS ( (), (sh.CITY), (a." + productDimension + "), " +
+                          "(sh.CITY, a." + productDimension + "), " +
+                          "(d.QUARTER, sh.CITY), (sh.CITY, a." + productDimension + ", d.QUARTER) )";
         Map<String,Map<String, Map<String, Integer>>> sales = new HashMap<>();
         
         try {

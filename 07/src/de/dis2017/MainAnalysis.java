@@ -12,7 +12,8 @@ public class MainAnalysis {
      */
     public static void main(String[] args) {
         _orm = new ORM();
-        Map<String,Map<String, Map<String, Integer>>> sales = _orm.getSalesCrossTable(2017);
+        Map<String,Map<String, Map<String, Integer>>> sales = _orm.getSalesCrossTable(2017,
+                                                                                      "PRODUCTFAMILY");
         printTable(sales);
     }
     
