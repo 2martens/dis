@@ -26,9 +26,15 @@ public class MainAnalysis {
         for (String article : articleNames) {
             if (article.equals("total")) continue;
             int colSize = article.length();
+            int fillUp = 0;
+            if (colSize < 7) {
+                fillUp = 7 - colSize;
+                colSize = 7;
+            }
             columnHeaderEdge.append(new String(new char[colSize + 2]).replace('\0', '-')).append("+");
             leftAlignFormat.append(" %").append(colSize).append("d |");
-            columnHeader.append(" ").append(article).append(" |");
+            columnHeader.append(" ").append(article).append(new String(new char[fillUp]).replace('\0', ' '))
+                        .append(" |");
         }
         columnHeaderEdge.append("---------+%n");
         leftAlignFormat.append(" %7d |%n");
