@@ -13,16 +13,17 @@ public class MainAnalysis {
     public static void main(String[] args) {
         _orm = new ORM();
         Map<String,Map<String, Map<String, Integer>>> sales = _orm.getSalesCrossTable(2017,
-                                                                                      "PRODUCTFAMILY");
+                                                                                      "PRODUCTFAMILY",
+                                                                                      "NAME");
         printTable(sales);
     }
     
     private static void printTable(Map<String, Map<String, Map<String, Integer>>> crossTable) {
         List<String> articleNames = new ArrayList<>(crossTable.get("total").get("total").keySet());
         Collections.sort(articleNames);
-        StringBuilder columnHeaderEdge = new StringBuilder("+-----------------+-----------------+");
-        StringBuilder columnHeader     = new StringBuilder("| Location        | Time            |");
-        StringBuilder        leftAlignFormat  = new StringBuilder("| %-15s | %-15s |");
+        StringBuilder columnHeaderEdge = new StringBuilder("+------------------------+-----------------+");
+        StringBuilder columnHeader     = new StringBuilder("| Location               | Time            |");
+        StringBuilder        leftAlignFormat  = new StringBuilder("| %-22s | %-15s |");
         
         for (String article : articleNames) {
             if (article.equals("total")) continue;

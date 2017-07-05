@@ -202,10 +202,14 @@ public class ORM {
      * @param year the year to be queried
      * @param productDimension the column of the productDimension to be used (name for article name, productgroup,
      *                         productfamily, productcategory)
+     * @param locationDimension the column of the locationDimension to be used (name for shop name, city, region, country)
      * @return the cross table
      */
-    public Map<String,Map<String, Map<String, Integer>>> getSalesCrossTable(int year, String productDimension) {
-        String querySQL = "SELECT SUM(s.SOLDUNITS) AS sales, a." + productDimension + " AS article, sh.CITY AS city, " +
+    public Map<String,Map<String, Map<String, Integer>>> getSalesCrossTable(int year,
+                                                                            String productDimension,
+                                                                            String locationDimension) {
+        String querySQL = "SELECT SUM(s.SOLDUNITS) AS sales, a." + productDimension + " AS article, sh." +
+                          locationDimension + " AS city, " +
                           "d.QUARTER AS quarter " +
                           "FROM VSISP12.SALES AS s, " +
                           "VSISP12.DATETABLE AS d, " +
@@ -215,9 +219,10 @@ public class ORM {
                           "AND s.STOREID = sh.ID " +
                           "AND s.ARTICLEID = a.ID " +
                           "AND d.YEAR = " + year + " " +
-                          "GROUP BY GROUPING SETS ( (), (sh.CITY), (a." + productDimension + "), " +
-                          "(sh.CITY, a." + productDimension + "), " +
-                          "(d.QUARTER, sh.CITY), (sh.CITY, a." + productDimension + ", d.QUARTER) )";
+                          "GROUP BY GROUPING SETS ( (), (sh." + locationDimension + "), (a." + productDimension + "), " +
+                          "(sh." + locationDimension + ", a." + productDimension + "), " +
+                          "(d.QUARTER, sh." + locationDimension + "), " +
+                          "(sh." + locationDimension + ", a." + productDimension + ", d.QUARTER) )";
         Map<String,Map<String, Map<String, Integer>>> sales = new HashMap<>();
         
         try {
