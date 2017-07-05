@@ -6,24 +6,34 @@ import java.util.*;
 
 public class MainAnalysis {
     private static ORM _orm;
+    private static int _year;
+    private static String _productDimension;
+    private static String _locationDimension;
+    private static String _timeDimension;
     
     /**
      * Starts the application.
      */
     public static void main(String[] args) {
         _orm = new ORM();
-        Map<String,Map<String, Map<String, Integer>>> sales = _orm.getSalesCrossTable(2017,
-                                                                                      "PRODUCTFAMILY",
-                                                                                      "NAME");
-        printTable(sales);
+        _year = 2017;
+        _productDimension = "PRODUCTFAMILY";
+        _locationDimension = "NAME";
+        _timeDimension = "MONTH";
+        
+        Map<String,Map<String, Map<String, Integer>>> sales = _orm.getSalesCrossTable(_year,
+                                                                                      _productDimension,
+                                                                                      _locationDimension,
+                                                                                      _timeDimension);
+        printTable(sales, _timeDimension);
     }
     
-    private static void printTable(Map<String, Map<String, Map<String, Integer>>> crossTable) {
+    private static void printTable(Map<String, Map<String, Map<String, Integer>>> crossTable, String timeDimension) {
         List<String> articleNames = new ArrayList<>(crossTable.get("total").get("total").keySet());
         Collections.sort(articleNames);
         StringBuilder columnHeaderEdge = new StringBuilder("+------------------------+-----------------+");
         StringBuilder columnHeader     = new StringBuilder("| Location               | Time            |");
-        StringBuilder        leftAlignFormat  = new StringBuilder("| %-22s | %-15s |");
+        StringBuilder        leftAlignFormat  = new StringBuilder("| %-22s | %15s |");
         
         for (String article : articleNames) {
             if (article.equals("total")) continue;
@@ -62,12 +72,35 @@ public class MainAnalysis {
             List<String>                      times   = new ArrayList<>(timeMap.keySet());
             Collections.sort(times);
         
+            Map<Integer, String> months = new HashMap<>();
+            months.put(1, "January");
+            months.put(2, "February");
+            months.put(3, "March");
+            months.put(4, "April");
+            months.put(5, "May");
+            months.put(6, "June");
+            months.put(7, "July");
+            months.put(8, "August");
+            months.put(9, "September");
+            months.put(10, "October");
+            months.put(11, "November");
+            months.put(12, "December");
             for (String time : times) {
                 if (time.equals("total")) continue;
                 Map<String, Integer> productMap = timeMap.get(time);
                 List<Object> values = new ArrayList<>();
                 values.add(city);
-                values.add("quarter " + time + ", 2017");
+                switch (timeDimension) {
+                    case "QUARTER":
+                        values.add("quarter " + time + ", 2017");
+                        break;
+                    case "MONTH":
+                        values.add(months.get(Integer.valueOf(time)) + ", 2017");
+                        break;
+                    case "YEAR":
+                        values.add(time);
+                        break;
+                }
                 for (String article : articleNames) {
                     if (article.equals("total")) continue;
                     values.add(productMap.get(article));
