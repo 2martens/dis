@@ -81,6 +81,41 @@ public class MainAnalysis {
         return false;
     }
     
+    private static String getMonth(int monthNr) {
+        Map<Integer, String> months = new HashMap<>();
+        months.put(1, "January");
+        months.put(2, "February");
+        months.put(3, "March");
+        months.put(4, "April");
+        months.put(5, "May");
+        months.put(6, "June");
+        months.put(7, "July");
+        months.put(8, "August");
+        months.put(9, "September");
+        months.put(10, "October");
+        months.put(11, "November");
+        months.put(12, "December");
+        
+        return months.get(monthNr);
+    }
+    
+    private static String getTimeCell(String timeDimension, String time) {
+        String returnValue = "";
+        switch (timeDimension) {
+            case "QUARTER":
+                returnValue = "quarter " + time + ", 2017";
+                break;
+            case "MONTH":
+                returnValue = getMonth(Integer.valueOf(time)) + ", 2017";
+                break;
+            case "YEAR":
+                returnValue = time;
+                break;
+        }
+        
+        return returnValue;
+    }
+    
     private static void printTable(Map<String, Map<String, Map<String, Integer>>> crossTable, String timeDimension) {
         List<String> articleNames = new ArrayList<>(crossTable.get("total").get("total").keySet());
         Collections.sort(articleNames);
@@ -124,36 +159,13 @@ public class MainAnalysis {
             Map<String, Map<String, Integer>> timeMap = crossTable.get(city);
             List<String>                      times   = new ArrayList<>(timeMap.keySet());
             Collections.sort(times);
-        
-            Map<Integer, String> months = new HashMap<>();
-            months.put(1, "January");
-            months.put(2, "February");
-            months.put(3, "March");
-            months.put(4, "April");
-            months.put(5, "May");
-            months.put(6, "June");
-            months.put(7, "July");
-            months.put(8, "August");
-            months.put(9, "September");
-            months.put(10, "October");
-            months.put(11, "November");
-            months.put(12, "December");
+            
             for (String time : times) {
                 if (time.equals("total")) continue;
                 Map<String, Integer> productMap = timeMap.get(time);
                 List<Object> values = new ArrayList<>();
                 values.add(city);
-                switch (timeDimension) {
-                    case "QUARTER":
-                        values.add("quarter " + time + ", 2017");
-                        break;
-                    case "MONTH":
-                        values.add(months.get(Integer.valueOf(time)) + ", 2017");
-                        break;
-                    case "YEAR":
-                        values.add(time);
-                        break;
-                }
+                values.add(getTimeCell(timeDimension, time));
                 for (String article : articleNames) {
                     if (article.equals("total")) continue;
                     values.add(productMap.get(article));
@@ -173,6 +185,22 @@ public class MainAnalysis {
             System.out.format(leftAlignFormat.toString(), unpack(totalValues.toArray()));
         }
         Map<String, Map<String, Integer>> timeMap = crossTable.get("total");
+        List<String>                      times   = new ArrayList<>(timeMap.keySet());
+        Collections.sort(times);
+        for (String time : times) {
+            if (time.equals("total")) continue;
+            Map<String, Integer> productMap = timeMap.get(time);
+            List<Object> values = new ArrayList<>();
+            values.add("total");
+            values.add(getTimeCell(timeDimension, time));
+            for (String article : articleNames) {
+                if (article.equals("total")) continue;
+                values.add(productMap.get(article));
+            }
+            values.add(productMap.get("total"));
+            System.out.format(leftAlignFormat.toString(), unpack(values.toArray()));
+        }
+        
         Map<String, Integer> productMap = timeMap.get("total");
         List<Object> globalTotalValues = new ArrayList<>();
         globalTotalValues.add("total");

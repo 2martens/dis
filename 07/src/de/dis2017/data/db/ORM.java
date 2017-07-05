@@ -222,8 +222,10 @@ public class ORM {
                           "AND s.ARTICLEID = a.ID " +
                           "AND d.YEAR = " + year + " " +
                           "GROUP BY GROUPING SETS ( (), (sh." + locationDimension + "), (a." + productDimension + "), " +
+                          "(d." + timeDimension + "), " +
                           "(sh." + locationDimension + ", a." + productDimension + "), " +
                           "(d." + timeDimension + ", sh." + locationDimension + "), " +
+                          "(d." + timeDimension + ", a." + productDimension + "), " +
                           "(sh." + locationDimension + ", a." + productDimension + ", d." + timeDimension + ") )";
         Map<String,Map<String, Map<String, Integer>>> sales = new HashMap<>();
         
