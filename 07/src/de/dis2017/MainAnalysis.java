@@ -2,6 +2,9 @@ package de.dis2017;
 
 import de.dis2017.data.db.ORM;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.*;
 
 public class MainAnalysis {
@@ -21,11 +24,61 @@ public class MainAnalysis {
         _locationDimension = "NAME";
         _timeDimension = "MONTH";
         
-        Map<String,Map<String, Map<String, Integer>>> sales = _orm.getSalesCrossTable(_year,
-                                                                                      _productDimension,
-                                                                                      _locationDimension,
-                                                                                      _timeDimension);
-        printTable(sales, _timeDimension);
+        while (true) {
+            Map<String, Map<String, Map<String, Integer>>> sales = _orm.getSalesCrossTable(_year,
+                                                                                           _productDimension,
+                                                                                           _locationDimension,
+                                                                                           _timeDimension);
+            printTable(sales, _timeDimension);
+            boolean continueLoop = interact();
+            if (!continueLoop) {
+                break;
+            }
+        }
+    }
+    
+    private static boolean interact() {
+        BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in));
+        try {
+            System.out.println("Re-Query [Yes, No]?");
+            String reQuery = stdin.readLine();
+            if (reQuery.equals("No")) {
+                return false;
+            }
+            
+            System.out.println("Product dimension (Article, Productgroup, Productfamily, Productcategory):");
+            String productDimension = stdin.readLine();
+            if (productDimension.equals("Article") || productDimension.equals("article")) {
+                productDimension = "NAME";
+            }
+            else {
+                productDimension = productDimension.toUpperCase();
+            }
+    
+            System.out.println("Location dimension (Shop, City, Region, Country):");
+            String locationDimension = stdin.readLine();
+            if (locationDimension.equals("Shop") || locationDimension.equals("shop")) {
+                locationDimension = "NAME";
+            }
+            else {
+                locationDimension = locationDimension.toUpperCase();
+            }
+    
+            System.out.println("Time dimension (Month, Quarter, Year):");
+            String timeDimension = stdin.readLine();
+            timeDimension = timeDimension.toUpperCase();
+            
+            // overwrite
+            _productDimension = productDimension;
+            _locationDimension = locationDimension;
+            _timeDimension = timeDimension;
+            
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        
+        return false;
     }
     
     private static void printTable(Map<String, Map<String, Map<String, Integer>>> crossTable, String timeDimension) {
