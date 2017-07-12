@@ -7,8 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Apriori {
-    
-    
     private static List<int[]> itemsets        = new ArrayList<int[]>();
     private static float       minSup          = 0.01f;
     private static String      path            = "transactions.txt";
@@ -78,7 +76,7 @@ public class Apriori {
                 }
             }
         }
-        itemsets = new ArrayList<int[]>(candidates);
+        itemsets = new ArrayList<>(candidates);
         if (itemsets.size() > 0) {
             System.out.println(itemsets.size() + " Candidates for k=" + itemsets.get(0).length);
         } else {
@@ -99,15 +97,6 @@ public class Apriori {
                 }
             }
             if (!match) return false;
-        }
-        return true;
-    }
-    
-    private static boolean compare(int[] a, int[] b) {
-        for (int i = 0; i < a.length; i++) {
-            if (a[i] != b[i]) {
-                return false;
-            }
         }
         return true;
     }
