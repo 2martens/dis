@@ -51,7 +51,7 @@ public class Apriori {
     
     private static void generateCandidates() {
         int         k          = itemsets.get(0).length + 1;
-        List<int[]> candidates = new ArrayList<int[]>();
+        List<int[]> candidates = new ArrayList<>();
         for (int i = 0; i < itemsets.size(); i++) {
             for (int[] itemset : itemsets) {
                 int[]   I1    = itemsets.get(i);
@@ -131,7 +131,7 @@ public class Apriori {
     }
     
     private static void find_frequent_1_itemsets() {
-        itemsets = new ArrayList<int[]>();
+        itemsets = new ArrayList<>();
         for (int i = 0; i < numItems; i++) {
             int[] cand = {i};
             itemsets.add(cand);
@@ -141,7 +141,7 @@ public class Apriori {
     }
     
     private static void calculateFrequentItemsets() {
-        List<int[]> frequent = new ArrayList<int[]>();
+        List<int[]> frequent = new ArrayList<>();
         int[]       counter  = new int[itemsets.size()];
         try (BufferedReader br = new BufferedReader(new FileReader(path))) {
             String line;
