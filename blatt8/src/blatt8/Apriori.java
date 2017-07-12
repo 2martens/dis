@@ -15,6 +15,11 @@ public class Apriori {
     private static int         numItems        = 0;
     private static int         numTransactions = 0;
     
+    public static void main(String[] args) {
+        analyzeTransactionFile();
+        AprioriAlgorithm();
+    }
+    
     private static void analyzeTransactionFile() {
         try (BufferedReader br = new BufferedReader(new FileReader(path))) {
             String line;
@@ -66,7 +71,7 @@ public class Apriori {
                         int[] c = new int[k];
                         System.arraycopy(I1, 0, c, 0, k - 1);
                         c[k - 1] = itemset[k - 2];
-                        if (!prune(c)) {
+                        if (!prune()) {
                             candidates.add(c);
                         }
                     }
@@ -81,31 +86,8 @@ public class Apriori {
         }
     }
     
-    
-    private static boolean prune(int[] c) {
-        //		if(new Random().nextInt(50)==0)return false;
+    private static boolean prune() {
         return false;
-        //		for(int skip=0;skip<c.length;skip++){
-        //			int[] subset = new int[c.length-1];
-        //			for(int i=0;i<c.length-1;i++){
-        //				if(i>=skip)
-        //					subset[i]=c[i+1];
-        //				else
-        //					subset[i]=c[i];
-        //			}
-        //			boolean match=false;
-        //			for(int i=0;i<itemsets.size();i++){
-        //				if(compare(itemsets.get(i),subset)){
-        //					match=true;
-        //					break;
-        //				}
-        //			}
-        //			if(!match)
-        //				return true;
-        //
-        //		}
-        //		return false;
-        
     }
     
     private static boolean contains(int[] a, int[] b) {
@@ -182,12 +164,6 @@ public class Apriori {
             print.append(i1).append(" - ");
         }
         System.out.println(print);
-    }
-    
-    
-    public static void main(String[] args) {
-        analyzeTransactionFile();
-        AprioriAlgorithm();
     }
     
 }
